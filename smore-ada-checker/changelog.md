@@ -2,6 +2,14 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## 2026-04-07
+- Update guide styling — title, label, and changelog formatting
+- Backfill changelog — last 30 days of commits
+- Replace print button with simple link
+- Remove 'Last project activity' line — replaced by automated changelog
+- Update user guide — add changelog section and permanent changelog for Thrillshare smore-scan callout
+
+
 ## 2026-03-27
 - feat: add timestamps to reports, kill stale servers, increase email note font
 - chore: auto-delete reports older than 30 days at startup

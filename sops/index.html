@@ -410,7 +410,7 @@
   <li><strong>Say "eod" or "sv" before <code>/clear</code>.</strong> If you <code>/clear</code> a session and then close it, the automated 3:01 PM task will fork an empty conversation with no context to capture. Always save notes before clearing.</li>
   <li><strong>A project needs at least one Claude session</strong> before the automated fork can capture it. If you see "no session to continue" in <code>eod-log.txt</code>, just open that project in Claude Code and do some work first.</li>
   <li><strong>Duplicate detection:</strong> If you say "eod" manually and the 3:01 PM task fires within 10 minutes, the script skips that project to avoid near-duplicate notes.</li>
-  <li><strong>New projects must be added to the script.</strong> The EOD script has a <code>$projects</code> array in <code>eod-summary.ps1</code>. New projects won't be captured until they're added there.</li>
+  <li><strong>New projects are auto-registered.</strong> The new-project skill (<a href="#sop-001">SOP-001</a>) automatically adds new projects to the EOD script's <code>$projects</code> array. If you create a project without using the skill, you'll need to add it to <code>eod-summary.ps1</code> manually.</li>
   <li><strong>Timeouts:</strong> Each Claude invocation has a 120-second timeout (240 for the summary phase). If a session hangs, it's killed and the script moves on. Check <code>eod-log.txt</code> for "Timeout:" entries.</li>
 </ul>
 

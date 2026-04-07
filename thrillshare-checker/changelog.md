@@ -2,6 +2,14 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## 2026-04-07
+- Update guide styling — title, label, and changelog formatting
+- Backfill changelog — last 30 days of commits
+- Replace print button with simple link
+- Remove 'Last project activity' line — replaced by automated changelog
+- Update user guide — add changelog section and permanent changelog for Smore Link Scanner feature
+
+
 ## 2026-03-19
 - Add CMS moderation checks, SMTP relay, date-organized reports
 - Fix run_hidden.vbs paths after project move to eusd subdirectory
