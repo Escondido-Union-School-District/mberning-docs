@@ -255,53 +255,69 @@
 
 <h2>SOP-001: New Project Setup</h2>
 
+<!-- ---- Quick Start ---- -->
+<table style="width:100%; border-collapse:collapse; margin:1em 0;">
+  <thead>
+    <tr style="background:#1a56db; color:white;">
+      <th style="padding:10px; text-align:left; width:50%;">Exploring an idea</th>
+      <th style="padding:10px; text-align:left; width:50%;">Ready to build</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding:10px; vertical-align:top; border:1px solid #ddd;">
+        <ol style="margin:0; padding-left:1.5em;">
+          <li>Open a terminal</li>
+          <li>Run <code>claude</code></li>
+          <li>Talk through your idea</li>
+          <li>If it has legs, move to <strong>Ready to build &rarr;</strong></li>
+        </ol>
+      </td>
+      <td style="padding:10px; vertical-align:top; border:1px solid #ddd;">
+        <ol style="margin:0; padding-left:1.5em;">
+          <li>Create a folder in <code>C:\Users\mberning\projects\eusd\</code> &mdash; the folder name matters because Claude derives the launch alias from its initials (e.g., <code>link-checker</code> &rarr; <code>lc</code>)</li>
+          <li><code>cd</code> into the folder</li>
+          <li>Run <code>claude</code></li>
+          <li>Start your message with "I want to start a <strong>new project</strong> that..." &mdash; the phrase "new project" triggers a setup skill that handles git, aliases, GitHub repo, and user guide automatically.</li>
+        </ol>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 <!-- ---- What Problem Does This Solve? ---- -->
 <h3>What Problem Does This Solve?</h3>
 
-<p>Every new Claude Code project needs the same handful of things before you start building: a <code>CLAUDE.md</code> so Claude has context, launch aliases (see <a href="#sop-004">SOP-004</a>) so you can open the project from any terminal, a <code>.gitignore</code>, a GitHub repo, and optionally a user guide and ADA accessibility skill. Setting these up by hand means something always gets missed &mdash; a forgotten PowerShell alias, a missing <code>.gitignore</code> entry, a repo that never gets created.</p>
+<p>Every new project needs the same handful of things before you start building. Some of these Claude would do on its own &mdash; like initializing git or creating a <code>.gitignore</code>. But others won't happen unless something tells Claude to do them: launch aliases (short commands like <code>lc</code> that open the project in one step) in both bash and PowerShell profiles, a GitHub repo, a user guide, and the ADA skill. Without this SOP, those get forgotten &mdash; you end up with a project that works but has no shortcut to open it, no repo backing it up, and no documentation.</p>
 
 <!-- ---- How It Works ---- -->
 <h3>How It Works</h3>
 
+<p>When you say "new project" in an empty directory (see step 4 in <em>Ready to build</em> above), Claude triggers the <code>new-project</code> skill. You don't need to remember a checklist &mdash; the skill handles it. Here's what it does:</p>
+
 <ol>
-  <li>You create a folder for the project, <code>cd</code> into it, and run <code>claude</code>.</li>
-  <li>You describe what you want to build.</li>
-  <li>Claude infers what the project needs from your description &mdash; web project? tool that others will use? &mdash; and asks only if it genuinely can't tell.</li>
-  <li>Claude initializes git, creates <code>CLAUDE.md</code> and <code>.gitignore</code>, and adds launch aliases to both your bash and PowerShell profiles.</li>
-  <li>If it's a web project, Claude installs the ADA accessibility skill.</li>
-  <li>If others will use the tool, Claude creates a user guide skeleton.</li>
-  <li>Claude creates a private GitHub repo and pushes the initial commit.</li>
-  <li>Claude updates the SOP alias table and project list to keep this document current.</li>
-  <li>Claude confirms everything it did and gives you the alias.</li>
+  <li>Asks about your idea if it needs more detail &mdash; you can go back and forth as long as you need before anything gets created</li>
+  <li>Initializes git, creates <code>CLAUDE.md</code> and <code>.gitignore</code></li>
+  <li>Adds launch aliases to both bash and PowerShell profiles (e.g., <code>lc</code> to reopen the link checker project). Both profiles are needed because Claude Code runs in a bash shell, but you may also open terminals in PowerShell. See <a href="#sop-004">SOP-004</a> for details</li>
+  <li>Creates a private GitHub repo and pushes the initial commit. Claude determines the GitHub owner from the folder path &mdash; projects in <code>projects\eusd\</code> go to the <code>Escondido-Union-School-District</code> org, projects elsewhere in <code>projects\</code> go to your personal GitHub account</li>
+  <li>Creates a user guide at <code>projects\eusd\&lt;project-name&gt;\docs\user-guide.html</code> for all work projects</li>
+  <li>Installs the ADA accessibility skill if it's a web project</li>
+  <li>Confirms everything it did and gives you the alias</li>
 </ol>
 
-<!-- ---- How It's Triggered ---- -->
-<h3>How It's Triggered</h3>
-
-<p>You create the folder, <code>cd</code> into it, start Claude Code, and describe what you want to build. Claude detects that the directory has no <code>CLAUDE.md</code> or <code>.git</code> and automatically triggers the <code>new-project</code> skill, which walks through the full setup checklist &mdash; aliases, GitHub repo, user guide, ADA skill, etc.</p>
-
-<div class="prompt-block">
-  <p><strong>Example:</strong></p>
-  <pre><code>mkdir budget-tracker && cd budget-tracker
-claude
-
-&gt; this is a node.js tool that pulls budget data from the
-  district's finance API and generates monthly reports</code></pre>
-</div>
-
-<p>You can be as brief or detailed as you like &mdash; Claude will ask for anything it can't figure out on its own.</p>
+<p><strong>You create the folder and say "new project" &mdash; Claude handles everything after that.</strong></p>
 
 <!-- ---- What to Expect ---- -->
 <h3>What to Expect</h3>
 
-<p><strong>During setup:</strong> Claude may ask one or two questions if your description is ambiguous (e.g., is this a web project?), then creates files and commits. Takes about a minute.</p>
+<p><strong>During setup:</strong> After you've finished discussing the idea, Claude runs through the setup checklist &mdash; creating files, setting up the repo, adding aliases. You don't need to do anything during this part.</p>
 
 <p><strong>When it's done, you'll have:</strong></p>
 <ul>
   <li><code>CLAUDE.md</code>, <code>.gitignore</code>, and an initial commit in your project folder</li>
-  <li>A private GitHub repo with the code pushed</li>
-  <li>A launch alias &mdash; type it from any terminal to <code>cd</code> into the project and start Claude Code with a named session</li>
-  <li>A user guide skeleton at <code>docs/user-guide.html</code> (if the project is a tool others will use)</li>
+  <li>A private GitHub repo with the code pushed (under the EUSD org for work projects, your personal account otherwise)</li>
+  <li>A launch alias &mdash; Claude picks the alias and tells you what it is when setup is complete. Open any terminal, type it from any directory, and it navigates to the project and starts Claude Code automatically (see <a href="#sop-004">SOP-004</a>)</li>
+  <li>A user guide at <code>projects\eusd\&lt;project-name&gt;\docs\user-guide.html</code> (all work projects)</li>
   <li>The ADA build-time skill installed (if it's a web project)</li>
 </ul>
 
@@ -312,55 +328,9 @@ claude
 
 <ul>
   <li><strong>Alias conflicts:</strong> If the project initials collide with an existing alias or system command, Claude will double the last letter (e.g., <code>fp</code> &rarr; <code>fpp</code>) or ask you to pick one.</li>
-  <li><strong>ADA <code>.gitignore</code> entry:</strong> The ADA skill tracks audit progress in <code>.wcag-progress.json</code>. The setup adds it to <code>.gitignore</code> automatically, but if you ever install the ADA skill into a project manually, you need to add that entry yourself.</li>
+
   <li><strong>New terminal required:</strong> After aliases are added to your profiles, you need to open a new terminal (or <code>source ~/.bashrc</code>) for the alias to be available.</li>
 </ul>
-
-<details class="collapsible">
-<summary>Reference</summary>
-
-<table>
-  <tr><th>File / Action</th><th>Always?</th><th>Purpose</th></tr>
-  <tr>
-    <td>Project folder + <code>git init</code></td>
-    <td>Yes</td>
-    <td>Project home directory with version control</td>
-  </tr>
-  <tr>
-    <td><code>CLAUDE.md</code></td>
-    <td>Yes</td>
-    <td>Project context for Claude Code &mdash; description, layout, conventions</td>
-  </tr>
-  <tr>
-    <td><code>.gitignore</code></td>
-    <td>Yes</td>
-    <td>Sensible defaults for the project's language/framework</td>
-  </tr>
-  <tr>
-    <td>Launch aliases (bash + PowerShell)</td>
-    <td>Yes</td>
-    <td>Single-command shortcut to <code>cd</code> + launch with <code>--name</code> (see SOP-004)</td>
-  </tr>
-  <tr>
-    <td>GitHub repo (<code>gh repo create</code>)</td>
-    <td>Yes</td>
-    <td>Remote repository, private by default</td>
-  </tr>
-  <tr>
-    <td><code>docs/user-guide.html</code></td>
-    <td>If CLI/tool</td>
-    <td>Printable user guide skeleton (see SOP-003)</td>
-  </tr>
-  <tr>
-    <td>ADA build-time skill</td>
-    <td>If web UI</td>
-    <td>WCAG 2.1 AA enforcement during coding</td>
-  </tr>
-</table>
-
-<p><strong>Skill file:</strong> <code>~/.claude/skills/new-project/SKILL.md</code></p>
-
-</details>
 
 
 </div><!-- end SOP-001 -->
