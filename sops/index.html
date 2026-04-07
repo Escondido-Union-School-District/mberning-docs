@@ -210,7 +210,7 @@
 </head>
 <body>
 
-<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this page</a> &nbsp;&bull;&nbsp; <a href="../" style="font-size: 0.85em; color: #1a56db;">All tools</a>
+<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this page</a>
 <button id="back-to-top" class="no-print" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#9650;</button>
 <script>
 (function(){
@@ -222,7 +222,7 @@
 </script>
 
 <h1 id="top">Claude Code — Standard Operating Procedures</h1>
-<p><strong>Author:</strong> Mark Berning, EUSD &nbsp;|&nbsp; <strong>Last Updated:</strong> 2026-03-26</p>
+<p><strong>Author:</strong> Mark Berning, EUSD &nbsp;|&nbsp; <strong>Last Updated:</strong> 2026-04-06</p>
 <p>Operational procedures for Claude Code automation workflows. Each SOP is self-contained and includes a replication guide for anyone who wants to set up something similar in their own environment.</p>
 
 <div class="toc">
@@ -674,7 +674,7 @@ Register-ScheduledTask -TaskName 'Claude EOD Summary' `
   </tr>
   <tr>
     <td><strong>Daily User Guide Check</strong> (3:30 PM weekdays, cloud)</td>
-    <td>Cloud-scheduled agent clones all repos from GitHub, compares recent commits to each guide, and updates any stale guide content. Opens a GitHub issue with results (email notification). This is the primary mechanism for keeping guides current.</td>
+    <td>Cloud-scheduled agent clones all repos from GitHub and performs four jobs: <strong>(A)</strong> updates guide content if code changes affect user-facing behavior, <strong>(B)</strong> adds all commits to a collapsible "Recent Changes" accordion on each guide's HTML page (last 30 days, auto-prunes), <strong>(C)</strong> maintains a permanent <code>docs/changelog.md</code> in each project (full history, never pruned), and <strong>(D)</strong> syncs updated guides to the <code>mberning-docs</code> repo for GitHub Pages hosting. Reports results to <code>claude-code-sops/status/user-guide-check.md</code>. This is the primary mechanism for keeping guides current.</td>
   </tr>
   <tr>
     <td><strong>You ask Claude</strong> to create or update a guide</td>
@@ -685,19 +685,20 @@ Register-ScheduledTask -TaskName 'Claude EOD Summary' `
 <!-- ---- What to Expect ---- -->
 <h3>What to Expect</h3>
 
-<p><strong>User guides</strong> follow a strict section order: What This Tool Does, Prerequisites, Step-by-Step, CLI Reference, Folder Structure, Understanding the Output, Troubleshooting, and Quick Reference Card. They're self-contained HTML with a Print button &mdash; no external dependencies.</p>
+<p><strong>User guides</strong> follow a strict section order: What This Tool Does, Prerequisites, Step-by-Step, CLI Reference, Folder Structure, Understanding the Output, Troubleshooting, and Quick Reference Card. They're self-contained HTML with a "Print this guide" link &mdash; no external dependencies. Guides hosted on GitHub Pages also include an "All tools" link back to the index page.</p>
 
 <p><strong>CLAUDE.md files</strong> are brief &mdash; project description in 2-3 sentences, workflow summary, folder layout, and conventions. They're for Claude and developers, not end users.</p>
 
 <p><strong>When a guide is created or updated</strong>, it's committed and pushed in the same session. Claude won't leave it as an untracked file.</p>
 
-<p><strong>Every guide has a "Last updated" status line</strong> at the top (below the subtitle), showing when the guide's actual content last changed and what changed. Updated by the cloud-scheduled Daily User Guide Check at 3:30 PM. Each guide also includes an automated Recent Changes changelog.</p>
+<p><strong>Every guide includes a collapsible "Recent Changes" accordion</strong> showing commits from the last 30 days (auto-pruned). A permanent changelog is also maintained at <code>docs/changelog.md</code> in each project (full history, never pruned). Guides are also published to GitHub Pages at <a href="https://escondido-union-school-district.github.io/mberning-docs/">escondido-union-school-district.github.io/mberning-docs</a> for easy sharing with internal staff.</p>
 
 <!-- ---- Gotchas ---- -->
 <h3>Gotchas</h3>
 
 <ul>
-  <li><strong>Guides are not updated during interactive sessions.</strong> To avoid wasting time and tokens mid-session, guide content is only updated by the cloud-scheduled Daily User Guide Check at 3:30 PM. This means guides may be up to 24 hours behind code changes.</li>
+  <li><strong>Guides are not updated during interactive sessions.</strong> To avoid wasting time and tokens mid-session, guide content is only updated by the cloud-scheduled Daily User Guide Check at 3:30 PM. This means guides may be up to 24 hours behind code changes. The cloud trigger writes its status to <code>claude-code-sops/status/user-guide-check.md</code> rather than creating GitHub issues.</li>
+  <li><strong>Cloud trigger environment matters.</strong> The Daily User Guide Check must use the default cloud environment (not a custom one) because <code>gh</code> CLI is not available in cloud environments. The GitHub Integration must have write access so the trigger can commit and push changes. The trigger reports status via a committed status file rather than <code>gh issue create</code>.</li>
   <li><strong>Don't edit the template CSS.</strong> The <code>eusd-user-guide</code> skill has a frozen stylesheet. All guides must use it verbatim so they look identical.</li>
   <li><strong>Guides are for non-technical users.</strong> Write for someone with no Claude Code context &mdash; just a terminal and the tool.</li>
 </ul>
@@ -735,6 +736,26 @@ Register-ScheduledTask -TaskName 'Claude EOD Summary' `
     <td>Global CLAUDE.md rule</td>
     <td><code>C:\Users\mberning\CLAUDE.md</code> (User Guides section)</td>
     <td>Claude Code &mdash; enforces guide maintenance on CLI changes</td>
+  </tr>
+  <tr>
+    <td>GitHub Pages site</td>
+    <td><code>Escondido-Union-School-District/mberning-docs</code> (public repo)<br><a href="https://escondido-union-school-district.github.io/mberning-docs/">escondido-union-school-district.github.io/mberning-docs</a></td>
+    <td>Internal staff &mdash; browse all project guides and SOPs via a web link</td>
+  </tr>
+  <tr>
+    <td>Cloud trigger status</td>
+    <td><code>claude-code-sops/status/user-guide-check.md</code></td>
+    <td>Ops &mdash; status output from the Daily User Guide Check cloud trigger</td>
+  </tr>
+  <tr>
+    <td>Pull All Repos script</td>
+    <td><code>C:\Users\mberning\projects\daily-summaries\pull-all-repos.ps1</code></td>
+    <td>Ops &mdash; pulls all EUSD repos locally after cloud trigger finishes (3:50 PM weekdays via Task Scheduler: "Pull All Repos After Guide Check")</td>
+  </tr>
+  <tr>
+    <td>Pull log</td>
+    <td><code>C:\Users\mberning\projects\daily-summaries\pull-log.txt</code></td>
+    <td>Ops &mdash; execution log for the pull script</td>
   </tr>
 </table>
 
@@ -789,7 +810,7 @@ updated prerequisites, etc. - update the guide in the same commit.</code></pre>
 Read the code to understand what the tool does, its CLI flags/options,
 prerequisites, folder structure, and common errors. The guide should be
 self-contained so someone can use the tool without Claude Code running.
-Include a "Print This Guide" button, step-by-step usage instructions,
+Include a "Print this guide" link, step-by-step usage instructions,
 and a troubleshooting section. Also create a project-level CLAUDE.md
 if one doesn't exist.</code></pre>
 </div>
@@ -994,7 +1015,7 @@ SOP Audit 2026-04-07: All clear</code></pre>
   <tr>
     <td>Keeping user guides up to date</td>
     <td><strong>Daily User Guide Check</strong> (cloud, 3:30 PM weekdays)</td>
-    <td>High &mdash; compares recent commits to guide content, fixes mismatches, emails results</td>
+    <td>High &mdash; updates guide content, maintains changelogs, syncs to GitHub Pages, writes status to file</td>
   </tr>
   <tr>
     <td>Committing &amp; pushing uncommitted work</td>
@@ -1020,6 +1041,16 @@ SOP Audit 2026-04-07: All clear</code></pre>
     <td>Verifying SOPs remain accurate</td>
     <td><strong>Weekly local scheduled task</strong> (SOP-005)</td>
     <td>High &mdash; runs locally with full access to project files, profiles, and scripts</td>
+  </tr>
+  <tr>
+    <td>Publishing guides for internal staff</td>
+    <td><strong>Daily User Guide Check</strong> syncs to <strong>mberning-docs</strong> repo &rarr; GitHub Pages</td>
+    <td>High &mdash; automatic sync as part of the cloud trigger</td>
+  </tr>
+  <tr>
+    <td>Pulling cloud changes locally</td>
+    <td><strong>Pull All Repos</strong> (3:50 PM weekdays, local)</td>
+    <td>High &mdash; runs after cloud trigger finishes, pulls all EUSD repos + sops + mberning-docs</td>
   </tr>
 </table>
 
