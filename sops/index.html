@@ -225,6 +225,47 @@
 <p><strong>Author:</strong> Mark Berning, EUSD &nbsp;|&nbsp; <strong>Last Updated:</strong> 2026-04-06</p>
 <p>Operational procedures for Claude Code automation workflows. Each SOP is self-contained and includes a replication guide for anyone who wants to set up something similar in their own environment.</p>
 
+<details open style="margin:1.5em 0;">
+<summary><h2 style="display:inline; border:none; margin:0; padding:0; color:#1a56db; cursor:pointer;">How This All Works</h2></summary>
+
+<p>This section explains how these tools get built, maintained, and documented &mdash; from start to finish.</p>
+
+<h3>Starting a new project</h3>
+
+<p>Every project begins with an idea. Sometimes you know exactly what you want to build. Other times you're not even sure it's possible &mdash; you just want to talk it through. Either way works.</p>
+
+<p>If you're exploring, open a terminal and start a conversation with Claude. No folder, no setup &mdash; just talk. "Is it possible to crawl school websites for broken links? How would that work?" Go back and forth as long as you need. Not every conversation becomes a project.</p>
+
+<p>When you're ready to build, create a folder in <code>~/projects/eusd/</code>, open it in a terminal, and start Claude with "I want to start a <strong>new project</strong> that..." From that one sentence, Claude sets up everything: version control, a GitHub repository, a shortcut command so you can reopen the project anytime by typing two or three letters, and a user guide that explains how the tool works. You don't need to remember any of this &mdash; just say "new project" and it happens. The details are in <a href="#sop-001">SOP-001</a>.</p>
+
+<h3>Working during the day</h3>
+
+<p>During the day, you work on projects by typing your shortcut alias (like <code>pp</code> for Parent Portal or <code>lc</code> for link checker) from any terminal. Claude writes code, runs it, fixes bugs, and commits everything to GitHub as you go. You don't need to think about saving, backing up, or version control &mdash; it's all handled automatically.</p>
+
+<h3>What happens at the end of each day</h3>
+
+<p>Three things run back to back every weekday afternoon. You don't need to do anything &mdash; just leave your machine on.</p>
+
+<p>At <strong>3:01 PM</strong>, a script on your PC looks at every project that had activity today and saves a snapshot of where things stand &mdash; what you were working on, what's next, any open questions. These snapshots are stored in Claude's memory so you can pick up right where you left off, even weeks later. See <a href="#sop-002">SOP-002</a>.</p>
+
+<p>At <strong>3:30 PM</strong>, a cloud-based agent checks all your project repos on GitHub. If you made code changes that affect how a tool is used, it updates the user guide automatically. It also logs every commit to a "Recent Changes" section on each project's guide page, and publishes everything to a website where staff can browse all your tools. See <a href="#sop-003">SOP-003</a>.</p>
+
+<p>At <strong>3:50 PM</strong>, another script on your PC pulls down all the changes the cloud agent made, then sends you a daily status email showing which projects had activity, what was updated, and which projects are being monitored.</p>
+
+<h3>Coming back to a project</h3>
+
+<p>When you return to a project &mdash; whether it's been a day or a month &mdash; type the alias and say "catch me up." Claude reads the saved snapshots and recent git history and gives you a briefing: where you left off, what's next, and any open questions. You don't need to read through code or git logs yourself.</p>
+
+<h3>Sharing with staff</h3>
+
+<p>Every project's user guide is published to a website that anyone in the district can access by clicking a link:</p>
+
+<p><a href="https://escondido-union-school-district.github.io/mberning-docs/" style="display: inline-block; background: #1a56db; color: white; padding: 0.3em 0.7em; border-radius: 4px; text-decoration: none;">View all project guides</a></p>
+
+<p>The guides explain how to use each tool step by step, no technical knowledge required. They're updated automatically every day and always reflect the latest version of the code.</p>
+
+</details>
+
 <details style="background:#e8f0fe; border-left:4px solid #1a56db; padding:1em 1.2em; margin:1.5em 0; border-radius:0 6px 6px 0;">
 <summary><strong style="color:#1a56db; cursor:pointer;">Daily Automation Schedule (weekdays)</strong></summary>
 <table style="width:100%; border-collapse:collapse; background:white; border-radius:4px;">
