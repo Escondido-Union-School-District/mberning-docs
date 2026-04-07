@@ -210,7 +210,7 @@
 </head>
 <body>
 
-<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this page</a>
+
 <button id="back-to-top" class="no-print" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">&#9650;</button>
 <script>
 (function(){
@@ -225,12 +225,65 @@
 <p><strong>Author:</strong> Mark Berning, EUSD &nbsp;|&nbsp; <strong>Last Updated:</strong> 2026-04-06</p>
 <p>Operational procedures for Claude Code automation workflows. Each SOP is self-contained and includes a replication guide for anyone who wants to set up something similar in their own environment.</p>
 
+<details style="background:#e8f0fe; border-left:4px solid #1a56db; padding:1em 1.2em; margin:1.5em 0; border-radius:0 6px 6px 0;">
+<summary><strong style="color:#1a56db; cursor:pointer;">Daily Automation Schedule (weekdays)</strong></summary>
+<table style="width:100%; border-collapse:collapse; background:white; border-radius:4px;">
+  <thead>
+    <tr>
+      <th style="padding:8px; text-align:left; width:80px; border-bottom:2px solid #1a56db;">Time</th>
+      <th style="padding:8px; text-align:left; width:140px; border-bottom:2px solid #1a56db;">What</th>
+      <th style="padding:8px; text-align:left; width:80px; border-bottom:2px solid #1a56db;">Where</th>
+      <th style="padding:8px; text-align:left; border-bottom:2px solid #1a56db;">What it does</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr style="border-bottom:1px solid #eee;">
+      <td style="padding:8px; vertical-align:top;"><strong>3:01 PM</strong></td>
+      <td style="padding:8px; vertical-align:top;"><a href="#sop-002">EOD Summary</a></td>
+      <td style="padding:8px; vertical-align:top;">Your PC</td>
+      <td style="padding:8px;">
+        <strong>Script:</strong> <code>~/projects/daily-summaries/eod-summary.ps1</code> via Windows Task Scheduler<br>
+        <strong>Does:</strong> For each project with new commits, forks the latest Claude session and saves a snapshot: where you left off, current status, next steps, open questions, key decisions<br>
+        <strong>Saves to:</strong> <code>~/.claude/projects/&lt;key&gt;/memory/session-notes.md</code> (per project) and a daily summary at <code>~/projects/daily-summaries/YYYY-MM-DD.md</code><br>
+        <strong>Skips:</strong> Projects with no new commits since last capture<br>
+        <strong>To retrieve:</strong> Say "catch me up" in any project
+      </td>
+    </tr>
+    <tr style="border-bottom:1px solid #eee;">
+      <td style="padding:8px; vertical-align:top;"><strong>3:30 PM</strong></td>
+      <td style="padding:8px; vertical-align:top;"><a href="#sop-003">User Guide Check</a></td>
+      <td style="padding:8px; vertical-align:top;">Cloud</td>
+      <td style="padding:8px;">
+        <strong>Trigger:</strong> Claude Code cloud-scheduled agent at <a href="https://claude.ai/code/scheduled">claude.ai/code/scheduled</a><br>
+        <strong>Does:</strong> Clones all project repos, then for each one with commits in the last 24 hours:<br>
+        &nbsp;&nbsp;A) Updates user guide content if code changes affect how the tool is used<br>
+        &nbsp;&nbsp;B) Adds all commits to the "Project recent changes" section on the guide (30-day rolling window)<br>
+        &nbsp;&nbsp;C) Appends to <code>docs/changelog.md</code> (permanent record, never pruned)<br>
+        &nbsp;&nbsp;D) Syncs updated guides to <a href="https://escondido-union-school-district.github.io/mberning-docs/">GitHub Pages</a><br>
+        <strong>Status file:</strong> Commits results to <code>~/projects/sops/status/user-guide-check.md</code>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding:8px; vertical-align:top;"><strong>3:50 PM</strong></td>
+      <td style="padding:8px; vertical-align:top;">Pull &amp; Email</td>
+      <td style="padding:8px; vertical-align:top;">Your PC</td>
+      <td style="padding:8px;">
+        <strong>Script:</strong> <code>~/projects/daily-summaries/pull-all-repos.ps1</code> via Windows Task Scheduler<br>
+        <strong>Does:</strong> Runs <code>git pull</code> on all project repos so your local files reflect the cloud agent's changes. Then checks if the status file (<code>~/projects/sops/status/user-guide-check.md</code>) was updated and sends a daily summary email<br>
+        <strong>Email to:</strong> mberning@eusd.org via <code>mail.eusd.org</code> internal relay<br>
+        <strong>Log:</strong> <code>~/projects/daily-summaries/pull-log.txt</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</details>
+
 <div class="toc">
   <h2>Table of Contents</h2>
   <ol>
     <li><a href="#sop-001">SOP-001: New Project Setup</a></li>
     <li><a href="#sop-002">SOP-002: EOD Daily Summary System</a></li>
-    <li><a href="#sop-003">SOP-003: Project User Guides &amp; CLAUDE.md</a>
+    <li><a href="#sop-003">SOP-003: Project User Guides</a>
       <div style="display: flex; flex-wrap: wrap; gap: 0.4em; margin: 0.5em 0;">
         <a href="https://escondido-union-school-district.github.io/mberning-docs/pdf-ada-fixes/" style="display: inline-block; background: #1a56db; color: white; padding: 0.3em 0.7em; border-radius: 4px; text-decoration: none; font-size: 0.85em;">PDF ADA Fixes</a>
         <a href="https://escondido-union-school-district.github.io/mberning-docs/parent-portal/" style="display: inline-block; background: #1a56db; color: white; padding: 0.3em 0.7em; border-radius: 4px; text-decoration: none; font-size: 0.85em;">Parent Portal</a>
@@ -275,7 +328,7 @@
       </td>
       <td style="padding:10px; vertical-align:top; border:1px solid #ddd;">
         <ol style="margin:0; padding-left:1.5em;">
-          <li>Create a folder in <code>C:\Users\mberning\projects\eusd\</code> &mdash; the folder name matters because Claude derives the launch alias from its initials (e.g., <code>link-checker</code> &rarr; <code>lc</code>)</li>
+          <li>Create a folder in <code>~/projects/eusd/</code> &mdash; the folder name matters because Claude derives the launch alias from its initials (e.g., <code>link-checker</code> &rarr; <code>lc</code>)</li>
           <li><code>cd</code> into the folder</li>
           <li>Run <code>claude</code></li>
           <li>Start your message with "I want to start a <strong>new project</strong> that..." &mdash; the phrase "new project" triggers a setup skill that handles git, aliases, GitHub repo, and user guide automatically.</li>
@@ -284,6 +337,11 @@
     </tr>
   </tbody>
 </table>
+
+<!-- ---- What Is It? ---- -->
+<h3>What is it?</h3>
+
+<p>A checklist that runs automatically when you start a new project. You create a folder and describe what you want to build &mdash; Claude handles the rest: version control, a GitHub repository, keyboard shortcuts to launch the project, and a user guide if it's a work project. The full checklist is driven by a skill file so nothing gets missed.</p>
 
 <!-- ---- What Problem Does This Solve? ---- -->
 <h3>What Problem Does This Solve?</h3>
@@ -299,8 +357,8 @@
   <li>Asks about your idea if it needs more detail &mdash; you can go back and forth as long as you need before anything gets created</li>
   <li>Initializes git, creates <code>CLAUDE.md</code> and <code>.gitignore</code></li>
   <li>Adds launch aliases to both bash and PowerShell profiles (e.g., <code>lc</code> to reopen the link checker project). Both profiles are needed because Claude Code runs in a bash shell, but you may also open terminals in PowerShell. See <a href="#sop-004">SOP-004</a> for details</li>
-  <li>Creates a private GitHub repo and pushes the initial commit. Claude determines the GitHub owner from the folder path &mdash; projects in <code>projects\eusd\</code> go to the <code>Escondido-Union-School-District</code> org, projects elsewhere in <code>projects\</code> go to your personal GitHub account</li>
-  <li>Creates a user guide at <code>projects\eusd\&lt;project-name&gt;\docs\user-guide.html</code> for all work projects</li>
+  <li>Creates a private GitHub repo and pushes the initial commit. Claude determines the GitHub owner from the folder path &mdash; projects in <code>~/projects/eusd/</code> go to the <code>Escondido-Union-School-District</code> org, projects elsewhere in <code>~/projects/</code> go to your personal GitHub account</li>
+  <li>Creates a user guide at <code>~/projects/eusd/&lt;project-name&gt;/docs/user-guide.html</code> for all work projects</li>
   <li>Installs the ADA accessibility skill if it's a web project</li>
   <li>Confirms everything it did and gives you the alias</li>
 </ol>
@@ -317,7 +375,7 @@
   <li><code>CLAUDE.md</code>, <code>.gitignore</code>, and an initial commit in your project folder</li>
   <li>A private GitHub repo with the code pushed (under the EUSD org for work projects, your personal account otherwise)</li>
   <li>A launch alias &mdash; Claude picks the alias and tells you what it is when setup is complete. Open any terminal, type it from any directory, and it navigates to the project and starts Claude Code automatically (see <a href="#sop-004">SOP-004</a>)</li>
-  <li>A user guide at <code>projects\eusd\&lt;project-name&gt;\docs\user-guide.html</code> (all work projects)</li>
+  <li>A user guide at <code>~/projects/eusd/&lt;project-name&gt;/docs/user-guide.html</code> (all work projects)</li>
   <li>The ADA build-time skill installed (if it's a web project)</li>
 </ul>
 
@@ -340,48 +398,59 @@
 
 <h2>SOP-002: EOD Daily Summary System</h2>
 
+<!-- ---- What Is It? ---- -->
+<h3>What is it?</h3>
+
+<p>At the end of each workday, a PowerShell script runs automatically on your PC at 3:01 PM via Windows Task Scheduler. It does two things: first, it looks at every project that had activity and saves a snapshot of where things stand &mdash; what was being worked on, what's next, and any open questions. These snapshots are saved as session notes in Claude Code's memory system. Second, it generates a single daily summary that covers all projects in one file, so you can see everything at a glance.</p>
+
+<p>You can step away from a project for days or weeks and pick up right where you left off by asking Claude "catch me up" in any project.</p>
+
 <!-- ---- What Problem Does This Solve? ---- -->
 <h3>What Problem Does This Solve?</h3>
 
-<p>When you juggle multiple Claude Code projects, you inevitably leave sessions mid-task. Coming back days later, git history and code alone don't recapture <em>why</em> you were doing something or <em>where</em> you were heading. The EOD system automatically captures that context &mdash; what you were working on, what's next, what's unresolved &mdash; so you can pick up where you left off.</p>
+<p>When you juggle multiple projects, you inevitably leave sessions mid-task. Coming back days later, git history and code alone don't recapture <em>why</em> you were doing something or <em>where</em> you were heading. The EOD system automatically captures that context so you don't have to remember to save it yourself.</p>
 
 <!-- ---- How It Works ---- -->
 <h3>How It Works</h3>
 
-<p>The system runs in two phases:</p>
+<p>The script (<code>~/projects/daily-summaries/eod-summary.ps1</code>) runs in two phases, back to back:</p>
 
-<ol>
-  <li><strong>Per-project capture:</strong> For each project, forks the most recent Claude session (open or closed &mdash; it reads conversation history from disk), commits and pushes any uncommitted changes (skipping <code>.env</code> and secrets), and appends timestamped session notes to <code>~/.claude/projects/&lt;key&gt;/memory/session-notes.md</code>. Guide content updates are handled separately by the cloud-scheduled Daily User Guide Check at 3:30 PM (see <a href="#sop-003">SOP-003</a>).</li>
-  <li><strong>Cross-project summary:</strong> A separate Claude instance scans all projects and aggregates session notes, git activity, and file changes into a single daily markdown briefing.</li>
-</ol>
+<p><strong>Phase 1 &mdash; Per-project capture:</strong> The script loops through each project one at a time. For each project that has new commits since the last capture, it forks the most recent Claude session (open or closed &mdash; it reads conversation history from disk), commits and pushes any uncommitted changes (skipping <code>.env</code> and secrets), and appends timestamped session notes to <code>~/.claude/projects/&lt;key&gt;/memory/session-notes.md</code>. Projects with no new commits are skipped entirely. Each project has a 180-second timeout &mdash; if a session hangs, it gets killed so it doesn't block the rest.</p>
 
-<p>Both have 30-day rolling retention. Notes are append-only, so you can capture context multiple times per day without losing previous entries.</p>
+<p><strong>Phase 2 &mdash; Cross-project summary:</strong> Immediately after Phase 1 finishes, a separate Claude instance scans all projects and aggregates session notes, git activity, and file changes into a single daily markdown briefing at <code>~/projects/daily-summaries/YYYY-MM-DD.md</code>.</p>
+
+<p>There is no delay between phases &mdash; Phase 2 starts as soon as the last project in Phase 1 completes (or times out).</p>
+
+<p><strong>Note:</strong> This is separate from Claude Code's built-in auto memory, which saves technical learnings (build commands, patterns, debugging tips). The EOD system captures <em>project progress</em> &mdash; where you left off, next steps, open questions, key decisions &mdash; which auto memory does not track.</p>
+
+<p><strong>Retention:</strong> The two phases produce different outputs with different lifespans:</p>
+<ul>
+  <li><strong>Session notes</strong> (Phase 1) &mdash; the per-project snapshots that record where you left off, next steps, and open questions. These are kept <strong>forever</strong> because you might not revisit a project for months, and the context needs to be there when you do. This is what Claude reads when you say "catch me up."</li>
+  <li><strong>Daily summaries</strong> (Phase 2) &mdash; the single file that rolls up all projects into one overview for the day. These are deleted after <strong>30 days</strong> because they're only useful for a quick glance at recent activity, not long-term reference.</li>
+</ul>
 
 <!-- ---- How It's Triggered ---- -->
 <h3>How It's Triggered</h3>
 
-<p>Two ways:</p>
-
 <table>
   <tr><th>Trigger</th><th>What Happens</th><th>When to Use</th></tr>
   <tr>
-    <td>Say <strong>"eod"</strong> in an open Claude Code session</td>
-    <td>Commits/pushes uncommitted work for <em>that project</em>, appends session notes</td>
-    <td>Before <code>/clear</code>, before switching tasks, or anytime you want to save context mid-day. You can do this as many times as you want. Only works in a live session &mdash; Claude needs conversation context to write meaningful notes.</td>
+    <td>Say <strong>"eod"</strong>, <strong>"sv"</strong>, <strong>"end of day"</strong>, <strong>"save notes"</strong>, or <strong>"done for the day"</strong> in an open Claude session</td>
+    <td>Commits/pushes uncommitted work and saves session notes to <code>~/.claude/projects/&lt;key&gt;/memory/session-notes.md</code> for <em>that project only</em>. Does not generate the cross-project daily summary (<code>~/projects/daily-summaries/YYYY-MM-DD.md</code>) &mdash; that only happens in the automated 3:01 PM run.</td>
+    <td>Before <code>/clear</code>, before switching projects, or anytime you want to save context mid-day. You can do this as many times as you want. Only works in a live session &mdash; Claude needs conversation context to write meaningful notes.</td>
   </tr>
   <tr>
     <td><strong>Automatic</strong> &mdash; 3:01 PM weekdays via Task Scheduler</td>
-    <td>Forks every project's latest session, commits/pushes, saves notes, then generates a cross-project daily summary</td>
-    <td>You don't need to do anything &mdash; just leave your machine on. This is the safety net.</td>
+    <td>Runs both phases: saves session notes to <code>~/.claude/projects/&lt;key&gt;/memory/session-notes.md</code> for each project that had new commits since last capture, then generates the cross-project daily summary at <code>~/projects/daily-summaries/YYYY-MM-DD.md</code>. Skips inactive projects.</td>
+    <td>You don't need to do anything &mdash; just leave your machine on. This is the safety net that catches everything even if you forget to say "eod" manually.</td>
   </tr>
 </table>
 
-<p>Other trigger phrases that work: <strong>"end of day"</strong>, <strong>"save notes"</strong>, <strong>"sv"</strong>, <strong>"done for the day"</strong></p>
+<h3>How to Retrieve Notes</h3>
 
-<p>To retrieve notes when you return (even days later), say <strong>"catch me up"</strong> or <strong>"where was I"</strong> in any project terminal.</p>
+<p>When you come back to a project (even weeks or months later), say <strong>"catch me up"</strong> or <strong>"where was I"</strong> in any project terminal. Claude reads the session notes at <code>~/.claude/projects/&lt;key&gt;/memory/session-notes.md</code> and recent git history, then gives you a briefing of where things stand and what's next.</p>
 
-<p><strong>To run the automated system manually:</strong></p>
-<pre><code>powershell -ExecutionPolicy Bypass -File C:\Users\mberning\projects\daily-summaries\eod-summary.ps1</code></pre>
+<p>This goes beyond what Claude remembers on its own. Claude's built-in auto memory saves technical learnings &mdash; things like which build commands work or how a particular API behaves. But it doesn't track <em>what you were doing</em>, <em>where you were heading</em>, or <em>what decisions you made along the way</em>. Session notes fill that gap. Without them, Claude would start a new session knowing the codebase but having no idea what you were in the middle of or what you planned to do next.</p>
 
 <!-- ---- What to Expect ---- -->
 <h3>What to Expect</h3>
@@ -393,25 +462,23 @@
 <p><strong>What gets created:</strong></p>
 <ul>
   <li><strong>Per-project session notes</strong> at <code>~/.claude/projects/&lt;key&gt;/memory/session-notes.md</code> &mdash; append-only log of where you left off, what's next, open questions</li>
-  <li><strong>Daily summary</strong> at <code>C:\Users\mberning\projects\daily-summaries\YYYY-MM-DD.md</code> &mdash; one file per day covering all projects</li>
-  <li><strong>Execution log</strong> at <code>C:\Users\mberning\projects\daily-summaries\eod-log.txt</code> &mdash; shows Done/Failed/Skipped/Timeout per project per run</li>
+  <li><strong>Daily summary</strong> at <code>~/projects/daily-summaries/YYYY-MM-DD.md</code> &mdash; one file per day covering all projects</li>
+  <li><strong>Execution log</strong> at <code>~/projects/daily-summaries/eod-log.txt</code> &mdash; shows Done/Failed/Skipped/Timeout per project per run</li>
 </ul>
 
-<p>These all live in <code>C:\Users\mberning\projects\daily-summaries\</code> &mdash; a plain folder, not a git repo or Claude Code project. It just holds the script, log, and output files.</p>
+<p>Session notes live in Claude Code's memory system (<code>~/.claude/projects/</code>). Daily summaries, the script, and the log all live in <code>~/projects/daily-summaries/</code> &mdash; a plain folder, not a git repo or Claude Code project.</p>
 
-<p><strong>No email notifications.</strong> Check the daily summary file or say "catch me up" in a project. If you want to confirm the task ran, check <code>eod-log.txt</code>.</p>
-
-<p><strong>Retention:</strong> Everything older than 30 days is automatically deleted.</p>
+<p><strong>To confirm the task ran:</strong> Check <code>~/projects/daily-summaries/eod-log.txt</code> &mdash; it shows Done/Skipped/Failed/Timeout per project per run.</p>
 
 <!-- ---- Gotchas ---- -->
 <h3>Gotchas</h3>
 
 <ul>
   <li><strong>Say "eod" or "sv" before <code>/clear</code>.</strong> If you <code>/clear</code> a session and then close it, the automated 3:01 PM task will fork an empty conversation with no context to capture. Always save notes before clearing.</li>
-  <li><strong>A project needs at least one Claude session</strong> before the automated fork can capture it. If you see "no session to continue" in <code>eod-log.txt</code>, just open that project in Claude Code and do some work first.</li>
+  <li><strong>A project needs at least one Claude session</strong> before the automated fork can capture it. If you see "no session to continue" in <code>~/projects/daily-summaries/eod-log.txt</code>, just open that project in Claude Code and do some work first.</li>
   <li><strong>Duplicate detection:</strong> If you say "eod" manually and the 3:01 PM task fires within 10 minutes, the script skips that project to avoid near-duplicate notes.</li>
-  <li><strong>New projects are auto-registered.</strong> The new-project skill (<a href="#sop-001">SOP-001</a>) automatically adds new projects to the EOD script's <code>$projects</code> array. If you create a project without using the skill, you'll need to add it to <code>eod-summary.ps1</code> manually.</li>
-  <li><strong>Timeouts:</strong> Each Claude invocation has a 120-second timeout (240 for the summary phase). If a session hangs, it's killed and the script moves on. Check <code>eod-log.txt</code> for "Timeout:" entries.</li>
+  <li><strong>New projects are auto-registered.</strong> The new-project skill (<a href="#sop-001">SOP-001</a>) automatically adds new projects to the EOD script. If you created a project without using the skill and it's not showing up in the daily summary, tell Claude: <em>"Add [project name] to the EOD script and pull script"</em> &mdash; Claude will add it to the <code>$projects</code> array in <code>~/projects/daily-summaries/eod-summary.ps1</code> and the <code>$repos</code> array in <code>~/projects/daily-summaries/pull-all-repos.ps1</code>.</li>
+  <li><strong>Timeouts:</strong> Each project has a 180-second timeout (360 seconds for the summary phase). If a session hangs, it's killed and the script moves on. Check <code>~/projects/daily-summaries/eod-log.txt</code> for "Timeout:" entries.</li>
 </ul>
 
 <details class="collapsible">
@@ -423,7 +490,7 @@
   <tr><th>Component</th><th>Location</th></tr>
   <tr>
     <td>EOD Script</td>
-    <td><code>C:\Users\mberning\projects\daily-summaries\eod-summary.ps1</code></td>
+    <td><code>~/projects/daily-summaries/eod-summary.ps1</code></td>
   </tr>
   <tr>
     <td>Scheduled Task</td>
@@ -435,15 +502,15 @@
   </tr>
   <tr>
     <td>Daily Summaries</td>
-    <td><code>C:\Users\mberning\projects\daily-summaries\YYYY-MM-DD.md</code></td>
+    <td><code>~/projects/daily-summaries/YYYY-MM-DD.md</code></td>
   </tr>
   <tr>
     <td>Execution Log</td>
-    <td><code>C:\Users\mberning\projects\daily-summaries\eod-log.txt</code></td>
+    <td><code>~/projects/daily-summaries/eod-log.txt</code></td>
   </tr>
   <tr>
     <td>Global CLAUDE.md rule</td>
-    <td><code>C:\Users\mberning\CLAUDE.md</code> (Session Notes section)</td>
+    <td><code>~/CLAUDE.md</code> (Session Notes section)</td>
   </tr>
 </table>
 
@@ -498,7 +565,7 @@
   <tr>
     <td>Daily summary file missing</td>
     <td>Script didn't run or Phase 2 failed</td>
-    <td>Check <code>eod-log.txt</code>. Confirm project is in the <code>$projects</code> array. Run the script manually to see errors.</td>
+    <td>Check <code>~/projects/daily-summaries/eod-log.txt</code>. Confirm project is in the <code>$projects</code> array. Run the script manually to see errors.</td>
   </tr>
   <tr>
     <td>Task Scheduler not firing</td>
@@ -508,17 +575,12 @@
   <tr>
     <td>Script appears stuck</td>
     <td>A Claude session is hanging (network/API issue)</td>
-    <td>Sessions auto-kill after 120s. Check <code>eod-log.txt</code> for "Timeout:" entries.</td>
+    <td>Sessions auto-kill after 180s. Check <code>~/projects/daily-summaries/eod-log.txt</code> for "Timeout:" entries.</td>
   </tr>
   <tr>
     <td>Duplicate session notes</td>
     <td>Manual "eod" and 3:01 PM task fired within 10 minutes</td>
-    <td>This shouldn't happen &mdash; the script skips recently-modified projects. Check <code>eod-log.txt</code> for "Skipped:" entries.</td>
-  </tr>
-  <tr>
-    <td>Old entries not cleaned up</td>
-    <td>Cleanup runs on append &mdash; if no new notes in 30+ days, stale entries remain</td>
-    <td>Say "eod" in the project to trigger cleanup, or delete manually</td>
+    <td>This shouldn't happen &mdash; the script skips recently-modified projects. Check <code>~/projects/daily-summaries/eod-log.txt</code> for "Skipped:" entries.</td>
   </tr>
 </table>
 
@@ -533,7 +595,7 @@
 
 <h4>Step 1: Add session notes instructions to global CLAUDE.md</h4>
 
-<p>Add this to your global <code>CLAUDE.md</code> so you can trigger notes manually by saying "eod":</p>
+<p>Add this to your global <code>~/CLAUDE.md</code> so you can trigger notes manually by saying "eod":</p>
 
 <div class="prompt-block">
   <p><strong>Text to add:</strong></p>
@@ -544,7 +606,7 @@ When the user says "eod", "end of day", "save notes", "sv", or "done for the day
 1. If this is a git repo, check for uncommitted changes. If any, commit
    with a descriptive message and push to remote. Skip .env and secrets.
 2. APPEND a timestamped entry to session-notes.md in this project's
-   memory directory. Do not overwrite. Remove entries older than 30 days.
+   memory directory. Do not overwrite. Do not remove old entries.
 3. Update the project's MEMORY.md index if needed.
 4. Confirm: "Session notes saved. Safe to /clear or start a new session."
 
@@ -554,22 +616,22 @@ and summarize the most recent entries.</code></pre>
 
 <h4>Step 2: Create the EOD script</h4>
 
-<p>The production script is at <code>C:\Users\mberning\projects\daily-summaries\eod-summary.ps1</code>. Use it as a reference. Key architecture:</p>
+<p>The production script is at <code>~/projects/daily-summaries/eod-summary.ps1</code>. Use it as a reference. Key architecture:</p>
 
 <ul>
   <li>A <code>$projects</code> array listing all project paths</li>
   <li>Phase 1 loops through projects, piping an "eod" prompt to <code>claude -p -c --fork-session --dangerously-skip-permissions --model sonnet</code></li>
   <li>Phase 2 uses a fresh <code>claude -p</code> with <code>--add-dir</code> to scan all projects and write a daily summary</li>
   <li>Timeouts via <code>System.Diagnostics.Process</code> + <code>WaitForExit</code> + <code>taskkill /F /T</code></li>
-  <li>Duplicate detection: skip if <code>session-notes.md</code> modified in last 10 minutes</li>
-  <li>Append-only logging to <code>eod-log.txt</code></li>
+  <li>Duplicate detection: skip if <code>~/.claude/projects/&lt;key&gt;/memory/session-notes.md</code> modified in last 10 minutes</li>
+  <li>Append-only logging to <code>~/projects/daily-summaries/eod-log.txt</code></li>
 </ul>
 
 <h4>Step 3: Schedule the task</h4>
 
 <pre><code>$action = New-ScheduledTaskAction `
     -Execute 'powershell.exe' `
-    -Argument '-ExecutionPolicy Bypass -File "C:\path\to\eod-summary.ps1"'
+    -Argument '-ExecutionPolicy Bypass -File "C:\Users\mberning\projects\daily-summaries\eod-summary.ps1"'
 
 $trigger = New-ScheduledTaskTrigger `
     -Weekly -DaysOfWeek Monday,Tuesday,Wednesday,Thursday,Friday `
@@ -582,9 +644,9 @@ Register-ScheduledTask -TaskName 'Claude EOD Summary' `
 
 <ol>
   <li>Open a project in Claude Code and do some work</li>
-  <li>Say "eod" and verify <code>session-notes.md</code> was created</li>
-  <li>Run the script manually and check <code>daily-summaries/</code> for today's file</li>
-  <li>Check <code>eod-log.txt</code> for errors</li>
+  <li>Say "eod" and verify <code>~/.claude/projects/&lt;key&gt;/memory/session-notes.md</code> was created</li>
+  <li>Run the script manually and check <code>~/projects/daily-summaries/</code> for today's file</li>
+  <li>Check <code>~/projects/daily-summaries/eod-log.txt</code> for errors</li>
   <li>Next day, say "catch me up" and verify it works</li>
 </ol>
 
@@ -596,7 +658,7 @@ Register-ScheduledTask -TaskName 'Claude EOD Summary' `
 <!-- ================================================================== -->
 <div class="sop-section" id="sop-003">
 
-<h2>SOP-003: Project User Guides &amp; CLAUDE.md</h2>
+<h2>SOP-003: Project User Guides</h2>
 
 <div style="display: flex; flex-wrap: wrap; gap: 0.4em; margin: 0.5em 0;">
   <a href="https://escondido-union-school-district.github.io/mberning-docs/pdf-ada-fixes/" style="display: inline-block; background: #1a56db; color: white; padding: 0.3em 0.7em; border-radius: 4px; text-decoration: none; font-size: 0.85em;">PDF ADA Fixes</a>
@@ -610,20 +672,20 @@ Register-ScheduledTask -TaskName 'Claude EOD Summary' `
   <a href="https://escondido-union-school-district.github.io/mberning-docs/doj-webrule-audit/" style="display: inline-block; background: #1a56db; color: white; padding: 0.3em 0.7em; border-radius: 4px; text-decoration: none; font-size: 0.85em;">DOJ WebRule Audit</a>
 </div>
 
+<!-- ---- What Is It? ---- -->
+<h3>What is it?</h3>
+
+<p>Every work project gets a user guide &mdash; a printable HTML page that explains how to use the tool, written for non-technical staff. The user guide is created automatically when the project is set up, and a cloud-scheduled agent keeps it up to date every weekday at 3:30 PM &mdash; updating instructions when the code changes, logging all commits to a "Recent Changes" section, and publishing everything to <a href="https://escondido-union-school-district.github.io/mberning-docs/">a shared website</a> where staff can browse all project guides.</p>
+
 <!-- ---- What Problem Does This Solve? ---- -->
 <h3>What Problem Does This Solve?</h3>
 
-<p>Without documentation, only the person who built a tool knows how to use it. If someone else needs to run the tool &mdash; or you come back to it months later &mdash; there's nothing to reference. This SOP ensures every project with a user-facing tool has two things: a printable user guide for end users, and a <code>CLAUDE.md</code> so Claude Code has project context.</p>
+<p>Without documentation, only the person who built a tool knows how to use it. If someone else needs to run the tool &mdash; or you come back to it months later &mdash; there's nothing to reference. This SOP ensures every project with a user-facing tool has a printable user guide for end users.</p>
 
 <!-- ---- How It Works ---- -->
 <h3>How It Works</h3>
 
-<p>Two files are maintained per project:</p>
-
-<ol>
-  <li><strong><code>docs/user-guide.html</code></strong> &mdash; A self-contained, printable HTML guide that lets someone use the tool without Claude Code. Written for a non-technical audience.</li>
-  <li><strong><code>CLAUDE.md</code></strong> (project root) &mdash; Brief project description, layout, and conventions. Claude Code reads this automatically. Not a user guide &mdash; aimed at Claude and developers.</li>
-</ol>
+<p>Each project gets a <strong><code>docs/user-guide.html</code></strong> &mdash; a self-contained, printable HTML guide that lets someone use the tool without Claude Code. Written for a non-technical audience.</p>
 
 <p>All user guides are built from a shared template enforced by the <code>eusd-user-guide</code> Claude Code skill. Every guide looks identical &mdash; same CSS, same section order, same component patterns. Only the content changes.</p>
 
@@ -634,41 +696,42 @@ Register-ScheduledTask -TaskName 'Claude EOD Summary' `
   <tr><th>Trigger</th><th>What Happens</th></tr>
   <tr>
     <td><strong>New project created</strong> (via <a href="#sop-001">SOP-001</a>)</td>
-    <td>The <code>new-project</code> skill creates a user guide skeleton automatically if the project is a tool others will use</td>
+    <td>When you start a session with "I want to start a <strong>new project</strong> that...", the <code>new-project</code> skill creates a user guide automatically for all work projects (anything in <code>~/projects/eusd/</code>)</td>
   </tr>
-  <tr>
-    <td><strong>Automated EOD task</strong> (3:01 PM weekdays, local)</td>
-    <td>Saves session notes and commits/pushes any uncommitted changes. Does not touch guide content.</td>
-  </tr>
+
   <tr>
     <td><strong>Daily User Guide Check</strong> (3:30 PM weekdays, cloud)</td>
-    <td>Cloud-scheduled agent clones all repos from GitHub and performs four jobs: <strong>(A)</strong> updates guide content if code changes affect user-facing behavior, <strong>(B)</strong> adds all commits to a collapsible "Recent Changes" accordion on each guide's HTML page (last 30 days, auto-prunes), <strong>(C)</strong> maintains a permanent <code>docs/changelog.md</code> in each project (full history, never pruned), and <strong>(D)</strong> syncs updated guides to the <code>mberning-docs</code> repo for GitHub Pages hosting. Reports results to <code>claude-code-sops/status/user-guide-check.md</code>. This is the primary mechanism for keeping guides current.</td>
+    <td>Cloud-scheduled agent clones all repos from GitHub and performs four jobs:
+      <ul style="margin:0.3em 0; padding-left:1.5em;">
+        <li>Updates guide content if code changes affect user-facing behavior</li>
+        <li>Adds all commits to the "Project recent changes" section on each guide (always keeps the 10 most recent entries plus all entries from the last 30 days)</li>
+        <li>Appends to the permanent <code>docs/changelog.md</code> in each project (full history, never pruned)</li>
+        <li>Syncs updated guides to the <a href="https://escondido-union-school-district.github.io/mberning-docs/">mberning-docs</a> repo for GitHub Pages hosting</li>
+      </ul>
+      Reports results to <code>~/projects/sops/status/user-guide-check.md</code>.
+    </td>
   </tr>
   <tr>
     <td><strong>You ask Claude</strong> to create or update a guide</td>
-    <td>The <code>eusd-user-guide</code> skill fires automatically and follows the template</td>
+    <td>The <code>eusd-user-guide</code> skill fires automatically and follows the template. Try: <em>"create a user guide for this project"</em> or <em>"update the user guide"</em></td>
   </tr>
 </table>
 
 <!-- ---- What to Expect ---- -->
 <h3>What to Expect</h3>
 
-<p><strong>User guides</strong> follow a strict section order: What This Tool Does, Prerequisites, Step-by-Step, CLI Reference, Folder Structure, Understanding the Output, Troubleshooting, and Quick Reference Card. They're self-contained HTML with a "Print this guide" link &mdash; no external dependencies. Guides hosted on GitHub Pages also include an "All tools" link back to the index page.</p>
-
-<p><strong>CLAUDE.md files</strong> are brief &mdash; project description in 2-3 sentences, workflow summary, folder layout, and conventions. They're for Claude and developers, not end users.</p>
+<p><strong>User guides</strong> are self-contained HTML pages with a consistent structure and styling across all projects. Each includes a "Print this guide" link and, on GitHub Pages, an "All tools" link back to the index page.</p>
 
 <p><strong>When a guide is created or updated</strong>, it's committed and pushed in the same session. Claude won't leave it as an untracked file.</p>
 
-<p><strong>Every guide includes a collapsible "Recent Changes" accordion</strong> showing commits from the last 30 days (auto-pruned). A permanent changelog is also maintained at <code>docs/changelog.md</code> in each project (full history, never pruned). Guides are also published to GitHub Pages at <a href="https://escondido-union-school-district.github.io/mberning-docs/">escondido-union-school-district.github.io/mberning-docs</a> for easy sharing with internal staff.</p>
+<p><strong>Every guide includes a collapsible "Project recent changes" section</strong> showing the 10 most recent commits (always kept regardless of age) plus all commits from the last 30 days. A permanent changelog is also maintained at <code>docs/changelog.md</code> in each project (full history, never pruned). Guides are also published to GitHub Pages at <a href="https://escondido-union-school-district.github.io/mberning-docs/">escondido-union-school-district.github.io/mberning-docs</a> for easy sharing with internal staff.</p>
 
 <!-- ---- Gotchas ---- -->
 <h3>Gotchas</h3>
 
 <ul>
-  <li><strong>Guides are not updated during interactive sessions.</strong> To avoid wasting time and tokens mid-session, guide content is only updated by the cloud-scheduled Daily User Guide Check at 3:30 PM. This means guides may be up to 24 hours behind code changes. The cloud trigger writes its status to <code>claude-code-sops/status/user-guide-check.md</code> rather than creating GitHub issues.</li>
-  <li><strong>Cloud trigger environment matters.</strong> The Daily User Guide Check must use the default cloud environment (not a custom one) because <code>gh</code> CLI is not available in cloud environments. The GitHub Integration must have write access so the trigger can commit and push changes. The trigger reports status via a committed status file rather than <code>gh issue create</code>.</li>
-  <li><strong>Don't edit the template CSS.</strong> The <code>eusd-user-guide</code> skill has a frozen stylesheet. All guides must use it verbatim so they look identical.</li>
-  <li><strong>Guides are for non-technical users.</strong> Write for someone with no Claude Code context &mdash; just a terminal and the tool.</li>
+  <li><strong>You don't need to update guides yourself.</strong> The 3:30 PM cloud agent is the safety net &mdash; it catches any code changes that affect the guide and updates it automatically. If you want to update a guide during a session you can, but you don't have to. Guides may be up to 24 hours behind code changes until the next automated run.</li>
+  <li><strong>Cloud trigger needs GitHub write access.</strong> The 3:30 PM agent runs in Anthropic's cloud and pushes changes to your repos. If it stops working, check that the GitHub Integration at <a href="https://github.com/organizations/Escondido-Union-School-District/settings/installations">GitHub &gt; Org Settings &gt; Installations</a> still has write access to your repos.</li>
 </ul>
 
 <details class="collapsible">
@@ -686,11 +749,6 @@ Register-ScheduledTask -TaskName 'Claude EOD Summary' `
     <td>End users &mdash; someone running the tool from a terminal</td>
   </tr>
   <tr>
-    <td>CLAUDE.md</td>
-    <td>Project root</td>
-    <td>Claude Code &amp; developers &mdash; project context and conventions</td>
-  </tr>
-  <tr>
     <td>User Guide Skill</td>
     <td><code>~/.claude/skills/eusd-user-guide/SKILL.md</code></td>
     <td>Claude Code &mdash; template rules, frozen CSS, section order, component patterns</td>
@@ -701,28 +759,23 @@ Register-ScheduledTask -TaskName 'Claude EOD Summary' `
     <td>Claude Code &mdash; complete HTML/CSS skeleton to copy from</td>
   </tr>
   <tr>
-    <td>Global CLAUDE.md rule</td>
-    <td><code>C:\Users\mberning\CLAUDE.md</code> (User Guides section)</td>
-    <td>Claude Code &mdash; enforces guide maintenance on CLI changes</td>
-  </tr>
-  <tr>
     <td>GitHub Pages site</td>
     <td><code>Escondido-Union-School-District/mberning-docs</code> (public repo)<br><a href="https://escondido-union-school-district.github.io/mberning-docs/">escondido-union-school-district.github.io/mberning-docs</a></td>
     <td>Internal staff &mdash; browse all project guides and SOPs via a web link</td>
   </tr>
   <tr>
     <td>Cloud trigger status</td>
-    <td><code>claude-code-sops/status/user-guide-check.md</code></td>
+    <td><code>~/projects/sops/status/user-guide-check.md</code></td>
     <td>Ops &mdash; status output from the Daily User Guide Check cloud trigger</td>
   </tr>
   <tr>
     <td>Pull All Repos script</td>
-    <td><code>C:\Users\mberning\projects\daily-summaries\pull-all-repos.ps1</code></td>
+    <td><code>~/projects/daily-summaries/pull-all-repos.ps1</code></td>
     <td>Ops &mdash; pulls all EUSD repos locally after cloud trigger finishes (3:50 PM weekdays via Task Scheduler: "Pull All Repos After Guide Check")</td>
   </tr>
   <tr>
     <td>Pull log</td>
-    <td><code>C:\Users\mberning\projects\daily-summaries\pull-log.txt</code></td>
+    <td><code>~/projects/daily-summaries/pull-log.txt</code></td>
     <td>Ops &mdash; execution log for the pull script</td>
   </tr>
 </table>
@@ -779,8 +832,7 @@ Read the code to understand what the tool does, its CLI flags/options,
 prerequisites, folder structure, and common errors. The guide should be
 self-contained so someone can use the tool without Claude Code running.
 Include a "Print this guide" link, step-by-step usage instructions,
-and a troubleshooting section. Also create a project-level CLAUDE.md
-if one doesn't exist.</code></pre>
+and a troubleshooting section.</code></pre>
 </div>
 
 <p>Claude Code will invoke the <code>eusd-user-guide</code> skill automatically and produce a guide matching the template. If an existing guide uses a different style, use:</p>
@@ -801,6 +853,11 @@ Keep all content but replace the CSS and structure.</code></pre>
 
 <h2>SOP-004: Project Launch Aliases</h2>
 
+<!-- ---- What Is It? ---- -->
+<h3>What is it?</h3>
+
+<p>A shortcut system that lets you open any project from any terminal by typing two or three letters. For example, type <code>pp</code> and you're immediately in the Parent Portal project with Claude Code running. No need to remember folder paths or type long commands. Aliases are created automatically when you start a new project.</p>
+
 <!-- ---- What Problem Does This Solve? ---- -->
 <h3>What Problem Does This Solve?</h3>
 
@@ -816,12 +873,12 @@ Keep all content but replace the CSS and structure.</code></pre>
   <tr>
     <td>Bash</td>
     <td><code>~/.bashrc</code></td>
-    <td><code>alias pp="cd /c/Users/mberning/projects/eusd/parent-portal &amp;&amp; claude --name 'Parent Portal'"</code></td>
+    <td><code>alias pp="cd ~/projects/eusd/parent-portal &amp;&amp; claude --name 'Parent Portal'"</code></td>
   </tr>
   <tr>
     <td>PowerShell</td>
     <td><code>~/Documents/WindowsPowerShell/Microsoft.PowerShell_profile.ps1</code></td>
-    <td><code>function pp { Set-Location C:\...\parent-portal; claude --name 'Parent Portal' }</code></td>
+    <td><code>function pp { Set-Location ~/projects/eusd/parent-portal; claude --name 'Parent Portal' }</code></td>
   </tr>
 </table>
 
@@ -832,7 +889,7 @@ Keep all content but replace the CSS and structure.</code></pre>
 
 <p>Aliases are added <strong>automatically when a new project is created</strong> via <a href="#sop-001">SOP-001</a>. The <code>new-project</code> skill derives the alias from the project name initials, checks for conflicts, adds it to both profile files, and tells you what it picked.</p>
 
-<p>You can also ask Claude to add an alias manually at any time &mdash; the global <code>CLAUDE.md</code> has the naming rules and conflict-check process.</p>
+<p>You can also ask Claude to add an alias manually at any time &mdash; the global <code>~/CLAUDE.md</code> has the naming rules and conflict-check process.</p>
 
 <!-- ---- What to Expect ---- -->
 <h3>What to Expect</h3>
@@ -853,19 +910,19 @@ Keep all content but replace the CSS and structure.</code></pre>
 
 <table>
   <tr><th>Alias</th><th>Project</th><th>Path</th></tr>
-  <tr><td><code>pp</code></td><td>Parent Portal</td><td><code>eusd/parent-portal</code></td></tr>
-  <tr><td><code>el</code></td><td>EUSD Linkcheck</td><td><code>eusd/eusd-linkcheck</code></td></tr>
-  <tr><td><code>fp</code></td><td>Find PDFs</td><td><code>eusd/find-pdfs</code></td></tr>
-  <tr><td><code>paf</code></td><td>PDF ADA Fixes</td><td><code>eusd/pdf-ada-fixes</code></td></tr>
-  <tr><td><code>pfp</code></td><td>PDF Form Prep</td><td><code>eusd/pdf-form-prep</code></td></tr>
-  <tr><td><code>qcc</code></td><td>QR Code Converter</td><td><code>eusd/qr-code-converter</code></td></tr>
-  <tr><td><code>sac</code></td><td>Smore ADA Checker</td><td><code>eusd/smore-ada-checker</code></td></tr>
-  <tr><td><code>tc</code></td><td>Thrillshare Checker</td><td><code>eusd/thrillshare-checker</code></td></tr>
-  <tr><td><code>eat</code></td><td>EUSD ADA Toolkit</td><td><code>eusd/eusd-ada-toolkit</code></td></tr>
-  <tr><td><code>sop</code></td><td>Claude Code SOPs</td><td><code>sops</code></td></tr>
-  <tr><td><code>te</code></td><td>Test</td><td><code>personal/test</code></td></tr>
-  <tr><td><code>cc</code></td><td>Claude Config</td><td><code>claude-config</code></td></tr>
-  <tr><td><code>dwa</code></td><td>DOJ WebRule Audit</td><td><code>eusd/doj-webrule-audit</code></td></tr>
+  <tr><td><code>pp</code></td><td>Parent Portal</td><td><code>~/projects/eusd/parent-portal</code></td></tr>
+  <tr><td><code>el</code></td><td>EUSD Linkcheck</td><td><code>~/projects/eusd/eusd-linkcheck</code></td></tr>
+  <tr><td><code>fp</code></td><td>Find PDFs</td><td><code>~/projects/eusd/find-pdfs</code></td></tr>
+  <tr><td><code>paf</code></td><td>PDF ADA Fixes</td><td><code>~/projects/eusd/pdf-ada-fixes</code></td></tr>
+  <tr><td><code>pfp</code></td><td>PDF Form Prep</td><td><code>~/projects/eusd/pdf-form-prep</code></td></tr>
+  <tr><td><code>qcc</code></td><td>QR Code Converter</td><td><code>~/projects/eusd/qr-code-converter</code></td></tr>
+  <tr><td><code>sac</code></td><td>Smore ADA Checker</td><td><code>~/projects/eusd/smore-ada-checker</code></td></tr>
+  <tr><td><code>tc</code></td><td>Thrillshare Checker</td><td><code>~/projects/eusd/thrillshare-checker</code></td></tr>
+  <tr><td><code>eat</code></td><td>EUSD ADA Toolkit</td><td><code>~/projects/eusd/eusd-ada-toolkit</code></td></tr>
+  <tr><td><code>sop</code></td><td>Claude Code SOPs</td><td><code>~/projects/sops</code></td></tr>
+  <tr><td><code>te</code></td><td>Test</td><td><code>~/projects/personal/test</code></td></tr>
+  <tr><td><code>cc</code></td><td>Claude Config</td><td><code>~/projects/claude-config</code></td></tr>
+  <tr><td><code>dwa</code></td><td>DOJ WebRule Audit</td><td><code>~/projects/eusd/doj-webrule-audit</code></td></tr>
 </table>
 
 <div class="callout-info callout">
@@ -881,6 +938,10 @@ Keep all content but replace the CSS and structure.</code></pre>
 <div class="sop-section" id="sop-005">
 
 <h2>SOP-005: SOP Accuracy &amp; Effectiveness Audits</h2>
+
+<div class="callout" style="background:#fff3cd; border-left-color:#f9a825;">
+<strong>Currently disabled.</strong> Both the local scheduled task and the cloud triggers for this SOP are turned off. The content below describes how it worked when active. It needs to be reviewed and re-enabled when ready.
+</div>
 
 <!-- ---- What Problem Does This Solve? ---- -->
 <h3>What Problem Does This Solve?</h3>
@@ -902,12 +963,12 @@ Keep all content but replace the CSS and structure.</code></pre>
 <!-- ---- How It's Triggered ---- -->
 <h3>How It's Triggered</h3>
 
-<p><strong>Automatic:</strong> Windows Task Scheduler runs <code>sop-audit.ps1</code> every Monday at 9:00 AM. The monthly review only fires when Monday falls on the 1st.</p>
+<p><strong>Automatic:</strong> Windows Task Scheduler runs <code>~/projects/sops/sop-audit.ps1</code> every Monday at 9:00 AM. The monthly review only fires when Monday falls on the 1st.</p>
 
 <p><strong>If your PC is asleep at 9 AM</strong>, the task runs when the PC wakes up (<code>StartWhenAvailable</code>). If the PC stays off all day Monday, that week's audit is skipped.</p>
 
 <p><strong>To run manually:</strong></p>
-<pre><code>powershell -ExecutionPolicy Bypass -File C:\Users\mberning\projects\sops\sop-audit.ps1</code></pre>
+<pre><code>powershell -ExecutionPolicy Bypass -File ~/projects/sops/sop-audit.ps1</code></pre>
 
 <!-- ---- What to Expect ---- -->
 <h3>What to Expect</h3>
@@ -919,16 +980,16 @@ SOP Audit 2026-04-07: All clear</code></pre>
 <p><strong>On the 1st of each month</strong> (if it's a Monday), you'll also get:</p>
 <pre><code>SOP Effectiveness Review 2026-04-01: 2 SOPs recommended for simplification</code></pre>
 
-<p>For the full report, pull the SOPs repo and read <code>sop-audit-report.md</code> or <code>sop-effectiveness-review.md</code>. Reports are overwritten each run. The execution log at <code>sop-audit-log.txt</code> is append-only.</p>
+<p>For the full report, pull the SOPs repo and read <code>~/projects/sops/sop-audit-report.md</code> or <code>~/projects/sops/sop-effectiveness-review.md</code>. Reports are overwritten each run. The execution log at <code>~/projects/sops/sop-audit-log.txt</code> is append-only.</p>
 
-<p>If a finding requires an SOP update, edit <code>claude-code-sops.html</code>, commit, and push. The next week's audit will verify the fix.</p>
+<p>If a finding requires an SOP update, edit <code>~/projects/sops/claude-code-sops.html</code>, commit, and push. The next week's audit will verify the fix.</p>
 
 <!-- ---- Gotchas ---- -->
 <h3>Gotchas</h3>
 
 <ul>
   <li><strong>Task Scheduler configuration can't be verified.</strong> The audit runs locally with access to all project files, profiles, and scripts — but it can't query Task Scheduler from bash. Scheduled task claims are marked "Unverifiable."</li>
-  <li><strong>New SOPs need <code>--add-dir</code>.</strong> If a new SOP references files in a directory the audit doesn't currently check, add an <code>--add-dir</code> flag to the relevant <code>claude -p</code> call in <code>sop-audit.ps1</code>.</li>
+  <li><strong>New SOPs need <code>--add-dir</code>.</strong> If a new SOP references files in a directory the audit doesn't currently check, add an <code>--add-dir</code> flag to the relevant <code>claude -p</code> call in <code>~/projects/sops/sop-audit.ps1</code>.</li>
   <li><strong>The audit doesn't fix anything.</strong> It reports issues and opens a GitHub issue. You still need to edit the SOPs file manually.</li>
 </ul>
 
@@ -939,7 +1000,7 @@ SOP Audit 2026-04-07: All clear</code></pre>
   <tr><th>Component</th><th>Location</th></tr>
   <tr>
     <td>Audit Script</td>
-    <td><code>C:\Users\mberning\projects\sops\sop-audit.ps1</code></td>
+    <td><code>~/projects/sops/sop-audit.ps1</code></td>
   </tr>
   <tr>
     <td>Scheduled Task</td>
@@ -947,80 +1008,25 @@ SOP Audit 2026-04-07: All clear</code></pre>
   </tr>
   <tr>
     <td>Accuracy Report</td>
-    <td><code>sop-audit-report.md</code> (overwritten weekly)</td>
+    <td><code>~/projects/sops/sop-audit-report.md</code> (overwritten weekly)</td>
   </tr>
   <tr>
     <td>Effectiveness Review</td>
-    <td><code>sop-effectiveness-review.md</code> (overwritten monthly)</td>
+    <td><code>~/projects/sops/sop-effectiveness-review.md</code> (overwritten monthly)</td>
   </tr>
   <tr>
     <td>Execution Log</td>
-    <td><code>sop-audit-log.txt</code> (append-only)</td>
+    <td><code>~/projects/sops/sop-audit-log.txt</code> (append-only)</td>
   </tr>
 </table>
 
-<p>All files live in <code>C:\Users\mberning\projects\sops\</code>.</p>
+<p>All files live in <code>~/projects/sops/</code>.</p>
 
 </details>
 
 
 </div><!-- end SOP-005 -->
 
-<!-- ================================================================== -->
-<div class="sop-section" id="sop-interaction">
-
-<h2>How the SOPs Work Together</h2>
-
-<p>Each SOP handles a specific responsibility. This table shows who does what.</p>
-
-<table>
-  <tr><th>Responsibility</th><th>Handled By</th><th>Reliability</th></tr>
-  <tr>
-    <td>Setting up new projects with all standard files</td>
-    <td><strong>New-project skill</strong> (SOP-001)</td>
-    <td>High &mdash; skill checklist ensures nothing is missed</td>
-  </tr>
-  <tr>
-    <td>Keeping user guides up to date</td>
-    <td><strong>Daily User Guide Check</strong> (cloud, 3:30 PM weekdays)</td>
-    <td>High &mdash; updates guide content, maintains changelogs, syncs to GitHub Pages, writes status to file</td>
-  </tr>
-  <tr>
-    <td>Committing &amp; pushing uncommitted work</td>
-    <td><strong>EOD automation</strong> (SOP-002)</td>
-    <td>High &mdash; straightforward git operations</td>
-  </tr>
-  <tr>
-    <td>Saving session context for later</td>
-    <td><strong>EOD automation</strong> (SOP-002)</td>
-    <td>High &mdash; reads conversation history and appends notes</td>
-  </tr>
-  <tr>
-    <td>Launching projects with correct session names</td>
-    <td><strong>Shell aliases</strong> (SOP-004)</td>
-    <td>High &mdash; aliases enforce consistent <code>--name</code> flag for every launch</td>
-  </tr>
-  <tr>
-    <td>Adding aliases for new projects</td>
-    <td><strong>Project setup</strong> (SOP-004 + global CLAUDE.md rule)</td>
-    <td>High &mdash; Claude adds to both profiles automatically during project creation</td>
-  </tr>
-  <tr>
-    <td>Verifying SOPs remain accurate</td>
-    <td><strong>Weekly local scheduled task</strong> (SOP-005)</td>
-    <td>High &mdash; runs locally with full access to project files, profiles, and scripts</td>
-  </tr>
-  <tr>
-    <td>Publishing guides for internal staff</td>
-    <td><strong>Daily User Guide Check</strong> syncs to <strong>mberning-docs</strong> repo &rarr; GitHub Pages</td>
-    <td>High &mdash; automatic sync as part of the cloud trigger</td>
-  </tr>
-  <tr>
-    <td>Pulling cloud changes locally</td>
-    <td><strong>Pull All Repos</strong> (3:50 PM weekdays, local)</td>
-    <td>High &mdash; runs after cloud trigger finishes, pulls all EUSD repos + sops + mberning-docs</td>
-  </tr>
-</table>
 
 
 </div><!-- end SOP interaction -->
