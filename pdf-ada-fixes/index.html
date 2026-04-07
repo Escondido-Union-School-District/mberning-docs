@@ -104,7 +104,7 @@
 </head>
 <body>
 
-<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this guide</a> &nbsp;&bull;&nbsp; <a href="../" style="font-size: 0.85em; color: #1a56db;">All tools</a>
+<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this guide</a>
 
 <h1>PDF Accessibility Remediation Tool</h1>
 <p><strong>User Guide</strong> — Escondido Union School District</p>
@@ -123,6 +123,86 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-04-06</td>
+        <td style="padding:8px;">feat: add batch mode and fix Windows file locking issues</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-27</td>
+        <td style="padding:8px;">fix: use Path.replace() for cross-platform processed file move; add user guide and CLAUDE.md</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-23</td>
+        <td style="padding:8px;">feat: move processed input files to processed/ folder</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">chore: add input/ and review/ to gitignore</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">refactor: simplify table headers to CLI flag (--headers row/column/both/none)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">feat: interactive table header fix â€” saves screenshots and prompts user for R/C/B/S</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">feat: Gemini-driven table header detection (row, column, or both) with manual review fallback</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">feat: fix table headers by changing first row TD cells to TH with Column scope</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">fix: update Gemini model to gemini-2.5-flash (2.0-flash no longer available)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">fix: extract full multi-line H1 title by matching consecutive lines with same font</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">fix: prefer PyMuPDF for H1 title extraction to avoid garbled content stream text</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">feat: set document title from first H1 tag with DisplayDocTitle</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">feat: set document language to en-US</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">feat: Gemini vision integration with new google-genai SDK</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">feat: fallback image extraction via PyMuPDF page screenshot</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">feat: primary image extraction via content stream MCID parsing</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">feat: tag tree walking to find Figure and other structure elements</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">feat: main entry point with input validation, PDF open, and summary output</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">chore: project scaffolding with dependencies and script skeleton</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-03-19</td>
+        <td style="padding:8px;">docs: design spec and implementation plan for PDF accessibility remediation</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; white-space:nowrap;">2026-04-06</td>
         <td style="padding:8px;">Added batch mode (pass folder path to process all PDFs at once), fixed Windows stdout buffering and file lock handling with retry logic</td>
