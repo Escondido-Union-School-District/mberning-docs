@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smore ADA Checker — User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this guide</a> &nbsp;&bull;&nbsp; <a href="../" style="font-size: 0.85em; color: #1a56db;">All tools</a>
+
+<h1>Smore ADA Checker</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-03-27 &mdash; Initial guide created
+</div>
+
+<details class="changelog">
+  <summary><h2 style="display:inline; border:none; margin:0; padding:0;">Recent Changes</h2></summary>
+  <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+    <thead>
+      <tr style="background:#1a56db; color:white;">
+        <th style="padding:8px; text-align:left; width:100px;">Date</th>
+        <th style="padding:8px; text-align:left;">Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-04-06</td>
+        <td style="padding:8px;">Added callout linking to Thrillshare Checker smore-scan feature as source for Smore URLs</td>
+      </tr>
+    </tbody>
+  </table>
+</details>
+<p style="font-size:0.85em; color:#666; margin-top:4px;">Showing last 30 days. <a href="changelog.md">View full changelog</a>.</p>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>Smore ADA Checker audits Smore newsletter posts for accessibility issues. It uses a headless browser to scrape the page, runs 15+ automated checks (including AI-powered image and link analysis), and produces a detailed report with screenshots and suggested fixes.</p>
+
+<table>
+  <tr><th>Stage</th><th>What Happens</th><th>Your Role</th></tr>
+  <tr>
+    <td>1. Scrape &amp; Check</td>
+    <td>Playwright loads the Smore page, scrapes content, runs all accessibility checks, captures screenshots</td>
+    <td>Provide the Smore URL and wait</td>
+  </tr>
+  <tr>
+    <td>2. Review</td>
+    <td>A local web page opens showing all found issues with toggles and editable suggestions</td>
+    <td>Include/exclude issues, edit alt text and suggestions, then generate report or send email</td>
+  </tr>
+</table>
+
+<div class="callout callout-info">
+  <strong>Note:</strong> If no accessibility issues are found, the PDF generates automatically without the review step.
+</div>
+
+<div class="callout callout-info">
+  <strong>Finding Smore URLs:</strong> The <strong>Thrillshare Checker</strong> project (<code>C:\Users\mberning\projects\eusd\thrillshare-checker</code>) has a <code>--smore-scan</code> mode that automatically finds Smore links in principal emails on Thrillshare. It runs daily at 7:00 AM and emails you any new links. Copy the URLs from that email and paste them here to run the ADA check.
+</div>
+
+<!-- ================================================================== -->
+<h2>What Gets Checked</h2>
+
+<table>
+  <tr><th>Category</th><th>Checks</th></tr>
+  <tr>
+    <td><strong>Images</strong></td>
+    <td>Missing alt text, filename as alt text, alt text too long (&gt;200 chars), ineffective alt text (AI vision), duplicate alt text across images</td>
+  </tr>
+  <tr>
+    <td><strong>Flyers</strong></td>
+    <td>Important flyer info (dates, times, locations) not in surrounding text, QR codes without text link alternatives</td>
+  </tr>
+  <tr>
+    <td><strong>Links</strong></td>
+    <td>Generic text ("click here"), vague text ("more info here"), raw URLs as link text, instructional phrasing ("click here to..."), links to untagged file downloads (PDF, DOCX, PPTX), Google Workspace links</td>
+  </tr>
+  <tr>
+    <td><strong>Headings</strong></td>
+    <td>Skipped heading levels (e.g., H2 jumps to H4)</td>
+  </tr>
+  <tr>
+    <td><strong>Emoji</strong></td>
+    <td>Emoji in headings, consecutive emojis, emojis used as bullet points, emoji at start of text</td>
+  </tr>
+  <tr>
+    <td><strong>Video</strong></td>
+    <td>Direct video file links (no captions), non-YouTube video embeds</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Python 3.10+</strong> installed and on your PATH</li>
+  <li><strong>Project folder:</strong> <code>C:\Users\mberning\projects\eusd\smore-ada-checker</code></li>
+  <li><strong>Dependencies</strong> installed via <code>pip install -r requirements.txt</code></li>
+  <li><strong>Playwright browser</strong> installed via <code>playwright install chromium</code></li>
+  <li><strong>API key</strong> configured in <code>.env</code> file (see below)</li>
+</ol>
+
+<h3>Environment Variables (.env file)</h3>
+<p>Copy <code>.env.example</code> to <code>.env</code> and fill in:</p>
+<table>
+  <tr><th>Variable</th><th>Required</th><th>Description</th></tr>
+  <tr><td><code>VISION_PROVIDER</code></td><td>No</td><td><code>claude</code> (default) or <code>gemini</code></td></tr>
+  <tr><td><code>ANTHROPIC_API_KEY</code></td><td>If using Claude</td><td>Anthropic API key for vision analysis</td></tr>
+  <tr><td><code>GOOGLE_API_KEY</code></td><td>If using Gemini</td><td>Google API key for vision analysis</td></tr>
+  <tr><td><code>SMTP_HOST</code></td><td>For email</td><td>Mail server (e.g., <code>mail.eusd.org</code>)</td></tr>
+  <tr><td><code>SMTP_PORT</code></td><td>For email</td><td><code>25</code> for EUSD relay, <code>587</code> for Gmail</td></tr>
+  <tr><td><code>SENDER_EMAIL</code></td><td>For email</td><td>From address for reports</td></tr>
+  <tr><td><code>SMTP_PASSWORD</code></td><td>Gmail only</td><td>App password (leave empty for EUSD relay)</td></tr>
+  <tr><td><code>AUDITOR_EMAIL</code></td><td>For email</td><td>Your email for preview copies</td></tr>
+  <tr><td><code>AUDITOR_NAME</code></td><td>For email</td><td>Your display name in emails</td></tr>
+</table>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Clone or copy the project folder
+
+# 2. Open a terminal in the project folder and create a virtual environment:
+python -m venv venv
+venv\Scripts\activate
+
+# 3. Install dependencies:
+pip install -r requirements.txt
+
+# 4. Install Playwright browser:
+playwright install chromium
+
+# 5. Create .env from example and add your API key:
+copy .env.example .env
+# Then edit .env with your API key</code></pre>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step</h2>
+
+<h3><span class="step-num">1</span> Open a terminal in the project folder</h3>
+<pre><code>cd C:\Users\mberning\projects\eusd\smore-ada-checker
+venv\Scripts\activate</code></pre>
+
+<h3><span class="step-num">2</span> Run the checker on a Smore URL</h3>
+<pre><code>python check.py https://app.smore.com/n/jtycf</code></pre>
+<p>The tool will launch a headless browser, scrape the page, and run all accessibility checks. This typically takes 30&ndash;90 seconds depending on the number of images.</p>
+
+<p>You'll see progress output like:</p>
+<pre><code>[Scraping] Loading https://app.smore.com/n/jtycf ...
+[Checks]   Running non-vision checks...
+[Vision]   Classifying 8 images (2 batches)...
+[Vision]   Evaluating alt text for 3 images...
+[Vision]   Comparing flyer content for 2 flyers...
+[Done]     Found 12 issues</code></pre>
+
+<h3><span class="step-num">3</span> Review issues in the browser</h3>
+<p>If issues are found, a review page opens automatically at <code>http://localhost:5050</code>. Here you can:</p>
+<ul>
+  <li><strong>Toggle issues</strong> &mdash; uncheck any issue to exclude it from the report</li>
+  <li><strong>Edit suggestions</strong> &mdash; modify alt text, link text, or flyer detail suggestions before they go into the report</li>
+  <li><strong>View screenshots</strong> &mdash; click any screenshot to enlarge it in a lightbox</li>
+</ul>
+
+<h3><span class="step-num">4</span> Generate the report</h3>
+<p>At the bottom of the review page, choose one of:</p>
+<ul>
+  <li><strong>Generate Final Report</strong> &mdash; saves a PDF to the <code>reports\</code> folder</li>
+  <li><strong>Send Preview to Me</strong> &mdash; emails an HTML report to your auditor email for review, then offers a "Send to Staff" button to forward to the newsletter author</li>
+</ul>
+
+<div class="callout">
+  <strong>Warning:</strong> Do not close the terminal while the review page is open. The review server runs in that terminal session and will stop if the terminal closes.
+</div>
+
+<h3><span class="step-num">5</span> Find your report</h3>
+<p>PDF reports are saved to:</p>
+<pre><code>reports\smore-report-{slug}-{date}-{provider}.pdf</code></pre>
+<p>For example: <code>reports\smore-report-jtycf-2026-03-25-claude.pdf</code></p>
+
+<!-- ================================================================== -->
+<h2>CLI Reference</h2>
+
+<pre><code>python check.py [--verbose] [--clear-cache] [--no-review] &lt;smore-url&gt;</code></pre>
+
+<table>
+  <tr><th>Argument / Flag</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>&lt;smore-url&gt;</code></td><td><em>required</em></td><td>Full URL of the Smore post to audit (must contain <code>smore.com</code>)</td></tr>
+  <tr><td><code>--verbose</code></td><td>off</td><td>Show detailed vision API call logging with timing</td></tr>
+  <tr><td><code>--clear-cache</code></td><td>off</td><td>Clear the vision API result cache before running (forces fresh API calls)</td></tr>
+  <tr><td><code>--no-review</code></td><td>off</td><td>Skip the interactive review step and generate PDF immediately with all issues included</td></tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+
+<pre><code>smore-ada-checker\
+  check.py              &lt;-- CLI entry point &mdash; run this
+  .env                  &lt;-- API keys and email config (never share)
+  .env.example          &lt;-- Template for .env
+  requirements.txt      &lt;-- Python dependencies
+  reports\              &lt;-- Generated PDF reports appear here
+  docs\                 &lt;-- This guide and other documentation
+  smore_checker\        &lt;-- Source code (do not modify)
+    core.py             &lt;-- Orchestration: scrape, check, review
+    scraper.py          &lt;-- Playwright page scraping
+    checks.py           &lt;-- All accessibility check functions
+    report.py           &lt;-- PDF report generation
+    review_server.py    &lt;-- Flask review UI (localhost:5050)
+    email_sender.py     &lt;-- SMTP email delivery
+    email_report.py     &lt;-- HTML email report builder
+    vision_router.py    &lt;-- Vision API dispatcher and cache
+    vision_claude.py    &lt;-- Claude vision provider
+    vision_gemini.py    &lt;-- Gemini vision provider
+    vision_cache.json   &lt;-- Cached API results (auto-generated)
+</code></pre>
+
+<!-- ================================================================== -->
+<h2>Understanding the Output</h2>
+
+<h3>PDF Report</h3>
+<p>The PDF report contains:</p>
+<ul>
+  <li><strong>Summary dashboard</strong> &mdash; total issue count and breakdown by category</li>
+  <li><strong>Issues grouped by section</strong> &mdash; each issue shows:
+    <ul>
+      <li>Color-coded category badge (image, link, heading, etc.)</li>
+      <li>Plain English description of the problem</li>
+      <li>Current value (the alt text, link text, or missing details)</li>
+      <li>Suggested fix (your edited suggestion from the review step)</li>
+      <li>Screenshot of the issue on the page</li>
+    </ul>
+  </li>
+</ul>
+
+<h3>HTML Email Report</h3>
+<p>The email version contains the same information as the PDF, formatted for Gmail with inline images. It includes:</p>
+<ul>
+  <li>Page title and URL at the top</li>
+  <li>Optional notes-to-staff message (entered during review)</li>
+  <li>All included issues with embedded screenshots</li>
+</ul>
+
+<h3>Vision Cache</h3>
+<p>API results are cached in <code>smore_checker\vision_cache.json</code>. Re-running the same URL reuses cached results, saving time and API costs. Use <code>--clear-cache</code> to force fresh analysis.</p>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td><code>Error: URL must be a Smore page (smore.com)</code></td>
+    <td>The URL you provided doesn't contain <code>smore.com</code></td>
+    <td>Use the full Smore URL, e.g., <code>https://app.smore.com/n/jtycf</code></td>
+  </tr>
+  <tr>
+    <td><code>Cannot save PDF &mdash; file is open</code></td>
+    <td>A PDF viewer has the report file locked</td>
+    <td>Close the PDF in your viewer, then click the "back" link on the error page to retry</td>
+  </tr>
+  <tr>
+    <td>Playwright timeout or crash</td>
+    <td>Browser failed to load the Smore page</td>
+    <td>Run <code>playwright install chromium</code> to reinstall the browser, then try again</td>
+  </tr>
+  <tr>
+    <td>API key errors or <code>401 Unauthorized</code></td>
+    <td>Missing or invalid API key in <code>.env</code></td>
+    <td>Check that <code>ANTHROPIC_API_KEY</code> (or <code>GOOGLE_API_KEY</code>) is set correctly in your <code>.env</code> file</td>
+  </tr>
+  <tr>
+    <td>Rate limit errors (429)</td>
+    <td>Too many API calls in a short time</td>
+    <td>Wait a minute and retry. Gemini free tier has stricter limits; the tool adds automatic delays</td>
+  </tr>
+  <tr>
+    <td>Review page won't load</td>
+    <td>Port 5050 is already in use</td>
+    <td>Close any other instance of the checker, or check if another program is using port 5050</td>
+  </tr>
+  <tr>
+    <td>Email fails to send</td>
+    <td>SMTP configuration is incorrect</td>
+    <td>Verify <code>SMTP_HOST</code>, <code>SMTP_PORT</code>, <code>SENDER_EMAIL</code>, and <code>SMTP_PASSWORD</code> in <code>.env</code>. For EUSD relay, leave password empty</td>
+  </tr>
+  <tr>
+    <td><code>ModuleNotFoundError</code></td>
+    <td>Virtual environment not activated or dependencies missing</td>
+    <td>Run <code>venv\Scripts\activate</code> then <code>pip install -r requirements.txt</code></td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Daily Workflow</h3>
+  <ol>
+    <li>Open terminal, <code>cd</code> to project folder, activate venv</li>
+    <li>Run: <code>python check.py https://app.smore.com/n/XXXXX</code></li>
+    <li>Wait for scraping and checks to complete (30&ndash;90 seconds)</li>
+    <li>Review issues in browser &mdash; toggle and edit as needed</li>
+    <li>Click <strong>Send Preview to Me</strong> to review the email, or <strong>Generate Final Report</strong> for PDF</li>
+    <li>Find PDF in <code>reports\</code> folder</li>
+  </ol>
+  <h3 style="margin-top: 0.8em; color: #1a56db;">Common Flags</h3>
+  <ul>
+    <li><code>--clear-cache</code> &mdash; re-analyze images with fresh API calls</li>
+    <li><code>--no-review</code> &mdash; skip review, generate PDF immediately</li>
+    <li><code>--verbose</code> &mdash; see detailed API logging</li>
+  </ul>
+</div>
+
+</body>
+</html>

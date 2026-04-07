@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find PDFs — User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this guide</a> &nbsp;&bull;&nbsp; <a href="../" style="font-size: 0.85em; color: #1a56db;">All tools</a>
+
+<h1>Find PDFs</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-03-25 &mdash; Rewrote guide to match EUSD standard template
+</div>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>Find PDFs crawls pages on EUSD school websites, looking for <code>5il.co</code> and <code>aptg.co</code> shortcode URLs embedded in the HTML. For each shortcode it finds, it follows the link and checks whether the destination is a PDF file.</p>
+
+<p><strong>Sites covered:</strong> the main district site (<code>www.eusd.org</code>) plus all 27 elementary, middle, and specialty school sites hosted under <code>*.eusd.org</code>.</p>
+
+<p><strong>What it produces:</strong></p>
+<ul>
+  <li>A <code>results.json</code> file listing every shortcode found, the page it appeared on, the URL it resolves to, and whether it's a PDF</li>
+  <li>An interactive HTML viewer (<code>results.html</code>) for filtering, searching, and exporting the results</li>
+</ul>
+
+<div class="callout callout-info">
+  <strong>Note:</strong> The tool fetches raw HTML only &mdash; it does not execute JavaScript on the page. Shortcodes embedded in dynamically-loaded content may not be found.
+</div>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Python 3.8+</strong> must be installed. No external packages needed &mdash; uses only the Python standard library.</li>
+  <li><strong>Project folder:</strong> <code>C:\Users\mberning\projects\eusd\find-pdfs</code></li>
+  <li><strong>Internet access</strong> &mdash; the tool crawls live EUSD sites and follows shortcode URLs</li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Clone or copy the project folder
+
+# 2. Verify Python is installed:
+python --version
+
+# No pip install needed — this tool uses only the standard library.</code></pre>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step: find_pdfs.py</h2>
+
+<p>A basic scan from start to finish.</p>
+
+<h3><span class="step-num">1</span> Open a terminal</h3>
+<p>Open Command Prompt, PowerShell, or bash and navigate to the project folder:</p>
+<pre><code>cd C:\Users\mberning\projects\eusd\find-pdfs</code></pre>
+
+<h3><span class="step-num">2</span> Run a scan</h3>
+<p>Scan a single site (up to 50 pages):</p>
+<pre><code>python find_pdfs.py --start https://www.eusd.org --domain eusd.org --max-pages 50</code></pre>
+<p>This crawls pages on <code>www.eusd.org</code>, finds all shortcodes, checks each one, and writes <code>results.json</code>.</p>
+
+<h3><span class="step-num">3</span> View the results</h3>
+<p>Open <code>results.html</code> in any web browser. Click "Choose results.json" and select the output file.</p>
+
+<div class="callout callout-info">
+  <strong>Note:</strong> The <code>results.html</code> file and <code>results.json</code> should be in the same folder. The viewer will attempt to auto-load <code>results.json</code> from the same directory.
+</div>
+
+<!-- ================================================================== -->
+<h2>Providing Start URLs</h2>
+
+<p>You must provide at least one starting URL. There are three ways to do this:</p>
+
+<h3>Single URL</h3>
+<pre><code>python find_pdfs.py --start https://www.eusd.org --domain eusd.org</code></pre>
+
+<h3>Multiple URLs (comma-separated)</h3>
+<pre><code>python find_pdfs.py --starts "https://www.eusd.org,https://bernardo.eusd.org" --domain eusd.org</code></pre>
+
+<h3>URL list file</h3>
+<pre><code>python find_pdfs.py --start-list starts.txt --domain eusd.org</code></pre>
+<p>The file should contain one URL per line. The project includes a <code>starts.txt</code> with all 27 EUSD school homepages.</p>
+
+<!-- ================================================================== -->
+<h2>Sitemap Options</h2>
+
+<p>Sitemaps help the crawler discover pages that may not be linked from the homepage. These URLs are added to the crawl queue alongside start URLs.</p>
+
+<h3>Specify a sitemap</h3>
+<pre><code>python find_pdfs.py --start https://www.eusd.org --domain eusd.org --sitemap https://www.eusd.org/sitemap.xml</code></pre>
+
+<h3>Multiple sitemaps</h3>
+<pre><code>python find_pdfs.py --start https://www.eusd.org --domain eusd.org --sitemaps "https://www.eusd.org/sitemap.xml,https://bernardo.eusd.org/sitemap.xml"</code></pre>
+
+<h3>Auto-detect sitemaps</h3>
+<pre><code>python find_pdfs.py --start-list starts.txt --domain eusd.org --auto-sitemaps</code></pre>
+<p>This tries <code>https://&lt;host&gt;/sitemap.xml</code> for each start URL automatically.</p>
+
+<!-- ================================================================== -->
+<h2>CLI Reference</h2>
+
+<p>All options are passed as command-line flags.</p>
+
+<h3>Start URL Options (at least one required)</h3>
+<table>
+  <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>--start URL</code></td><td><em>none</em></td><td>Single starting URL</td></tr>
+  <tr><td><code>--starts URL,URL,...</code></td><td><em>none</em></td><td>Comma-separated list of starting URLs</td></tr>
+  <tr><td><code>--start-list FILE</code></td><td><em>none</em></td><td>Path to a file with one URL per line</td></tr>
+</table>
+
+<h3>Domain (required)</h3>
+<table>
+  <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>--domain DOMAIN</code></td><td><em>none</em></td><td>Domain to stay within (e.g., <code>eusd.org</code>). The crawler will only follow links to this domain and its subdomains.</td></tr>
+</table>
+
+<h3>Sitemap Options</h3>
+<table>
+  <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>--sitemap URL</code></td><td><em>none</em></td><td>Single sitemap URL to seed the crawl</td></tr>
+  <tr><td><code>--sitemaps URL,URL,...</code></td><td><em>none</em></td><td>Comma-separated sitemap URLs</td></tr>
+  <tr><td><code>--auto-sitemaps</code></td><td>off</td><td>Auto-detect <code>/sitemap.xml</code> for each start URL</td></tr>
+</table>
+
+<h3>Crawl Control</h3>
+<table>
+  <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>--max-pages N</code></td><td><code>50</code></td><td>Maximum number of pages to crawl</td></tr>
+  <tr><td><code>--delay SECONDS</code></td><td><code>0.2</code></td><td>Delay between page requests (be polite to servers)</td></tr>
+  <tr><td><code>--timeout SECONDS</code></td><td><code>15</code></td><td>HTTP request timeout</td></tr>
+</table>
+
+<h3>Output</h3>
+<table>
+  <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>--out FILE</code></td><td><code>results.json</code></td><td>Output file path</td></tr>
+  <tr><td><code>--user-agent STRING</code></td><td><code>FindPDFs/1.0 (+https://eusd.org)</code></td><td>Custom User-Agent header</td></tr>
+</table>
+
+<h3>Debugging</h3>
+<table>
+  <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>--insecure</code></td><td>off</td><td>Disable TLS/SSL certificate verification</td></tr>
+  <tr><td><code>--debug</code></td><td>off</td><td>Print fetch errors and HTTP status codes</td></tr>
+  <tr><td><code>--debug-anchors</code></td><td>off</td><td>Print extracted anchor tag samples from each page</td></tr>
+  <tr><td><code>--debug-shortcodes</code></td><td>off</td><td>Print inferred link text for each shortcode</td></tr>
+  <tr><td><code>--debug-shortcode URL</code></td><td><em>none</em></td><td>Dump the HTML context around a specific shortcode</td></tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+<pre><code>find-pdfs\
+  find_pdfs.py          &lt;-- Main script — crawls pages and checks shortcodes
+  starts.txt            &lt;-- List of all 27 EUSD school homepage URLs
+  results.json          &lt;-- Output file (generated by the script)
+  results.html          &lt;-- Interactive results viewer
+  results_viewer.js     &lt;-- Viewer logic (loaded by results.html)
+  results_viewer.css    &lt;-- Viewer styles (loaded by results.html)
+  docs\
+    user-guide.html     &lt;-- This guide
+  README.md
+</code></pre>
+
+<!-- ================================================================== -->
+<h2>Understanding the Output</h2>
+
+<h3>JSON Output</h3>
+<p>The tool writes a JSON array to <code>results.json</code> (or the file specified by <code>--out</code>). Each entry looks like:</p>
+<pre><code>{
+  "page": "https://bearvalley.eusd.org",
+  "shortcode": "https://5il.co/35twf",
+  "link_text": "Student Handbook",
+  "final_url": "https://files-backend.assets.../Handbook.pdf",
+  "status": 200,
+  "is_pdf": true,
+  "content_type": "application/pdf"
+}</code></pre>
+
+<table>
+  <tr><th>Field</th><th>Description</th></tr>
+  <tr><td><code>page</code></td><td>The EUSD page where the shortcode was found</td></tr>
+  <tr><td><code>shortcode</code></td><td>The <code>5il.co</code> or <code>aptg.co</code> URL</td></tr>
+  <tr><td><code>link_text</code></td><td>Inferred label from the HTML (may be empty if no label was found)</td></tr>
+  <tr><td><code>final_url</code></td><td>Where the shortcode redirects to (empty on error)</td></tr>
+  <tr><td><code>status</code></td><td>HTTP status code (200, 404, etc.) or <code>"error"</code></td></tr>
+  <tr><td><code>is_pdf</code></td><td><code>true</code> if the destination is a PDF file</td></tr>
+  <tr><td><code>content_type</code></td><td>The HTTP Content-Type header from the destination</td></tr>
+</table>
+
+<h3>Results Viewer</h3>
+<p>Open <code>results.html</code> in a browser and load your JSON file. The viewer provides:</p>
+<ul>
+  <li><strong>Filter by type</strong> &mdash; All, PDF only, Non-PDF, or Errors</li>
+  <li><strong>Search</strong> &mdash; filter by page URL, shortcode, or final URL</li>
+  <li><strong>Hide noisy pages</strong> &mdash; checkbox to hide <code>/documents</code>, <code>/news</code>, <code>/article</code> pages</li>
+  <li><strong>Export CSV</strong> &mdash; download results as a spreadsheet-ready CSV file</li>
+  <li><strong>Visual tags</strong> &mdash; PDF, Error, and Non-PDF labels for quick scanning</li>
+  <li><strong>Live counts</strong> &mdash; shows total results and PDF count for the current filter</li>
+</ul>
+
+<!-- ================================================================== -->
+<h2>Example Workflows</h2>
+
+<h3>Scan a single school site</h3>
+<pre><code>python find_pdfs.py --start https://bernardo.eusd.org --domain eusd.org --max-pages 100</code></pre>
+
+<h3>Scan all 27 schools using the included start list</h3>
+<pre><code>python find_pdfs.py --start-list starts.txt --domain eusd.org --max-pages 500</code></pre>
+
+<h3>Scan with auto-detected sitemaps for deeper coverage</h3>
+<pre><code>python find_pdfs.py --start-list starts.txt --domain eusd.org --auto-sitemaps --max-pages 1000</code></pre>
+
+<h3>Debug a specific shortcode that isn't resolving</h3>
+<pre><code>python find_pdfs.py --start https://www.eusd.org --domain eusd.org --debug --debug-shortcode "https://5il.co/35twf"</code></pre>
+
+<h3>Save results to a custom file</h3>
+<pre><code>python find_pdfs.py --start-list starts.txt --domain eusd.org --out march-2026-results.json</code></pre>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td><code>No start URLs provided</code></td>
+    <td>No starting URL was supplied on the command line</td>
+    <td>Provide at least one URL using <code>--start</code>, <code>--starts</code>, or <code>--start-list</code></td>
+  </tr>
+  <tr>
+    <td>SSL/TLS certificate errors</td>
+    <td>Certificate verification failed for a site</td>
+    <td>Add <code>--insecure</code> to skip certificate checks (safe for internal EUSD crawling)</td>
+  </tr>
+  <tr>
+    <td>Crawl is very slow</td>
+    <td>Too many pages, high delay, or poor network</td>
+    <td>Reduce <code>--max-pages</code>, decrease <code>--delay</code> (minimum ~0.1), or check network connectivity</td>
+  </tr>
+  <tr>
+    <td>Many shortcodes show <code>"status": "error"</code></td>
+    <td>Shortcode service (5il.co / aptg.co) down, network issues, or timeout too low</td>
+    <td>Run with <code>--debug</code> to see details; increase <code>--timeout 30</code> if needed</td>
+  </tr>
+  <tr>
+    <td>Empty results (0 shortcodes found)</td>
+    <td>Start URL has no shortcodes, <code>--max-pages</code> too low, or content is JavaScript-rendered</td>
+    <td>Try <code>--start-list starts.txt</code>, increase <code>--max-pages</code>, or try a different start URL</td>
+  </tr>
+  <tr>
+    <td>Results viewer doesn't load data</td>
+    <td>JSON file not loaded into the viewer</td>
+    <td>Click "Choose results.json" and select your output file manually</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Daily Workflow</h3>
+  <ol>
+    <li>Open a terminal and <code>cd</code> to the project folder</li>
+    <li>Run <code>python find_pdfs.py --start-list starts.txt --domain eusd.org --max-pages 500</code></li>
+    <li>Open <code>results.html</code> in a browser and load the JSON file</li>
+    <li>Filter, search, and export to CSV as needed</li>
+  </ol>
+
+  <h3 style="color: #1a56db;">Common Commands</h3>
+  <table>
+    <tr><th>Goal</th><th>Command</th></tr>
+    <tr><td>Scan one school</td><td><code>python find_pdfs.py --start https://bernardo.eusd.org --domain eusd.org</code></td></tr>
+    <tr><td>Scan all 27 schools</td><td><code>python find_pdfs.py --start-list starts.txt --domain eusd.org --max-pages 500</code></td></tr>
+    <tr><td>Include sitemaps</td><td><code>python find_pdfs.py --start-list starts.txt --domain eusd.org --auto-sitemaps --max-pages 1000</code></td></tr>
+    <tr><td>Debug a shortcode</td><td><code>python find_pdfs.py --start URL --domain eusd.org --debug-shortcode "https://5il.co/xxxxx"</code></td></tr>
+    <tr><td>Skip SSL checks</td><td>Add <code>--insecure</code> to any command</td></tr>
+    <tr><td>Custom output file</td><td>Add <code>--out my-results.json</code> to any command</td></tr>
+    <tr><td>View results</td><td>Open <code>results.html</code> in a browser and load the JSON file</td></tr>
+    <tr><td>Export to CSV</td><td>Use the "Export CSV" button in the results viewer</td></tr>
+  </table>
+</div>
+
+</body>
+</html>

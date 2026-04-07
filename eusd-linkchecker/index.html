@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EUSD Link Checker — User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this guide</a> &nbsp;&bull;&nbsp; <a href="../" style="font-size: 0.85em; color: #1a56db;">All tools</a>
+
+<h1>EUSD Link Checker</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-03-25 &mdash; Rewrote guide to match EUSD standard template
+</div>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>The EUSD Link Checker crawls all 27 Escondido Union School District websites, discovers every hyperlink on each page, and checks whether those links still work. It produces reports listing broken, unreachable, and anomalous links so the web team can fix them.</p>
+
+<p><strong>Sites covered:</strong> the main district site plus all elementary, middle, and specialty school sites hosted under <code>*.eusd.org</code>.</p>
+
+<p><strong>Reports generated:</strong></p>
+<ul>
+  <li><strong>Internal issues</strong> &mdash; broken links within EUSD domains</li>
+  <li><strong>External issues</strong> &mdash; broken links to outside sites</li>
+  <li><strong>Anomalies</strong> &mdash; likely false positives (Google, Zoom, LinkedIn, etc. block bots)</li>
+  <li><strong>Link matches</strong> &mdash; pages linking to a specific target URL (optional)</li>
+  <li><strong>Link inventory</strong> &mdash; catalog of all internal links discovered</li>
+</ul>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Node.js 18+</strong> installed (download from <code>https://nodejs.org</code>)</li>
+  <li><strong>npm</strong> (included with Node.js)</li>
+  <li><strong>Project folder:</strong> <code>C:\Users\mberning\projects\eusd\eusd-linkcheck</code></li>
+  <li><strong>Dependencies</strong> installed via <code>npm install</code></li>
+  <li><strong>Internet access</strong> &mdash; the tool crawls live EUSD sites</li>
+  <li><strong>~2 GB free RAM</strong> &mdash; Playwright runs headless browsers</li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Clone or copy the project folder
+
+# 2. Open a terminal in the project folder and install dependencies:
+npm install
+
+# Playwright will also download browser binaries (~150 MB) on first install.
+# If browsers are missing later, run:
+npx playwright install</code></pre>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step: Running the Link Checker</h2>
+
+<p>Open a terminal in the project folder (<code>C:\Users\mberning\projects\eusd\eusd-linkcheck</code>).</p>
+
+<h3><span class="step-num">1</span> Quick run (default &mdash; 300 pages)</h3>
+<pre><code>npm start</code></pre>
+<p>Crawls up to 300 pages, checks all discovered links, and writes reports to <code>output\YYYY\MM\</code>.</p>
+
+<h3><span class="step-num">2</span> Full site crawl</h3>
+<pre><code>npm run start:full</code></pre>
+<p>Crawls every reachable page across all 27 EUSD sites. This can take a long time depending on site size and network speed.</p>
+
+<h3><span class="step-num">3</span> Find pages linking to a specific URL</h3>
+<pre><code>TARGET_URL="https://example.com/page" npm start</code></pre>
+<p>Generates an extra <code>link-matches</code> report showing which EUSD pages link to the target URL.</p>
+
+<h3><span class="step-num">4</span> Send reports via email</h3>
+<pre><code>EMAIL_USER="you@eusd.org" EMAIL_PASS="xxxx-xxxx-xxxx-xxxx" npm run email</code></pre>
+<p>Emails the most recent reports as attachments. Requires a Google App Password (see the Email Setup section below).</p>
+
+<h3><span class="step-num">5</span> Full crawl + email in one command</h3>
+<pre><code>EMAIL_USER="you@eusd.org" EMAIL_PASS="xxxx-xxxx-xxxx-xxxx" npm run report</code></pre>
+
+<!-- ================================================================== -->
+<h2>CLI Reference</h2>
+
+<p>All options are controlled via environment variables. Set them before the command:</p>
+<pre><code># Example (bash):
+MAX_REQUESTS=100 MAX_CONCURRENCY=3 npm start
+
+# Example (PowerShell):
+$env:MAX_REQUESTS="100"; $env:MAX_CONCURRENCY="3"; npm start</code></pre>
+
+<table>
+  <tr><th>Variable</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>MAX_REQUESTS</code></td><td><code>300</code></td><td>Maximum pages to crawl per run</td></tr>
+  <tr><td><code>MAX_CONCURRENCY</code></td><td><code>5</code></td><td>Concurrent browser instances</td></tr>
+  <tr><td><code>PAGE_DELAY_MS</code></td><td><code>100</code></td><td>Delay in ms between page loads</td></tr>
+  <tr><td><code>LINK_TIMEOUT_MS</code></td><td><code>12000</code></td><td>Timeout per link check (12 s)</td></tr>
+  <tr><td><code>LINK_CHECK_CONCURRENCY</code></td><td><code>20</code></td><td>Parallel link checks per page</td></tr>
+  <tr><td><code>STATUS_CACHE_MAX_SIZE</code></td><td><code>10000</code></td><td>In-memory cache limit</td></tr>
+  <tr><td><code>CACHE_MAX_AGE_DAYS</code></td><td><code>7</code></td><td>Days to keep cached "200 OK" results on disk</td></tr>
+  <tr><td><code>NO_CACHE</code></td><td><em>unset</em></td><td>Set to <code>1</code> to disable the disk cache</td></tr>
+  <tr><td><code>TARGET_URL</code></td><td><em>none</em></td><td>Track all pages linking to this URL</td></tr>
+  <tr><td><code>EMAIL_USER</code></td><td><em>required</em></td><td>Gmail/Google Workspace address for SMTP</td></tr>
+  <tr><td><code>EMAIL_PASS</code></td><td><em>required</em></td><td>Google App Password (not your regular password)</td></tr>
+  <tr><td><code>EMAIL_TO</code></td><td>same as EMAIL_USER</td><td>Recipient email address</td></tr>
+</table>
+
+<table>
+  <tr><th>npm Script</th><th>What It Does</th></tr>
+  <tr><td><code>npm start</code></td><td>Quick crawl (300 pages) using tsx (dev mode)</td></tr>
+  <tr><td><code>npm run start:full</code></td><td>Full crawl of all reachable pages</td></tr>
+  <tr><td><code>npm run start:prod</code></td><td>Run compiled JS (must <code>npm run build</code> first)</td></tr>
+  <tr><td><code>npm run build</code></td><td>Compile TypeScript to <code>dist\</code></td></tr>
+  <tr><td><code>npm run email</code></td><td>Email the most recent reports</td></tr>
+  <tr><td><code>npm run report</code></td><td>Full crawl + email in sequence</td></tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+<pre><code>eusd-linkcheck\
+  src\
+    main.ts              &lt;-- Core crawler and link checker
+    send-report.ts       &lt;-- Email sending utility
+  cache\
+    status-cache.json    &lt;-- Persistent disk cache (auto-generated)
+  output\                &lt;-- Reports organized by YYYY\MM\
+  dist\                  &lt;-- Compiled JS (after npm run build)
+  storage\               &lt;-- Crawlee internal data (auto-generated)
+  docs\
+    user-guide.html      &lt;-- This guide
+  package.json
+  tsconfig.json
+</code></pre>
+
+<!-- ================================================================== -->
+<h2>Understanding the Output</h2>
+
+<h3>Output folder layout</h3>
+<pre><code>output\
+  2026\
+    03\
+      link-issues-internal-2026-03-25_09-30.csv
+      link-issues-internal-2026-03-25_09-30.html
+      link-issues-external-2026-03-25_09-30.csv
+      link-issues-external-2026-03-25_09-30.html
+      link-issues-anomalies-2026-03-25_09-30.csv
+      link-issues-anomalies-2026-03-25_09-30.html
+      link-inventory-2026-03-25_09-30.csv
+      link-inventory-2026-03-25_09-30.html
+</code></pre>
+<p>Reports are organized by year and month. Each run creates a timestamped set of files.</p>
+
+<h3>Report types</h3>
+<table>
+  <tr><th>File Prefix</th><th>Contents</th></tr>
+  <tr><td><code>link-issues-internal</code></td><td>Broken/unreachable links within EUSD domains</td></tr>
+  <tr><td><code>link-issues-external</code></td><td>Broken/unreachable links to outside sites</td></tr>
+  <tr><td><code>link-issues-anomalies</code></td><td>Links that appear broken but are likely false positives (sites that block bots)</td></tr>
+  <tr><td><code>link-matches</code></td><td>Pages linking to your <code>TARGET_URL</code> (only when TARGET_URL is set)</td></tr>
+  <tr><td><code>link-inventory</code></td><td>Complete catalog of all internal links found</td></tr>
+</table>
+
+<h3>Link categories</h3>
+<p>Each issue is classified with one of these categories:</p>
+<ul>
+  <li><strong>BROKEN</strong> &mdash; HTTP status 400 or higher, or status 0 (server refused connection)</li>
+  <li><strong>UNREACHABLE</strong> &mdash; request timed out or a network error occurred</li>
+  <li><strong>NOT_CHECKED</strong> &mdash; link was skipped (e.g., external checks disabled)</li>
+</ul>
+
+<h3>HTML reports</h3>
+<p>Open any <code>.html</code> report file in a browser to get an interactive view with:</p>
+<ul>
+  <li>A search box for filtering across all fields</li>
+  <li>Category filter buttons (All / Broken / Unreachable / Not Checked)</li>
+  <li>Color-coded cards with clickable links</li>
+  <li>Summary counts at the top</li>
+</ul>
+
+<h3>CSV reports</h3>
+<p>CSV files can be opened in Excel or Google Sheets. Columns:</p>
+<pre><code>category, scope, page_title, source_url, link_text, link_href, link_resolved, checked_url, status_code, final_url, reason, error</code></pre>
+
+<div class="callout callout-info">
+  <strong>Partial runs:</strong> If a crawl is interrupted, output files will have <code>-partial</code> appended to the filename. These contain valid data but represent an incomplete crawl.
+</div>
+
+<h3>Caching</h3>
+<p>The tool uses a multi-level caching strategy to avoid re-checking links that were recently confirmed working:</p>
+<ol>
+  <li><strong>In-memory LRU cache</strong> (up to 10,000 entries) &mdash; avoids duplicate checks within a single run</li>
+  <li><strong>Persistent disk cache</strong> (<code>cache\status-cache.json</code>) &mdash; remembers URLs that returned 200 OK for up to 7 days</li>
+</ol>
+<p>Only successful (200) responses are cached on disk. Errors are always re-checked.</p>
+
+<pre><code># Disable disk cache for one run:
+NO_CACHE=1 npm start
+
+# Or delete the cache file entirely:
+rm cache/status-cache.json</code></pre>
+
+<!-- ================================================================== -->
+<h2>Email Setup (Google App Password)</h2>
+
+<p>The email feature uses Gmail SMTP. You need a <strong>Google App Password</strong>, not your regular password.</p>
+
+<h3><span class="step-num">1</span> Open App Passwords</h3>
+<p>Go to <code>https://myaccount.google.com/apppasswords</code> (requires 2FA enabled on your Google account).</p>
+
+<h3><span class="step-num">2</span> Create a new app password</h3>
+<p>Name it something like "EUSD Link Checker".</p>
+
+<h3><span class="step-num">3</span> Copy the password</h3>
+<p>Copy the 16-character password (formatted like <code>abcd efgh ijkl mnop</code>).</p>
+
+<h3><span class="step-num">4</span> Use it when sending email</h3>
+<pre><code>EMAIL_USER="you@eusd.org" EMAIL_PASS="abcdefghijklmnop" npm run email</code></pre>
+
+<div class="callout">
+  <strong>Security:</strong> Never commit your App Password to version control. Set it as an environment variable or pass it on the command line.
+</div>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td>Missing browser executables</td>
+    <td>Playwright browsers not installed</td>
+    <td>Run <code>npx playwright install</code></td>
+  </tr>
+  <tr>
+    <td><code>No reports found. Run the link checker first.</code></td>
+    <td>Running <code>npm run email</code> before any crawl has completed</td>
+    <td>Run <code>npm start</code> first to generate reports, then <code>npm run email</code></td>
+  </tr>
+  <tr>
+    <td><code>EMAIL_USER and EMAIL_PASS environment variables are required</code></td>
+    <td>Attempting to send email without credentials</td>
+    <td>Set both environment variables (see Email Setup section above)</td>
+  </tr>
+  <tr>
+    <td>Many links showing as UNREACHABLE</td>
+    <td>Network issues, firewall blocking, or sites rate-limiting the checker</td>
+    <td>Increase timeout: <code>LINK_TIMEOUT_MS=20000 npm start</code></td>
+  </tr>
+  <tr>
+    <td>Crawl stops at 300 pages</td>
+    <td>Default page limit is 300</td>
+    <td>Use <code>npm run start:full</code> for a complete crawl</td>
+  </tr>
+  <tr>
+    <td><code>Rate limiting detected (backing off...)</code></td>
+    <td>More than 30% of recent requests are failing; tool is auto-slowing</td>
+    <td>No action needed &mdash; it resumes normal speed once the error rate drops</td>
+  </tr>
+  <tr>
+    <td>High memory usage</td>
+    <td>Too many concurrent browsers/checks during large crawls</td>
+    <td>Reduce concurrency: <code>MAX_CONCURRENCY=2 LINK_CHECK_CONCURRENCY=10 npm run start:full</code></td>
+  </tr>
+  <tr>
+    <td>Anomalies report has many entries</td>
+    <td>Google, Zoom, LinkedIn, Facebook, Twitter, Instagram block bots</td>
+    <td>These links are almost always fine &mdash; the tool separates them so they don't pollute real reports</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Common Commands</h3>
+  <table>
+    <tr><th>Goal</th><th>Command</th></tr>
+    <tr><td>Quick test run</td><td><code>npm start</code></td></tr>
+    <tr><td>Full site crawl</td><td><code>npm run start:full</code></td></tr>
+    <tr><td>Crawl only 50 pages</td><td><code>MAX_REQUESTS=50 npm start</code></td></tr>
+    <tr><td>Find pages linking to a URL</td><td><code>TARGET_URL="https://..." npm start</code></td></tr>
+    <tr><td>Email latest reports</td><td><code>EMAIL_USER=... EMAIL_PASS=... npm run email</code></td></tr>
+    <tr><td>Full crawl + email</td><td><code>EMAIL_USER=... EMAIL_PASS=... npm run report</code></td></tr>
+    <tr><td>Skip disk cache</td><td><code>NO_CACHE=1 npm start</code></td></tr>
+    <tr><td>View reports</td><td>Open any <code>.html</code> file in <code>output\</code></td></tr>
+  </table>
+</div>
+
+</body>
+</html>

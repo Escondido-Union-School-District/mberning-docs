@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrillshare Checker — User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this guide</a> &nbsp;&bull;&nbsp; <a href="../" style="font-size: 0.85em; color: #1a56db;">All tools</a>
+
+<h1>Thrillshare Checker</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-04-06 &mdash; Added Smore Link Scanner section (--smore-scan flag)
+</div>
+
+<details class="changelog">
+  <summary><h2 style="display:inline; border:none; margin:0; padding:0;">Recent Changes</h2></summary>
+  <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+    <thead>
+      <tr style="background:#1a56db; color:white;">
+        <th style="padding:8px; text-align:left; width:100px;">Date</th>
+        <th style="padding:8px; text-align:left;">Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-04-06</td>
+        <td style="padding:8px;">Added --smore-scan flag to find Smore links in principal emails, added daily scheduled Smore scan at 7:00 AM with 36-hour lookback, updated user guide with Smore Link Scanner documentation</td>
+      </tr>
+    </tbody>
+  </table>
+</details>
+<p style="font-size:0.85em; color:#666; margin-top:4px;">Showing last 30 days. <a href="changelog.md">View full changelog</a>.</p>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>This tool has two modes that automate Thrillshare monitoring:</p>
+
+<table>
+  <tr><th>Mode</th><th>Flag</th><th>What It Does</th><th>Schedule</th></tr>
+  <tr><td>Approval Checker</td><td><em>(default)</em></td><td>Checks all schools for pending approvals in Live Feed, News, and CMS pages</td><td>Hourly on weekdays</td></tr>
+  <tr><td>Smore Link Scanner</td><td><code>--smore-scan</code></td><td>Scans specific principals' emails for Smore newsletter links</td><td>Daily at 7:00 AM</td></tr>
+</table>
+
+<p>Both modes use browser automation (Playwright), log into Thrillshare via saved session cookies, and email results only when something is found.</p>
+
+<div class="callout callout-info">
+  <strong>Note:</strong> This tool uses browser automation (Playwright) to interact with Thrillshare. It requires an initial manual Google SSO login to establish a session cookie, which is then reused for automated headless runs.
+</div>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Python 3.9+</strong> installed</li>
+  <li><strong>Project folder:</strong> <code>C:\Users\mberning\projects\eusd\thrillshare-checker</code></li>
+  <li><strong>Virtual environment</strong> with <code>playwright</code> and <code>python-dotenv</code> installed</li>
+  <li><strong>Chromium browser</strong> installed via Playwright (<code>playwright install chromium</code>)</li>
+  <li><strong>Environment file</strong> (<code>.env</code>) configured with SMTP and email settings</li>
+  <li><strong>Session cookies</strong> saved from an initial <code>--login</code> run</li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Clone or copy the project folder
+
+# 2. Create and activate a virtual environment
+python -m venv venv
+venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+
+# 4. Install the Chromium browser for Playwright
+python -m playwright install chromium
+
+# 5. Create the environment file
+copy .env.example .env
+# Edit .env with your SMTP and email settings
+
+# 6. Run the first-time login to establish a session
+python checker.py --login</code></pre>
+
+<div class="callout">
+  <strong>Warning:</strong> The <code>.env</code> file contains email configuration. Never commit it to version control. A <code>.env.example</code> template is provided as a reference.
+</div>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step</h2>
+
+<p>The tool has two modes: an initial interactive login and the regular automated check.</p>
+
+<h3><span class="step-num">1</span> First-Time Login</h3>
+<p>Run with the <code>--login</code> flag to open a visible browser window. Log in through Google SSO when prompted. The script saves your session cookies so future runs work without manual login.</p>
+<pre><code>cd C:\Users\mberning\projects\eusd\thrillshare-checker
+venv\Scripts\activate
+python checker.py --login</code></pre>
+<p>A Chromium window will open. You'll see a prompt:</p>
+<pre><code>=== LOGIN REQUIRED ===
+Please log in using Google in the browser window.
+Take your time — the script will wait.</code></pre>
+<p>Complete the Google SSO login. Once done, the script saves your cookies and proceeds to check all schools.</p>
+
+<h3><span class="step-num">2</span> Run an Automated Check</h3>
+<p>After the initial login, run without flags for a headless check. If pending items are found, an email is sent automatically.</p>
+<pre><code>python checker.py</code></pre>
+
+<h3><span class="step-num">3</span> Run Without Sending Email</h3>
+<p>To see results in the terminal without sending email (useful for testing):</p>
+<pre><code>python checker.py --no-email</code></pre>
+
+<h3><span class="step-num">4</span> Scheduling (Optional)</h3>
+<p>The tool can run automatically via Windows Task Scheduler. VBS wrappers run the checker silently (no console window) and write output to log files.</p>
+<p>Two scheduled tasks are configured:</p>
+<table>
+  <tr><th>Task Name</th><th>Schedule</th><th>Wrapper</th><th>Log File</th></tr>
+  <tr><td>ThrillshareChecker</td><td>Hourly, weekdays 6 AM &ndash; 4 PM</td><td><code>run_hidden.vbs</code></td><td><code>log.txt</code></td></tr>
+  <tr><td>Thrillshare Smore Scan</td><td>Daily at 7:00 AM</td><td><code>run_smore_scan.vbs</code></td><td><code>smore_scan_log.txt</code></td></tr>
+</table>
+
+<h2>Step-by-Step: Smore Link Scanner</h2>
+
+<p>The Smore scanner finds emails sent by specific principals that contain Smore newsletter links. It navigates to each school's Media &gt; Alerts &gt; Analytics page, filters by the principal using the "Published By" dropdown, and extracts any <code>app.smore.com</code> URLs from recent messages.</p>
+
+<h3><span class="step-num">1</span> Run a Manual Smore Scan</h3>
+<pre><code>cd C:\Users\mberning\projects\eusd\thrillshare-checker
+venv\Scripts\activate
+python checker.py --smore-scan --no-email</code></pre>
+
+<h3><span class="step-num">2</span> Run With Email Notification</h3>
+<p>Drop the <code>--no-email</code> flag. An email is sent only if Smore links are found.</p>
+<pre><code>python checker.py --smore-scan</code></pre>
+
+<h3><span class="step-num">3</span> Review the Report</h3>
+<p>The report lists each finding with school, principal, date, message subject, and the Smore URL. Example:</p>
+<pre><code>Thrillshare Smore Link Report
+Generated: April 06, 2026 at 02:08 PM
+============================================================
+
+Found 4 message(s) containing Smore links:
+
+School:    Felicita
+Principal: Stephanie Higginbotham
+Date:      3/29/26 4:00 PM
+Message:   Week of 3/29/26 Felicita Family News
+  Link:    https://app.smore.com/n/xsr9t
+
+School:    Reidy Creek
+Principal: Megan Loh
+Date:      4/1/26 4:00 PM
+Message:   Here is this week's Coyote Connection
+  Link:    https://app.smore.com/n/g67t8
+
+Schools scanned: 3
+Messages with Smore links: 4</code></pre>
+
+<h3><span class="step-num">4</span> Configured Principals</h3>
+<p>The scanner currently checks these principals (configured in <code>smore_scanner.py</code>):</p>
+<table>
+  <tr><th>School</th><th>Principal</th></tr>
+  <tr><td>Felicita</td><td>Stephanie Higginbotham</td></tr>
+  <tr><td>Reidy Creek</td><td>Megan Loh</td></tr>
+  <tr><td>Rincon</td><td>Cristina Meglich</td></tr>
+</table>
+<p>To add a new school, edit the <code>SMORE_SCAN_SCHOOLS</code> list in <code>smore_scanner.py</code> and add an entry with the school name and principal's name as it appears in the Thrillshare "Published By" dropdown.</p>
+
+<!-- ================================================================== -->
+<h2>CLI Reference</h2>
+
+<table>
+  <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>--login</code></td><td>Off</td><td>Force a visible browser login. Use for first-time setup or when your session expires.</td></tr>
+  <tr><td><code>--no-email</code></td><td>Off</td><td>Print results to the terminal only. No email is sent regardless of findings.</td></tr>
+  <tr><td><code>--smore-scan</code></td><td>Off</td><td>Scan configured principals' emails for Smore links instead of checking approvals. Covers the last 36 hours.</td></tr>
+</table>
+
+<p>With no flags, the tool runs headless and sends email only if pending approvals or errors are found.</p>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+<pre><code>thrillshare-checker\
+  checker.py           &lt;-- Main script — runs approval checks or Smore scan
+  smore_scanner.py     &lt;-- Smore link scanning logic and principal config
+  config.py            &lt;-- Email, URL, and timeout settings (reads from .env)
+  run_hidden.vbs       &lt;-- VBScript wrapper for scheduled approval checks
+  run_smore_scan.vbs   &lt;-- VBScript wrapper for scheduled Smore scans
+  requirements.txt     &lt;-- Python dependencies (playwright, python-dotenv)
+  .env                 &lt;-- Email/SMTP settings (not committed)
+  .env.example         &lt;-- Template for .env
+  session\             &lt;-- Saved browser cookies (not committed)
+    cookies.json       &lt;-- Session cookies from last login
+  reports\             &lt;-- Date-organized report files (auto-cleaned after 3 days)
+    2026-03-25\        &lt;-- One folder per day
+      0810.txt         &lt;-- Report file named by time (HHMM)
+  log.txt              &lt;-- Output from scheduled approval checks
+  smore_scan_log.txt   &lt;-- Output from scheduled Smore scans
+  docs\                &lt;-- This guide
+</code></pre>
+
+<!-- ================================================================== -->
+<h2>Understanding the Output</h2>
+
+<p>Each run prints a progress line per school, then a summary report. Here is an example:</p>
+
+<pre><code>Discovering schools from dropdown...
+Found 24 organizations
+
+[1/24] Checking Bear Valley Middle...
+  No pending approvals
+[2/24] Checking Bernardo Elementary...
+  ** PENDING: Live Feed: 2, CMS: 1
+...
+
+Thrillshare Approval Report
+Generated: March 25, 2026 at 08:10 AM
+================================================
+
+PENDING APPROVALS:
+
+School                    Live Feed         News          CMS
+------------------------------------------------
+Bernardo Elementary              2            -            1
+Del Dios Middle                  -            1            -
+------------------------------------------------
+
+Schools checked:  24
+With pending:     2</code></pre>
+
+<p>The report is also saved as a text file in the <code>reports\</code> folder, organized by date. Reports older than 3 days are automatically deleted.</p>
+
+<p>If the tool is run via the scheduled task, output goes to <code>log.txt</code> in the project folder.</p>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td><code>Session expired. Run with --login to re-authenticate.</code></td>
+    <td>Saved cookies have expired or become invalid</td>
+    <td>Run <code>python checker.py --login</code> and complete the Google SSO login</td>
+  </tr>
+  <tr>
+    <td><code>No schools discovered.</code></td>
+    <td>The organization dropdown wasn't found on the page, or the page didn't load correctly</td>
+    <td>Run with <code>--login</code> to see the browser. Verify you can see the school switcher dropdown. If the Thrillshare UI changed, selectors in <code>checker.py</code> may need updating.</td>
+  </tr>
+  <tr>
+    <td><code>Could not find MEDIA nav link!</code></td>
+    <td>The MEDIA navigation link wasn't found after logging in</td>
+    <td>Run with <code>--login</code> to check whether you land on the accounts page. Ensure your Google account has Thrillshare media access.</td>
+  </tr>
+  <tr>
+    <td><code>Failed to send email: ...</code></td>
+    <td>SMTP relay connection failed</td>
+    <td>Check your <code>.env</code> settings. Verify <code>SMTP_HOST</code> (default: <code>mail.eusd.org</code>) and <code>SMTP_PORT</code> (default: <code>25</code>) are correct. Ensure the machine can reach the mail server on the network.</td>
+  </tr>
+  <tr>
+    <td><code>Timed out waiting for login.</code></td>
+    <td>The 2-minute login timeout was reached before SSO completed</td>
+    <td>Run with <code>--login</code> again and complete the Google login more quickly. The script waits up to 2 minutes.</td>
+  </tr>
+  <tr>
+    <td>Scheduled task runs but no email and no report</td>
+    <td>The VBS wrapper or paths may be misconfigured</td>
+    <td>Check <code>log.txt</code> for error output. Verify the paths in <code>run_hidden.vbs</code> match your actual project location.</td>
+  </tr>
+  <tr>
+    <td><code>Error checking CMS: ...</code></td>
+    <td>The CMS pages section failed to load or the table structure changed</td>
+    <td>Run manually with <code>--no-email</code> to see the full error. The CMS check navigates directly to <code>thrillshare.com/cms/v2/pages</code> &mdash; verify that URL works in a normal browser.</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Common Commands</h3>
+  <ol>
+    <li><strong>First-time setup:</strong> <code>python checker.py --login</code></li>
+    <li><strong>Approval check (with email):</strong> <code>python checker.py</code></li>
+    <li><strong>Approval check (no email):</strong> <code>python checker.py --no-email</code></li>
+    <li><strong>Smore scan (with email):</strong> <code>python checker.py --smore-scan</code></li>
+    <li><strong>Smore scan (no email):</strong> <code>python checker.py --smore-scan --no-email</code></li>
+    <li><strong>Re-authenticate:</strong> <code>python checker.py --login</code></li>
+  </ol>
+  <h3 style="margin-top: 0.8em; color: #1a56db;">Key Files</h3>
+  <ul>
+    <li><code>.env</code> &mdash; SMTP host, port, sender/recipient email</li>
+    <li><code>session\cookies.json</code> &mdash; saved login session</li>
+    <li><code>smore_scanner.py</code> &mdash; principal list (edit <code>SMORE_SCAN_SCHOOLS</code> to add schools)</li>
+    <li><code>reports\</code> &mdash; date-organized report history (auto-cleaned after 3 days)</li>
+    <li><code>log.txt</code> / <code>smore_scan_log.txt</code> &mdash; output from scheduled runs</li>
+  </ul>
+</div>
+
+</body>
+</html>

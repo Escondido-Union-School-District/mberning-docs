@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EUSD ADA Toolkit &mdash; User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this guide</a> &nbsp;&bull;&nbsp; <a href="../" style="font-size: 0.85em; color: #1a56db;">All tools</a>
+
+<h1>EUSD ADA Toolkit</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-03-26 &mdash; Initial guide created
+</div>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>The EUSD ADA Toolkit helps you make web projects accessible to all users, meeting WCAG 2.1 Level AA standards. It provides two tools that work at different stages of a project:</p>
+
+<table>
+  <tr><th>Tool</th><th>What It Does</th><th>When to Use</th></tr>
+  <tr>
+    <td><strong>Build-time skill</strong></td>
+    <td>Enforces WCAG 2.1 AA rules automatically while Claude Code writes or edits HTML, CSS, and JavaScript. Also includes an on-demand audit command.</td>
+    <td>Any project you're building with Claude Code that has a web interface</td>
+  </tr>
+  <tr>
+    <td><strong>Formal audit report</strong></td>
+    <td>Audits any web page and produces a Word document report with every issue found, its severity, and a specific Claude Code prompt to fix it.</td>
+    <td>Auditing live sites, third-party pages, or producing formal documentation</td>
+  </tr>
+</table>
+
+<div class="callout callout-info">
+  <strong>Note:</strong> EUSD is legally required to make its websites accessible under ADA Title II and Section 508. These tools help you comply from the start rather than fixing issues after the fact.
+</div>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Claude Code</strong> installed and working</li>
+  <li><strong>Toolkit repo cloned</strong> to <code>C:\Users\mberning\projects\eusd\eusd-ada-toolkit</code></li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Clone the toolkit repo
+git clone https://github.com/Escondido-Union-School-District/eusd-ada-toolkit.git
+
+# 2. That's it — the toolkit is just files you copy into your projects</code></pre>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step: Installing the Build-Time Skill</h2>
+
+<p>Do this once per project that has a web interface.</p>
+
+<h3><span class="step-num">1</span> Create the skill directory in your project</h3>
+<pre><code>mkdir -p .claude\skills\ada-wcag</code></pre>
+
+<h3><span class="step-num">2</span> Copy the skill file from the toolkit repo</h3>
+<pre><code>copy C:\Users\mberning\projects\eusd\eusd-ada-toolkit\skill\.claude\skills\ada-wcag\SKILL.md .claude\skills\ada-wcag\SKILL.md</code></pre>
+
+<h3><span class="step-num">3</span> Add the CLAUDE.md snippet</h3>
+<p>Open <code>C:\Users\mberning\projects\eusd\eusd-ada-toolkit\skill\CLAUDE-snippet.md</code> and copy everything below the first line into your project's <code>CLAUDE.md</code>. If you don't have a <code>CLAUDE.md</code> yet, create one at your project root.</p>
+
+<h3><span class="step-num">4</span> Add .wcag-progress.json to your .gitignore</h3>
+<p>The audit skill tracks progress in a <code>.wcag-progress.json</code> file. Add it to your project's <code>.gitignore</code> so it doesn't get committed:</p>
+<pre><code># In your project's .gitignore, add this line:
+.wcag-progress.json</code></pre>
+
+<div class="callout">
+  <strong>Warning:</strong> This step is easy to forget. The toolkit's own <code>.gitignore</code> has this entry, but it does not carry over when you install the skill into a new project.
+</div>
+
+<h3><span class="step-num">5</span> Verify it's working</h3>
+<p>Start a Claude Code session in your project and ask it to write or edit some HTML. It should automatically follow accessibility rules (proper heading structure, alt attributes, contrast-safe colors, etc.) without you having to ask.</p>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step: Running the Accessibility Audit</h2>
+
+<p>Run this before launching any project with a web interface, or anytime you want a thorough accessibility check.</p>
+
+<h3><span class="step-num">1</span> Open your project in Claude Code</h3>
+<p>Navigate to your project folder and start a Claude Code session.</p>
+
+<h3><span class="step-num">2</span> Tell Claude Code to run the audit</h3>
+<pre><code>run accessibility audit</code></pre>
+<p>You can also say <code>check accessibility</code>, <code>wcag audit</code>, or <code>a11y check</code>.</p>
+
+<h3><span class="step-num">3</span> Review the results</h3>
+<p>Claude Code will scan all HTML files (or source components for SPAs), audit each one against the full WCAG 2.1 AA criteria (19 categories covering structure, contrast, keyboard, forms, media, motion, reflow, and more), and present issues sorted by severity:</p>
+<ul>
+  <li><strong>Critical</strong> &mdash; Fails a Level A criterion or has site-wide impact. Blocks access.</li>
+  <li><strong>Serious</strong> &mdash; Fails a Level AA criterion. Significant barrier.</li>
+  <li><strong>Moderate</strong> &mdash; Best practice issue or limited scope. Causes friction.</li>
+</ul>
+
+<h3><span class="step-num">4</span> Fix issues interactively</h3>
+<p>Type <code>fix</code> to start with the first issue, or <code>fix 5</code> to jump to a specific one. Claude Code shows each problem, explains the impact, and proposes a fix. Type <code>y</code> to apply, <code>s</code> to skip, or <code>q</code> to quit.</p>
+
+<p>Progress is saved in <code>.wcag-progress.json</code>, so you can close the session and resume later.</p>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step: Generating a Formal Audit Report</h2>
+
+<p>Use this for live sites, third-party pages, or when you need a formal Word document for records.</p>
+
+<h3><span class="step-num">1</span> Open the audit project in Claude Code</h3>
+<pre><code>cd C:\Users\mberning\projects\eusd\eusd-ada-toolkit\audit-project
+claude</code></pre>
+
+<h3><span class="step-num">2</span> Follow the prompts</h3>
+<p>Claude Code will ask you to paste in the page's HTML, CSS, and JavaScript. It walks you through how to grab each file from your browser.</p>
+
+<h3><span class="step-num">3</span> Review the Word document</h3>
+<p>Claude Code generates a report with every issue found, organized by category, with severity ratings and specific fix prompts.</p>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+<pre><code>eusd-ada-toolkit\
+  SETUP.md                                  &lt;-- Full installation instructions
+  README.md                                 &lt;-- Repo overview
+  skill\                                    &lt;-- Build-time skill files
+    CLAUDE-snippet.md                       &lt;-- Paste into your project's CLAUDE.md
+    .claude\skills\ada-wcag\SKILL.md        &lt;-- Copy into your project
+  audit-project\                            &lt;-- Formal audit report tool
+    CLAUDE.md                               &lt;-- Drives the audit session
+  docs\                                     &lt;-- Documentation
+    ADA-COMPLIANCE-PROCESS.md               &lt;-- Team process guide
+    user-guide.html                         &lt;-- This guide
+</code></pre>
+
+<!-- ================================================================== -->
+<h2>Understanding the Output</h2>
+
+<h3>Build-time skill</h3>
+<p>When the skill is installed, Claude Code silently follows WCAG rules as it writes code. You won't see separate output unless it flags an issue during coding.</p>
+
+<h3>Accessibility audit</h3>
+<p>The audit prints a summary to the terminal showing how many issues were found at each severity level, then enters an interactive fix mode. Progress is tracked in <code>.wcag-progress.json</code>.</p>
+
+<h3>Formal audit report</h3>
+<p>Produces a Word document (<code>.docx</code>) with:</p>
+<ul>
+  <li>Every accessibility issue found, organized by WCAG category</li>
+  <li>WCAG criterion reference for each issue</li>
+  <li>Severity rating (Critical, Serious, Moderate)</li>
+  <li>A specific Claude Code prompt for fixing each issue</li>
+</ul>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td>Claude Code doesn't follow accessibility rules during coding</td>
+    <td>Skill not installed or CLAUDE.md snippet missing</td>
+    <td>Verify <code>.claude\skills\ada-wcag\SKILL.md</code> exists in your project and the snippet is in your <code>CLAUDE.md</code></td>
+  </tr>
+  <tr>
+    <td>"run accessibility audit" does nothing special</td>
+    <td>SKILL.md not in the right location</td>
+    <td>Check that the file is at <code>.claude\skills\ada-wcag\SKILL.md</code> (not a different folder name)</td>
+  </tr>
+  <tr>
+    <td><code>.wcag-progress.json</code> showing up in git status</td>
+    <td>Not added to <code>.gitignore</code></td>
+    <td>Add <code>.wcag-progress.json</code> to your project's <code>.gitignore</code></td>
+  </tr>
+  <tr>
+    <td>Audit says "no HTML files found"</td>
+    <td>HTML files are in a non-standard location</td>
+    <td>Tell Claude Code which directory contains your HTML files</td>
+  </tr>
+  <tr>
+    <td>Contrast checks say "CSS file not found"</td>
+    <td>Stylesheets couldn't be resolved from HTML link tags</td>
+    <td>Make sure CSS files are accessible at the paths referenced in your HTML</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Which Tool Do I Use?</h3>
+  <table>
+    <tr><th>Situation</th><th>Tool</th></tr>
+    <tr>
+      <td>Building a new project with Claude Code</td>
+      <td>Install the build-time skill</td>
+    </tr>
+    <tr>
+      <td>Adding features to an existing project</td>
+      <td>Install the build-time skill (if not already)</td>
+    </tr>
+    <tr>
+      <td>Pre-launch check on your own project</td>
+      <td>Run <code>run accessibility audit</code></td>
+    </tr>
+    <tr>
+      <td>Auditing a live site you didn't build</td>
+      <td>Use the formal audit report</td>
+    </tr>
+    <tr>
+      <td>Need a formal document for records</td>
+      <td>Use the formal audit report</td>
+    </tr>
+  </table>
+</div>
+
+</body>
+</html>

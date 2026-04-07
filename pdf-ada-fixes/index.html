@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Accessibility Remediation Tool — User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this guide</a> &nbsp;&bull;&nbsp; <a href="../" style="font-size: 0.85em; color: #1a56db;">All tools</a>
+
+<h1>PDF Accessibility Remediation Tool</h1>
+<p><strong>User Guide</strong> — Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-03-25 &mdash; Initial guide created
+</div>
+
+<details class="changelog">
+  <summary><h2 style="display:inline; border:none; margin:0; padding:0;">Recent Changes</h2></summary>
+  <table style="width:100%; border-collapse:collapse; margin-top:10px;">
+    <thead>
+      <tr style="background:#1a56db; color:white;">
+        <th style="padding:8px; text-align:left; width:100px;">Date</th>
+        <th style="padding:8px; text-align:left;">Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; white-space:nowrap;">2026-04-06</td>
+        <td style="padding:8px;">Added batch mode (pass folder path to process all PDFs at once), fixed Windows stdout buffering and file lock handling with retry logic</td>
+      </tr>
+    </tbody>
+  </table>
+</details>
+<p style="font-size:0.85em; color:#666; margin-top:4px;">Showing last 30 days. <a href="changelog.md">View full changelog</a>.</p>
+
+<h2>What This Tool Does</h2>
+<p>This tool automatically fixes four common PDF accessibility issues required for ADA/Section 508 compliance:</p>
+
+<table>
+  <tr><th>#</th><th>Fix</th><th>What It Does</th></tr>
+  <tr><td>1</td><td>Figure Alt Text</td><td>Uses Google Gemini AI to generate descriptive alt text for all images</td></tr>
+  <tr><td>2</td><td>Document Language</td><td>Sets the document language to English (en-US)</td></tr>
+  <tr><td>3</td><td>Document Title</td><td>Extracts the first &lt;H1&gt; heading and sets it as the document title</td></tr>
+  <tr><td>4</td><td>Table Headers</td><td>Marks table header cells so screen readers can navigate tables</td></tr>
+</table>
+
+<div class="callout callout-info">
+  <strong>Requirement:</strong> Input PDFs must be <em>tagged</em> PDFs (exported from Word with "Create bookmarks using Headings" or similar). Untagged/scanned PDFs will not work.
+</div>
+
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Python 3.10+</strong> must be installed</li>
+  <li><strong>Project folder:</strong> <code>C:\Users\mberning\projects\eusd\pdf-ada-fixes</code></li>
+  <li><strong>Virtual environment</strong> with dependencies is already created in <code>venv\</code></li>
+  <li><strong>Google API key</strong> is saved in the <code>.env</code> file</li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Clone or copy the project folder
+
+# 2. Open a terminal in the project folder and create the virtual environment:
+python -m venv venv
+
+# 3. Activate it:
+#    PowerShell:
+.\venv\Scripts\Activate.ps1
+#    Git Bash / Terminal:
+source venv/Scripts/activate
+
+# 4. Install dependencies:
+pip install -r requirements.txt
+
+# 5. Create the .env file with your Google API key:
+#    Copy .env.example to .env, then edit .env and replace the placeholder:
+GOOGLE_API_KEY=your-actual-api-key-here</code></pre>
+
+<div class="callout">
+  <strong>Getting a Google API Key:</strong> Go to <code>aistudio.google.com</code>, sign in, click "Get API key", and create a key. The free tier allows 15 requests per minute which is sufficient for this tool.
+</div>
+
+<h2>How to Run the Tool</h2>
+
+<h3><span class="step-num">1</span> Place PDF files in the <code>input\</code> folder</h3>
+<p>Copy the PDF files you want to fix into:</p>
+<pre><code>C:\Users\mberning\projects\eusd\pdf-ada-fixes\input\</code></pre>
+<div class="callout">
+  <strong>Important:</strong> Make sure the input PDFs are not open in Acrobat or any other program. Open files will be locked and the tool won't be able to move them to <code>processed\</code> when finished.
+</div>
+
+<h3><span class="step-num">2</span> Open a terminal</h3>
+<p>Open <strong>Git Bash</strong>, <strong>PowerShell</strong>, or <strong>Windows Terminal</strong> and navigate to the project:</p>
+<pre><code>cd C:\Users\mberning\projects\eusd\pdf-ada-fixes</code></pre>
+
+<h3><span class="step-num">3</span> Activate the virtual environment</h3>
+<pre><code># PowerShell:
+.\venv\Scripts\Activate.ps1
+
+# Git Bash:
+source venv/Scripts/activate</code></pre>
+<p>You should see <code>(venv)</code> appear at the start of your prompt.</p>
+
+<h3><span class="step-num">4</span> Run the tool</h3>
+
+<p><strong>Process all PDFs in the input folder (recommended):</strong></p>
+<pre><code>python remediate.py input/</code></pre>
+
+<p><strong>Or process a single file:</strong></p>
+<pre><code>python remediate.py "input/YourFile.pdf"</code></pre>
+
+<p><strong>Example with header option:</strong></p>
+<pre><code>python remediate.py input/ --headers row</code></pre>
+
+<h3><span class="step-num">5</span> Collect your output</h3>
+<p>Remediated files are saved to the <code>output\</code> folder with <code>_remediated</code> appended to the filename. The original input file is automatically moved to the <code>processed\</code> folder.</p>
+
+<div class="callout callout-info">
+  <strong>Batch mode:</strong> When you pass a folder instead of a file, the tool processes every <code>.pdf</code> in that folder and prints a summary at the end showing how many succeeded or failed.
+</div>
+
+<h2>The <code>--headers</code> Option</h2>
+<p>This controls how table headers are marked. Choose based on your table layout:</p>
+
+<table>
+  <tr><th>Option</th><th>Use When</th><th>What It Does</th></tr>
+  <tr>
+    <td><code>--headers row</code></td>
+    <td>First row contains column headings (most common)</td>
+    <td>Marks first row cells as <code>&lt;TH Scope=Column&gt;</code></td>
+  </tr>
+  <tr>
+    <td><code>--headers column</code></td>
+    <td>First column contains row headings</td>
+    <td>Marks first cell in each row as <code>&lt;TH Scope=Row&gt;</code></td>
+  </tr>
+  <tr>
+    <td><code>--headers both</code></td>
+    <td>Both first row and first column are headings</td>
+    <td>Applies both row and column header fixes</td>
+  </tr>
+  <tr>
+    <td><code>--headers none</code></td>
+    <td>Tables don't have headers or are already correct</td>
+    <td>Skips table header fixing entirely</td>
+  </tr>
+</table>
+
+<div class="callout callout-info">
+  <strong>Default:</strong> If you don't specify <code>--headers</code>, it defaults to <code>row</code> (first row = column headers). This is correct for most EUSD implementation plan templates.
+</div>
+
+<h2>Processing Multiple Files</h2>
+<p>The easiest way to process all PDFs at once is to pass the folder path:</p>
+<pre><code>python remediate.py input/</code></pre>
+<p>This processes every <code>.pdf</code> file in the folder and prints a batch summary when finished.</p>
+
+<h2>Folder Structure</h2>
+<pre><code>pdf-ada-fixes\
+  input\          &lt;-- Put your PDFs here
+  output\         &lt;-- Remediated PDFs appear here (*_remediated.pdf)
+  processed\      &lt;-- Original PDFs are moved here after processing
+  remediate.py    &lt;-- The tool
+  venv\           &lt;-- Python virtual environment (don't touch)
+  .env            &lt;-- Your Google API key (don't share!)
+</code></pre>
+
+<h2>Understanding the Output</h2>
+<p>When the tool runs, it prints progress for each step:</p>
+<pre><code>[Step 1] Fixing figure alt text...
+  Found 2 &lt;Figure&gt; tags
+  Figure 1 on page 1: "Shield-shaped logo with a dark blue panther..."
+  Figure 2 on page 1: "Circular Escondido Union School District logo..."
+[Step 2] Setting document language...
+  Set /Lang to en-US
+[Step 3] Setting document title from &lt;H1&gt;...
+  Title: "ESCONDIDO UNION SCHOOL DISTRICT..."
+  DisplayDocTitle: true
+[Step 4] Fixing table headers...
+  Found 6 tables (mode: row)
+  Table 1: changed 2 first-row cells to &lt;TH Scope=Column&gt;
+
+=== Remediation Summary ===
+Figures found:      2
+  Alt text added:   2
+  ...
+Output:             output\filename_remediated.pdf</code></pre>
+
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td><code>GOOGLE_API_KEY not set</code></td>
+    <td>Missing or empty <code>.env</code> file</td>
+    <td>Create/edit <code>.env</code> with your API key</td>
+  </tr>
+  <tr>
+    <td><code>PDF is not tagged</code></td>
+    <td>The PDF wasn't exported as a tagged PDF</td>
+    <td>Re-export from Word with accessibility tags enabled</td>
+  </tr>
+  <tr>
+    <td><code>file not found</code></td>
+    <td>Wrong path or filename</td>
+    <td>Check the filename and use quotes around paths with spaces</td>
+  </tr>
+  <tr>
+    <td><code>[SKIP] Figure N: could not extract image</code></td>
+    <td>Image format not extractable</td>
+    <td>Tool uses a screenshot fallback; if both fail, add alt text manually in Acrobat</td>
+  </tr>
+  <tr>
+    <td><code>ResourceExhausted</code> / rate limit</td>
+    <td>Too many Gemini API calls too fast</td>
+    <td>Wait a minute and try again. The tool has built-in delays.</td>
+  </tr>
+  <tr>
+    <td><code>(venv)</code> not showing</td>
+    <td>Virtual environment not activated</td>
+    <td>Run the activate command from Step 3</td>
+  </tr>
+  <tr>
+    <td><code>Could not move ... to processed/</code></td>
+    <td>Input PDF is still open in Acrobat or another program</td>
+    <td>Close the PDF in Acrobat before running the tool, or close it after and move it to <code>processed\</code> manually</td>
+  </tr>
+</table>
+
+<div class="callout">
+  <strong>Tip:</strong> Close input PDFs in Acrobat before running the tool. If a PDF is open in another program, the tool will still create the remediated file in <code>output\</code>, but it won't be able to move the original to <code>processed\</code>.
+</div>
+
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Daily Workflow</h3>
+  <ol>
+    <li>Drop PDFs into <code>input\</code></li>
+    <li>Open terminal, <code>cd</code> to project folder</li>
+    <li>Activate: <code>.\venv\Scripts\Activate.ps1</code> (PowerShell) or <code>source venv/Scripts/activate</code> (Bash)</li>
+    <li>Run: <code>python remediate.py input/</code> (all files) or <code>python remediate.py "input/filename.pdf"</code> (single file)</li>
+    <li>Pick up results from <code>output\</code></li>
+  </ol>
+</div>
+
+</body>
+</html>

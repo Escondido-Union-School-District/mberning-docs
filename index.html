@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EUSD Tools &mdash; Documentation</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1em;
+    margin: 1em 0;
+  }
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1em 1.2em;
+    transition: box-shadow 0.2s, border-color 0.2s;
+  }
+  .card:hover {
+    border-color: #1a56db;
+    box-shadow: 0 2px 8px rgba(26,86,219,0.15);
+  }
+  .card h3 {
+    margin: 0 0 0.3em 0;
+    color: #1a56db;
+  }
+  .card h3 a {
+    text-decoration: none;
+    color: inherit;
+  }
+  .card h3 a:hover {
+    text-decoration: underline;
+  }
+  .card p {
+    margin: 0;
+    font-size: 0.9em;
+    color: #555;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left: 4px solid #1a56db;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.9em;
+  }
+</style>
+</head>
+<body>
+
+<h1>EUSD Tools</h1>
+<p><strong>Documentation Hub</strong> &mdash; Mark Berning, Escondido Union School District</p>
+
+<div class="callout-info">
+  These guides are automatically synced from each project's source code. Updated daily at 3:30 PM.
+</div>
+
+<h2>Accessibility Tools</h2>
+<div class="card-grid">
+  <div class="card">
+    <h3><a href="pdf-ada-fixes/">PDF Accessibility Remediation</a></h3>
+    <p>Automated PDF accessibility fixes &mdash; tags, alt text, reading order for ADA/WCAG compliance</p>
+  </div>
+  <div class="card">
+    <h3><a href="eusd-ada-toolkit/">ADA Toolkit</a></h3>
+    <p>WCAG 2.1 AA compliance toolkit for Claude Code projects</p>
+  </div>
+  <div class="card">
+    <h3><a href="smore-ada-checker/">Smore ADA Checker</a></h3>
+    <p>ADA/WCAG compliance checker for Smore newsletters and flyers</p>
+  </div>
+  <div class="card">
+    <h3><a href="doj-webrule-audit/">DOJ Web Rule Audit</a></h3>
+    <p>DOJ web accessibility rule audit &mdash; automated WCAG checks across 535+ EUSD pages</p>
+  </div>
+</div>
+
+<h2>Website Tools</h2>
+<div class="card-grid">
+  <div class="card">
+    <h3><a href="eusd-linkchecker/">Link Checker</a></h3>
+    <p>Crawls eusd.org and 26 school subdomains to find and report broken links</p>
+  </div>
+  <div class="card">
+    <h3><a href="thrillshare-checker/">Thrillshare Checker</a></h3>
+    <p>ADA/WCAG compliance checker for Thrillshare (Apptegy) school website content</p>
+  </div>
+  <div class="card">
+    <h3><a href="find-pdfs/">Find PDFs</a></h3>
+    <p>Crawls EUSD websites to discover and catalog all hosted PDF files</p>
+  </div>
+</div>
+
+<h2>Other Tools</h2>
+<div class="card-grid">
+  <div class="card">
+    <h3><a href="parent-portal/">Parent Portal</a></h3>
+    <p>Parent Portal tools and utilities for Escondido Union School District</p>
+  </div>
+  <div class="card">
+    <h3><a href="qr-code-converter/">QR Code Converter</a></h3>
+    <p>Batch QR code generator and converter for school print materials</p>
+  </div>
+</div>
+
+<h2>Reference</h2>
+<div class="card-grid">
+  <div class="card">
+    <h3><a href="sops/">Standard Operating Procedures</a></h3>
+    <p>SOPs for Claude Code automation, scheduled agents, and project workflows</p>
+  </div>
+</div>
+
+</body>
+</html>
