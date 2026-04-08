@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DOJ WebRule Audit — User Guide</title>
+<title>DOJ WebRule Audit &mdash; User Guide</title>
 <style>
   @media print {
     body { font-size: 11pt; }
@@ -119,16 +119,32 @@
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
-        <td style="padding:8px; background: white;">Add feed/blog/pagination page exclusion (npm run exclude)</td>
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
+        <td style="padding:8px; background: white;">Add GitHub Pages progress dashboard for team sharing (<code>npm run export-site</code>)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
+        <td style="padding:8px; background: white;">Add linked files review page with rollup to check 14</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
+        <td style="padding:8px; background: white;">Add web-based Review UI &mdash; replaces CLI-only workflow with interactive browser tool for pass/fail toggling, notes, filters, dashboard stats, and daily goal tracking</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
+        <td style="padding:8px; background: white;">Auto-hide fully-passed checks, show remaining count per check in progress bar</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
+        <td style="padding:8px; background: white;">Add Windows scheduled task to auto-start Review UI on login</td>
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
-        <td style="padding:8px; background: white;">Add duplicate page detector (npm run dupes)</td>
+        <td style="padding:8px; background: white;">Add feed/blog/pagination page exclusion (<code>npm run exclude</code>)</td>
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
-        <td style="padding:8px; background: white;">Add Excel temp files to gitignore, set up daily email scheduled task</td>
+        <td style="padding:8px; background: white;">Add duplicate page detector (<code>npm run dupes</code>)</td>
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
@@ -136,15 +152,7 @@
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
-        <td style="padding:8px; background: white;">Phase 1: Foundation â€” automated audit pipeline working end-to-end</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
-        <td style="padding:8px; background: white;">Add resources folder for source files (Excel, etc.)</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
-        <td style="padding:8px; background: white;">Initial project setup</td>
+        <td style="padding:8px; background: white;">Phase 1: Foundation &mdash; automated audit pipeline working end-to-end</td>
       </tr>
     </tbody>
   </table>
@@ -160,8 +168,10 @@
 <table>
   <tr><th>Feature</th><th>What It Does</th></tr>
   <tr><td>Automated audit</td><td>Runs axe-core + custom checks against rendered pages via Playwright</td></tr>
-  <tr><td>Manual review queue</td><td>Flags items that need human verification with copy-paste commands</td></tr>
-  <tr><td>Dashboard</td><td>HTML progress dashboard showing status by check and by site</td></tr>
+  <tr><td>Review UI</td><td>Interactive web tool for reviewing pages &mdash; click to toggle pass/fail, add notes, filter by status/site/check</td></tr>
+  <tr><td>Linked files page</td><td>Review linked PDFs and documents (check 14) with file-level status tracking</td></tr>
+  <tr><td>Progress dashboard</td><td>Real-time stats in Review UI header &mdash; pages passed, reviewed, daily goals, weekly progress</td></tr>
+  <tr><td>Team dashboard</td><td>Read-only GitHub Pages dashboard for sharing progress with the team</td></tr>
   <tr><td>Daily nudges</td><td>"Hey Mark" emails with today's batch, how to start, and schedule tracking</td></tr>
   <tr><td>Low-hanging fruit</td><td>Identifies the most impactful fixes across all pages</td></tr>
 </table>
@@ -202,12 +212,32 @@ npm run import
 <h3><span class="step-num">1</span> Start your day</h3>
 <p>Open a terminal and type:</p>
 <pre><code>dwa</code></pre>
-<p>This launches Claude Code in the project directory. Then run:</p>
-<pre><code>npm run today</code></pre>
-<p>This shows where you left off, today's batch, and copy-paste commands for every item.</p>
+<p>This launches Claude Code in the project directory. The Review UI auto-starts on login (Windows scheduled task), so it should already be running at <a href="http://localhost:3000">http://localhost:3000</a>. If not:</p>
+<pre><code>npm run review-ui</code></pre>
 
-<h3><span class="step-num">2</span> Run automated scans (if needed)</h3>
-<p>If there are unscanned pages, the "today" output will tell you. Run:</p>
+<h3><span class="step-num">2</span> Review pages in the Review UI</h3>
+<p>The Review UI is the primary workflow tool. Open <a href="http://localhost:3000">http://localhost:3000</a> in your browser.</p>
+<ul>
+  <li><strong>Dashboard header</strong> shows Fully Passed, Reviewed w/ Failures, Need Review, Today's progress vs daily goal, and weekly/monthly counts</li>
+  <li><strong>Check progress bar</strong> shows remaining count per check; fully-passed checks auto-hide</li>
+  <li><strong>Filter bar</strong> lets you filter by status, site, check number, or search by page name</li>
+  <li><strong>Page grid</strong> shows each page with all 15 checks in a compact table</li>
+</ul>
+
+<h4>Reviewing a page</h4>
+<ul>
+  <li><strong>Click P/F/? cells</strong> to cycle: unreviewed &rarr; pass &rarr; fail &rarr; unreviewed</li>
+  <li><strong>Click note cells</strong> to open a popup for adding notes</li>
+  <li><strong>Pass All</strong> button marks all unreviewed checks as pass (with Undo)</li>
+  <li><strong>Skip</strong> button removes unpublished pages from review</li>
+  <li><strong>Check 14</strong> links to the Linked Files page for pages that have linked documents</li>
+</ul>
+
+<h3><span class="step-num">3</span> Review linked files</h3>
+<p>Click <strong>Linked Files &rarr;</strong> in the header or check 14's link to go to <a href="http://localhost:3000/files.html">the files page</a>. This shows all linked PDFs/documents grouped by page, with file-level pass/fail tracking that rolls up to check 14.</p>
+
+<h3><span class="step-num">4</span> Run automated scans (if needed)</h3>
+<p>If there are unscanned pages:</p>
 <pre><code># Scan 50 unscanned pages
 npm run audit -- --new --limit 50
 
@@ -217,42 +247,45 @@ npm run audit -- --site pioneer --limit 20
 # Scan a single page
 npm run audit -- --url https://www.eusd.org</code></pre>
 
-<h3><span class="step-num">3</span> Do manual reviews</h3>
-<p>The "today" output lists items needing manual review. For each one:</p>
-<ol>
-  <li>Open the URL in your browser</li>
-  <li>Perform the check described (e.g., test keyboard navigation)</li>
-  <li>Record the result using the provided command:</li>
-</ol>
+<h3><span class="step-num">5</span> Check progress</h3>
+<pre><code># Quick CLI status
+npm run status
+
+# Low-hanging fruit report
+npm run quickwins
+
+# Update team dashboard (GitHub Pages)
+npm run export-site</code></pre>
+
+<h3><span class="step-num">6</span> CLI-based reviews (alternative to Review UI)</h3>
+<p>You can still record reviews from the command line if preferred:</p>
 <pre><code># Pass a check
 npm run review -- 142 1 pass "Keyboard nav works on all menus"
 
 # Fail a check
-npm run review -- 142 1 fail "Dropdown menu traps keyboard focus"</code></pre>
+npm run review -- 142 1 fail "Dropdown menu traps keyboard focus"
 
-<h3><span class="step-num">4</span> Batch-apply template-level results</h3>
-<p>Since all EUSD sites use the same Apptegy template, some checks only need verification once:</p>
-<pre><code># All pages pass skip links (verified on template)
-npm run review:batch -- --check 3 pass "Skip link verified on template"
+# Batch-apply template-level results
+npm run review:batch -- --check 3 pass "Skip link verified on template"</code></pre>
 
-# All pioneer pages pass magnification
-npm run review:batch -- --check 13 --site pioneer pass "Zoom to 400% OK"</code></pre>
+<!-- ================================================================== -->
+<h2>Team Dashboard (GitHub Pages)</h2>
 
-<h3><span class="step-num">5</span> Check progress</h3>
-<pre><code># Quick status
-npm run status
+<p>A read-only progress dashboard is published at:<br>
+<a href="https://escondido-union-school-district.github.io/doj-webrule-audit/">https://escondido-union-school-district.github.io/doj-webrule-audit/</a></p>
 
-# Full HTML dashboard
-npm run dashboard
+<p>To update it with the latest numbers:</p>
+<pre><code>npm run export-site
+# Then commit and push docs/data.json</code></pre>
 
-# Low-hanging fruit report
-npm run quickwins</code></pre>
+<p>The dashboard shows overall progress, activity stats (today/week/month), and per-check progress bars.</p>
 
 <!-- ================================================================== -->
 <h2>CLI Reference</h2>
 
 <table>
   <tr><th>Command</th><th>Description</th></tr>
+  <tr><td><code>npm run review-ui</code></td><td>Start the web-based Review UI at localhost:3000</td></tr>
   <tr><td><code>npm run import</code></td><td>Import pages from Excel into SQLite database</td></tr>
   <tr><td><code>npm run discover</code></td><td>Crawl all EUSD sites to find current pages</td></tr>
   <tr><td><code>npm run audit</code></td><td>Run automated audit on all pages</td></tr>
@@ -261,15 +294,17 @@ npm run quickwins</code></pre>
   <tr><td><code>npm run audit -- --new --limit 50</code></td><td>Audit only pages not yet scanned</td></tr>
   <tr><td><code>npm run today</code></td><td>Show today's action plan</td></tr>
   <tr><td><code>npm run status</code></td><td>Quick progress summary</td></tr>
-  <tr><td><code>npm run dashboard</code></td><td>Generate HTML dashboard</td></tr>
+  <tr><td><code>npm run export-site</code></td><td>Export stats to docs/data.json for GitHub Pages dashboard</td></tr>
   <tr><td><code>npm run queue</code></td><td>Show manual review queue</td></tr>
   <tr><td><code>npm run queue -- --check &lt;n&gt;</code></td><td>Filter queue by check number (1-15)</td></tr>
-  <tr><td><code>npm run review -- &lt;page_id&gt; &lt;check#&gt; pass|fail "notes"</code></td><td>Record manual review result</td></tr>
+  <tr><td><code>npm run review -- &lt;page_id&gt; &lt;check#&gt; pass|fail "notes"</code></td><td>Record manual review result (CLI)</td></tr>
   <tr><td><code>npm run review:batch -- --check &lt;n&gt; pass|fail "notes"</code></td><td>Batch record results for a check</td></tr>
   <tr><td><code>npm run quickwins</code></td><td>Show most impactful issues to fix first</td></tr>
   <tr><td><code>npm run export</code></td><td>Export results to CSV</td></tr>
   <tr><td><code>npm run export:excel</code></td><td>Export results to Excel (.xlsx)</td></tr>
   <tr><td><code>npm run email</code></td><td>Send daily summary email</td></tr>
+  <tr><td><code>npm run dupes</code></td><td>Find duplicate pages in the database</td></tr>
+  <tr><td><code>npm run exclude</code></td><td>Exclude feed/blog/paginated pages from review</td></tr>
 </table>
 
 <!-- ================================================================== -->
@@ -280,10 +315,14 @@ npm run quickwins</code></pre>
     checks\          &lt;-- All 15 audit check implementations
     crawler\         &lt;-- Playwright page fetcher, batch runner, discovery
     reports\         &lt;-- Dashboard, email nudges, export
+    server\          &lt;-- Review UI (Express server + static frontend)
+      api.ts         &lt;-- REST API for page data, review actions
+      files-api.ts   &lt;-- REST API for linked files
+      static\        &lt;-- HTML, CSS, JS for the Review UI
   data\              &lt;-- SQLite database (gitignored)
   output\            &lt;-- Generated reports and exports (gitignored)
   resources\         &lt;-- Source Excel file
-  docs\              &lt;-- This guide
+  docs\              &lt;-- GitHub Pages dashboard
 </code></pre>
 
 <!-- ================================================================== -->
@@ -292,15 +331,13 @@ npm run quickwins</code></pre>
 <p>Each page gets 15 checks. Each check produces one of these statuses:</p>
 
 <table>
-  <tr><th>Status</th><th>Meaning</th></tr>
-  <tr><td><strong>pass</strong></td><td>Check passed automated verification</td></tr>
-  <tr><td><strong>fail</strong></td><td>Check found accessibility issues</td></tr>
-  <tr><td><strong>needs-review</strong></td><td>Automation couldn't determine pass/fail &mdash; needs manual check</td></tr>
-  <tr><td><strong>n/a</strong></td><td>Check not applicable (e.g., no tables on page)</td></tr>
-  <tr><td><strong>error</strong></td><td>Page failed to load or check errored</td></tr>
+  <tr><th>Status</th><th>In Review UI</th><th>Meaning</th></tr>
+  <tr><td><strong>pass</strong></td><td>Green P</td><td>Check passed &mdash; automated or manually verified</td></tr>
+  <tr><td><strong>fail</strong></td><td>Red F</td><td>Check found accessibility issues</td></tr>
+  <tr><td><strong>unreviewed</strong></td><td>Yellow ?</td><td>Not yet reviewed &mdash; click to set pass or fail</td></tr>
 </table>
 
-<p>The dashboard at <code>output\dashboard.html</code> shows aggregate results by check, by site, top issues, and daily progress.</p>
+<p>The Review UI dashboard header shows aggregate counts. A page is "Fully Passed" when all 15 checks are pass. "Reviewed w/ Failures" means all 15 checks have been reviewed but at least one failed.</p>
 
 <!-- ================================================================== -->
 <h2>Troubleshooting</h2>
@@ -316,6 +353,11 @@ npm run quickwins</code></pre>
     <td><code>axe-core failed</code></td>
     <td>Page structure prevented axe from running</td>
     <td>Try auditing the page again; if persistent, do manual audit</td>
+  </tr>
+  <tr>
+    <td>Review UI not loading</td>
+    <td>Server not running</td>
+    <td>Run <code>npm run review-ui</code> or check if port 3000 is in use</td>
   </tr>
   <tr>
     <td><code>Email not configured</code></td>
@@ -335,11 +377,12 @@ npm run quickwins</code></pre>
   <h3 style="margin-top: 0; color: #1a56db;">Daily Workflow</h3>
   <ol>
     <li>Open terminal, type <code>dwa</code></li>
-    <li>Run <code>npm run today</code> to see your batch</li>
+    <li>Review UI should already be running at <a href="http://localhost:3000">localhost:3000</a></li>
+    <li>Use the dashboard header to see today's progress vs goal</li>
+    <li>Click through pages, toggle pass/fail, add notes</li>
+    <li>Use <strong>Pass All</strong> for template-level pages that are clearly compliant</li>
     <li>If unscanned pages exist: <code>npm run audit -- --new --limit 50</code></li>
-    <li>Do manual reviews using the provided commands</li>
-    <li>Check progress: <code>npm run status</code></li>
-    <li>Generate dashboard: <code>npm run dashboard</code></li>
+    <li>Update team dashboard: <code>npm run export-site</code> then commit &amp; push</li>
   </ol>
 </div>
 
