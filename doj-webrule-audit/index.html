@@ -207,78 +207,37 @@ npm run import
 # Copy .env.example to .env and fill in EMAIL_USER, EMAIL_PASS, EMAIL_TO</code></pre>
 
 <!-- ================================================================== -->
-<h2>Step-by-Step</h2>
+<h2>Daily Workflow</h2>
 
-<h3><span class="step-num">1</span> Start your day</h3>
-<p>Open a terminal and type:</p>
-<pre><code>dwa</code></pre>
-<p>This launches Claude Code in the project directory. The Review UI auto-starts on login (Windows scheduled task), so it should already be running at <a href="http://localhost:3000">http://localhost:3000</a>. If not:</p>
-<pre><code>npm run review-ui</code></pre>
+<p>The Review UI starts automatically when you log in (Windows scheduled task). Open your browser to <a href="http://localhost:3000">http://localhost:3000</a>.</p>
 
-<h3><span class="step-num">2</span> Review pages in the Review UI</h3>
-<p>The Review UI is the primary workflow tool. Open <a href="http://localhost:3000">http://localhost:3000</a> in your browser.</p>
+<h3><span class="step-num">1</span> Check your progress</h3>
+<p>The <strong>dashboard header</strong> at the top shows everything at a glance:</p>
 <ul>
-  <li><strong>Dashboard header</strong> shows Fully Passed, Reviewed w/ Failures, Need Review, Today's progress vs daily goal, and weekly/monthly counts</li>
-  <li><strong>Check progress bar</strong> shows remaining count per check; fully-passed checks auto-hide</li>
-  <li><strong>Filter bar</strong> lets you filter by status, site, check number, or search by page name</li>
-  <li><strong>Page grid</strong> shows each page with all 15 checks in a compact table</li>
+  <li><strong>Fully Passed</strong> / <strong>Reviewed w/ Failures</strong> / <strong>Need Review</strong> / <strong>Total Pages</strong> &mdash; click any stat to filter the grid to those pages</li>
+  <li><strong>Today / Daily Goal</strong> &mdash; turns green when you hit the target</li>
+  <li><strong>This Week</strong> / <strong>This Month</strong> &mdash; running totals</li>
+  <li><strong>Behind Schedule</strong> &mdash; appears in red if you're behind pace</li>
 </ul>
+<p>The <strong>check progress bar</strong> below shows remaining pages per check. Checks that are 100% passed auto-hide from the grid to reduce clutter. Click <strong>Show All</strong> to bring them back.</p>
 
-<h4>Reviewing a page</h4>
+<h3><span class="step-num">2</span> Review pages</h3>
+<p>Use the <strong>filter bar</strong> to narrow down by status, site, check number, or search by page name. Then work through the grid:</p>
 <ul>
-  <li><strong>Click P/F/? cells</strong> to cycle: unreviewed &rarr; pass &rarr; fail &rarr; unreviewed</li>
-  <li><strong>Click note cells</strong> to open a popup for adding notes</li>
-  <li><strong>Pass All</strong> button marks all unreviewed checks as pass (with Undo)</li>
-  <li><strong>Skip</strong> button removes unpublished pages from review</li>
-  <li><strong>Check 14</strong> links to the Linked Files page for pages that have linked documents</li>
+  <li><strong>Click the P/F/? cells</strong> to cycle: unreviewed &rarr; pass &rarr; fail &rarr; unreviewed. Changes save instantly.</li>
+  <li><strong>Click a note cell</strong> to open a popup for adding notes to any check.</li>
+  <li><strong>Pass All</strong> &mdash; marks all unreviewed checks on a page as pass. An <strong>Undo</strong> button appears immediately if you need to revert.</li>
+  <li><strong>Skip</strong> &mdash; removes a page from review (for unpublished or irrelevant pages).</li>
 </ul>
 
 <h3><span class="step-num">3</span> Review linked files</h3>
-<p>Click <strong>Linked Files &rarr;</strong> in the header or check 14's link to go to <a href="http://localhost:3000/files.html">the files page</a>. This shows all linked PDFs/documents grouped by page, with file-level pass/fail tracking that rolls up to check 14.</p>
+<p>For pages with linked PDFs or documents, check 14's note cell shows a <strong>View linked files</strong> link. You can also click <strong>Linked Files &rarr;</strong> in the page header.</p>
+<p>The <a href="http://localhost:3000/files.html">files page</a> shows all linked documents grouped by page, with file-level pass/fail tracking that rolls up to check 14.</p>
 
-<h3><span class="step-num">4</span> Run automated scans (if needed)</h3>
-<p>If there are unscanned pages:</p>
-<pre><code># Scan 50 unscanned pages
-npm run audit -- --new --limit 50
-
-# Scan a specific site
-npm run audit -- --site pioneer --limit 20
-
-# Scan a single page
-npm run audit -- --url https://www.eusd.org</code></pre>
-
-<h3><span class="step-num">5</span> Check progress</h3>
-<pre><code># Quick CLI status
-npm run status
-
-# Low-hanging fruit report
-npm run quickwins
-
-# Update team dashboard (GitHub Pages)
-npm run export-site</code></pre>
-
-<h3><span class="step-num">6</span> CLI-based reviews (alternative to Review UI)</h3>
-<p>You can still record reviews from the command line if preferred:</p>
-<pre><code># Pass a check
-npm run review -- 142 1 pass "Keyboard nav works on all menus"
-
-# Fail a check
-npm run review -- 142 1 fail "Dropdown menu traps keyboard focus"
-
-# Batch-apply template-level results
-npm run review:batch -- --check 3 pass "Skip link verified on template"</code></pre>
-
-<!-- ================================================================== -->
-<h2>Team Dashboard (GitHub Pages)</h2>
-
+<h3><span class="step-num">4</span> Share progress with the team</h3>
 <p>A read-only progress dashboard is published at:<br>
 <a href="https://escondido-union-school-district.github.io/doj-webrule-audit/">https://escondido-union-school-district.github.io/doj-webrule-audit/</a></p>
-
-<p>To update it with the latest numbers:</p>
-<pre><code>npm run export-site
-# Then commit and push docs/data.json</code></pre>
-
-<p>The dashboard shows overall progress, activity stats (today/week/month), and per-check progress bars.</p>
+<p>This updates automatically when changes are pushed to the repository.</p>
 
 <!-- ================================================================== -->
 <h2>CLI Reference</h2>
@@ -376,13 +335,12 @@ npm run review:batch -- --check 3 pass "Skip link verified on template"</code></
 <div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
   <h3 style="margin-top: 0; color: #1a56db;">Daily Workflow</h3>
   <ol>
-    <li>Open terminal, type <code>dwa</code></li>
-    <li>Review UI should already be running at <a href="http://localhost:3000">localhost:3000</a></li>
-    <li>Use the dashboard header to see today's progress vs goal</li>
-    <li>Click through pages, toggle pass/fail, add notes</li>
-    <li>Use <strong>Pass All</strong> for template-level pages that are clearly compliant</li>
-    <li>If unscanned pages exist: <code>npm run audit -- --new --limit 50</code></li>
-    <li>Update team dashboard: <code>npm run export-site</code> then commit &amp; push</li>
+    <li>Open <a href="http://localhost:3000">localhost:3000</a> (starts automatically on login)</li>
+    <li>Check the dashboard header &mdash; see today's count vs daily goal</li>
+    <li>Filter to <strong>Need Review</strong> to see what's left</li>
+    <li>Click through pages &mdash; toggle pass/fail, add notes where needed</li>
+    <li>Use <strong>Pass All</strong> for pages that are clearly compliant</li>
+    <li>Check <strong>Linked Files</strong> for pages with PDFs/documents</li>
   </ol>
 </div>
 
