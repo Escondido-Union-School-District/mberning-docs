@@ -225,7 +225,7 @@
 <p><strong>Author:</strong> Mark Berning, EUSD &nbsp;|&nbsp; <strong>Last Updated:</strong> 2026-04-06</p>
 <p>Operational procedures for Claude Code automation workflows. Each SOP is self-contained and includes a replication guide for anyone who wants to set up something similar in their own environment.</p>
 
-<details open style="margin:1.5em 0;">
+<details style="margin:1.5em 0;">
 <summary><h2 style="display:inline; border:none; margin:0; padding:0; color:#1a56db; cursor:pointer;">How This All Works</h2></summary>
 
 <p>This section explains how these tools get built, maintained, and documented &mdash; from start to finish.</p>
@@ -278,6 +278,31 @@
     </tr>
   </thead>
   <tbody>
+    <tr style="border-bottom:1px solid #eee;">
+      <td style="padding:8px; vertical-align:top;"><strong>6 AM&ndash;4 PM</strong><br><span style="font-size:0.85em; color:#666;">hourly</span></td>
+      <td style="padding:8px; vertical-align:top;">Thrillshare Approval Checker</td>
+      <td style="padding:8px; vertical-align:top;">Your PC</td>
+      <td style="padding:8px;">
+        <strong>Script:</strong> <code>~/projects/eusd/thrillshare-checker/run_hidden.vbs</code> via Windows Task Scheduler ("ThrillshareChecker")<br>
+        <strong>Does:</strong> Logs into Thrillshare via saved cookies, cycles through all 28 EUSD schools, and checks for pending approvals in Media &gt; Live Feed, Media &gt; News, and CMS pages<br>
+        <strong>Email:</strong> Only sent when pending approvals or errors are found (to mberning@eusd.org via <code>mail.eusd.org</code>)<br>
+        <strong>Reports:</strong> Saved to <code>~/projects/eusd/thrillshare-checker/reports/YYYY-MM-DD/</code> (auto-cleaned after 3 days)<br>
+        <strong>Auth:</strong> Cookie-based. If cookies expire, run: <code>python checker.py --login</code>
+      </td>
+    </tr>
+    <tr style="border-bottom:1px solid #eee;">
+      <td style="padding:8px; vertical-align:top;"><strong>7:00 AM</strong></td>
+      <td style="padding:8px; vertical-align:top;">Thrillshare Smore Link Scanner</td>
+      <td style="padding:8px; vertical-align:top;">Your PC</td>
+      <td style="padding:8px;">
+        <strong>Script:</strong> <code>~/projects/eusd/thrillshare-checker/run_smore_scan.vbs</code> via Windows Task Scheduler ("Thrillshare Smore Scan")<br>
+        <strong>Does:</strong> Checks Thrillshare alerts analytics for emails sent by specific principals that contain Smore newsletter links (instead of using Thrillshare's built-in alert system)<br>
+        <strong>Schools:</strong> Felicita (Higginbotham), Reidy Creek (Loh), Rincon Middle (Meglich)<br>
+        <strong>Email:</strong> Sent when Smore links are found, or when an error occurs (to mberning@eusd.org via <code>mail.eusd.org</code>)<br>
+        <strong>Lookback:</strong> 36 hours, so weekend activity is caught on Monday<br>
+        <strong>Log:</strong> <code>~/projects/eusd/thrillshare-checker/smore_scan_log.txt</code>
+      </td>
+    </tr>
     <tr style="border-bottom:1px solid #eee;">
       <td style="padding:8px; vertical-align:top;"><strong>3:01 PM</strong></td>
       <td style="padding:8px; vertical-align:top;"><a href="#sop-002">EOD Summary</a></td>
@@ -929,6 +954,7 @@ Keep all content but replace the CSS and structure.</code></pre>
 
 <table>
   <tr><th>Alias</th><th>Project</th><th>Path</th></tr>
+  <tr><td><code>ap</code></td><td>ADA Presentations</td><td><code>~/projects/eusd/ada-presentations</code></td></tr>
   <tr><td><code>pp</code></td><td>Parent Portal</td><td><code>~/projects/eusd/parent-portal</code></td></tr>
   <tr><td><code>el</code></td><td>EUSD Linkcheck</td><td><code>~/projects/eusd/eusd-linkcheck</code></td></tr>
   <tr><td><code>fp</code></td><td>Find PDFs</td><td><code>~/projects/eusd/find-pdfs</code></td></tr>
