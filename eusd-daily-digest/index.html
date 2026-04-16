@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EUSD Daily Digest &mdash; User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Print This Guide</button>
+
+<h1>EUSD Daily Digest</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-04-16 &mdash; Initial guide created
+</div>
+
+<!-- ================================================================== -->
+<h2>What Is This?</h2>
+
+<p>EUSD Daily Digest is an automated tool that emails you a once-a-day summary of everything that happened across all your EUSD projects. It runs silently in the background at 6 AM every day and sends a single email to <code>mberning@eusd.org</code> — no action required on your part.</p>
+
+<p>If you were away and your computer was off at 6 AM, the digest fires automatically the next time you log in, so you never miss a day.</p>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>Each morning, the digest scans every project under <code>~/projects/eusd/</code> and collects three types of activity from the previous calendar day:</p>
+
+<table>
+  <tr><th>Collector</th><th>What It Collects</th><th>Where It Looks</th></tr>
+  <tr>
+    <td>Git commits</td>
+    <td>All non-merge commits made during the day, with short hash, author, and subject</td>
+    <td>Each project's <code>.git</code> folder via <code>git log</code></td>
+  </tr>
+  <tr>
+    <td>Session notes</td>
+    <td>Claude Code session notes saved during the day — what you were working on, decisions made, next steps</td>
+    <td><code>~/.claude/projects/C--Users-mberning-projects-eusd-&lt;project&gt;/memory/session-notes.md</code></td>
+  </tr>
+  <tr>
+    <td>Tool findings</td>
+    <td>Any files modified during the day in <code>reports/</code>, <code>output/</code>, or <code>logs/</code> directories</td>
+    <td>Up to 2 levels deep inside each project's output folders</td>
+  </tr>
+</table>
+
+<p>Projects with zero activity still appear in the email with an explicit <em>No activity.</em> note — silence is the signal that a project was untouched, not a bug.</p>
+
+<div class="callout callout-info">
+  <strong>Note:</strong> If you do not receive an email on any given morning, something broke. The digest is designed to <strong>always</strong> send, even when all projects are quiet.
+</div>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Python 3.10+</strong> is installed and on your PATH</li>
+  <li><strong>Project folder:</strong> <code>~/projects/eusd/eusd-daily-digest/</code></li>
+  <li><strong>Dependencies</strong> installed in the local <code>venv/</code> (python-dotenv)</li>
+  <li><strong>Windows Scheduled Task</strong> named <code>EusdDailyDigest</code> created via <code>register_task.ps1</code> — triggers at 6 AM daily and again at logon</li>
+  <li><strong>Network access</strong> to <code>mail.eusd.org:25</code> (SMTP relay, no authentication needed)</li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Copy or clone the project to:
+#    C:\Users\mberning\projects\eusd\eusd-daily-digest\
+
+# 2. Open a terminal in the project folder and create a virtual environment:
+python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+
+# 3. Register the scheduled task (run once from the project folder):
+powershell -ExecutionPolicy Bypass -File .\register_task.ps1</code></pre>
+
+<div class="callout">
+  <strong>Warning:</strong> The scheduled task uses <em>Interactive</em> logon — it requires you to be logged in when it fires. It will <strong>not</strong> run while the machine is at the Windows login screen with no user session active.
+</div>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step</h2>
+
+<p>Under normal operation the digest runs automatically and you do nothing. These steps are for manual runs, backfilling missed dates, or debugging.</p>
+
+<h3><span class="step-num">1</span> Open a terminal in the project folder</h3>
+<pre><code>cd ~/projects/eusd/eusd-daily-digest</code></pre>
+
+<h3><span class="step-num">2</span> Run the digest manually (sends email for yesterday)</h3>
+<pre><code>python digest.py</code></pre>
+<p>You will see a confirmation line like <code>Sent: EUSD daily digest — Tue Apr 15, 2026</code> if the email was sent successfully.</p>
+
+<h3><span class="step-num">3</span> Preview output without sending an email</h3>
+<pre><code>python digest.py --stdout</code></pre>
+<p>Prints both the plain-text and HTML versions to the terminal. Useful for checking what the email would contain before sending.</p>
+
+<h3><span class="step-num">4</span> Backfill a specific date</h3>
+<pre><code>python digest.py --date 2026-04-10</code></pre>
+<p>Sends the digest for April 10 instead of yesterday. Combine with <code>--stdout</code> to preview without sending.</p>
+
+<h3><span class="step-num">5</span> Force re-send if today's digest was already sent</h3>
+<pre><code>python digest.py --force</code></pre>
+<p>The digest records the last date it sent in a <code>.last_sent</code> file to avoid duplicates when the logon trigger fires multiple times. Use <code>--force</code> to override that guard.</p>
+
+<!-- ================================================================== -->
+<h2>CLI Reference</h2>
+
+<table>
+  <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
+  <tr>
+    <td><code>--date YYYY-MM-DD</code></td>
+    <td><em>yesterday</em></td>
+    <td>Summarize a specific calendar day instead of yesterday</td>
+  </tr>
+  <tr>
+    <td><code>--no-email</code> / <code>--stdout</code></td>
+    <td><em>off</em></td>
+    <td>Print HTML and plain-text output to the terminal instead of sending via SMTP</td>
+  </tr>
+  <tr>
+    <td><code>--force</code></td>
+    <td><em>off</em></td>
+    <td>Bypass the <code>.last_sent</code> idempotency guard and send even if the target date was already sent today</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+<pre><code>~/projects/eusd/eusd-daily-digest/
+  digest.py              &lt;-- Entry point; run this
+  config.py              &lt;-- Reads .env, defines constants
+  render.py              &lt;-- Builds HTML + plain-text email
+  collectors/
+    git_log.py           &lt;-- Collects git commits per project
+    session_notes.py     &lt;-- Collects Claude Code session notes
+    tool_findings.py     &lt;-- Scans reports/, output/, logs/ for modified files
+  run_hidden.vbs         &lt;-- VBScript wrapper used by the scheduled task (no console window)
+  cleanup_stale.ps1      &lt;-- Kills orphaned python.exe processes older than 30 min
+  register_task.ps1      &lt;-- One-time script to create the Windows scheduled task
+  requirements.txt       &lt;-- Python dependencies (python-dotenv)
+  venv/                  &lt;-- Python virtual environment
+  .env                   &lt;-- Optional overrides (SMTP_HOST, RECIPIENT_EMAIL, etc.)
+  .last_sent             &lt;-- Stores the ISO date of the last successful send (gitignored)
+  log.txt                &lt;-- Output from the last scheduled task run
+  docs/
+    user-guide.html      &lt;-- This guide
+</code></pre>
+
+<!-- ================================================================== -->
+<h2>Understanding the Output</h2>
+
+<p>The digest email has one section per EUSD project, sorted alphabetically. Each section shows up to three subsections:</p>
+
+<ul>
+  <li><strong>Commits</strong> — short hash, author name, and commit subject for every non-merge commit on that day</li>
+  <li><strong>Session notes</strong> — the full text of any Claude Code session note entries timestamped on that day</li>
+  <li><strong>Tool findings</strong> — file path and a preview (up to 10 lines) of any output files modified on that day</li>
+</ul>
+
+<p>If a project had no activity at all, the section reads <em>No activity.</em> If a collector encountered an error for a specific project, it shows <code>⚠ error: ...</code> for that section only — other projects and other collectors still run normally.</p>
+
+<p>The subject line header row summarizes totals across all projects, for example:</p>
+<pre><code>12 projects · 3 with commits · 1 with findings · 2 with session notes · 6 quiet</code></pre>
+
+<p>When the digest itself fails completely (not just one collector), you will receive a separate failure email with the full Python traceback so you can diagnose the problem.</p>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Error / Symptom</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td>No email received this morning</td>
+    <td>Machine was off at 6 AM and the logon trigger hasn't fired, or the task is disabled</td>
+    <td>Log in — the logon trigger fires 2 minutes after login. Or run <code>python digest.py</code> manually. Check Task Scheduler if it keeps happening.</td>
+  </tr>
+  <tr>
+    <td><code>Already sent digest for YYYY-MM-DD; skipping.</code></td>
+    <td>The logon trigger fired but the digest was already sent by the 6 AM trigger (normal behavior)</td>
+    <td>Not an error — this is the idempotency guard working correctly. Use <code>--force</code> if you actually need to re-send.</td>
+  </tr>
+  <tr>
+    <td><code>git not on PATH</code> in one project section</td>
+    <td>Git is not installed or not in the PATH visible to the scheduled task's environment</td>
+    <td>Install Git for Windows and ensure it is on the system PATH. Re-register the task after fixing.</td>
+  </tr>
+  <tr>
+    <td><code>git log timed out after 30s</code></td>
+    <td>A project's git repo is very large or the drive is slow</td>
+    <td>Check if the repo has excessive history or is on a network drive. The timeout is per-project so other projects still run.</td>
+  </tr>
+  <tr>
+    <td>Session notes section empty for a project you worked on</td>
+    <td>The session notes file path doesn't match the expected slug format, or notes weren't saved via the "eod" command</td>
+    <td>Check that <code>~/.claude/projects/C--Users-mberning-projects-eusd-&lt;project-name&gt;/memory/session-notes.md</code> exists and has timestamped entries. Use the <code>eod</code> command in Claude Code to save notes.</td>
+  </tr>
+  <tr>
+    <td>Failure email with <code>ConnectionRefusedError</code> or SMTP error</td>
+    <td>Cannot reach <code>mail.eusd.org:25</code> — you may be off-network or VPN is disconnected</td>
+    <td>Connect to the EUSD network or VPN, then run <code>python digest.py --force</code> to retry.</td>
+  </tr>
+  <tr>
+    <td><code>ModuleNotFoundError: No module named 'dotenv'</code></td>
+    <td>The virtual environment is not activated, or dependencies were not installed</td>
+    <td>Run <code>venv\Scripts\activate</code> then <code>pip install -r requirements.txt</code>. The scheduled task uses <code>run_hidden.vbs</code> which points to the venv Python automatically.</td>
+  </tr>
+  <tr>
+    <td>Digest appears to hang or never finish</td>
+    <td>A subprocess (e.g., git) is blocking; the watchdog will kill the process after 5 minutes</td>
+    <td>Wait up to 5 minutes for the watchdog to terminate the process. Then check <code>log.txt</code> for the last output before the hang. You can also run <code>cleanup_stale.ps1</code> to kill any orphaned python.exe processes immediately.</td>
+  </tr>
+  <tr>
+    <td>Tool findings show <code>&lt;binary file, not previewed&gt;</code></td>
+    <td>A file in <code>reports/</code>, <code>output/</code>, or <code>logs/</code> is a binary (PDF, image, etc.)</td>
+    <td>Expected behavior — binary files are detected by null bytes and skipped to avoid garbled output. The file path and size are still shown.</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Common Commands</h3>
+  <ol>
+    <li><strong>Preview yesterday's digest (no email):</strong><br><code>python digest.py --stdout</code></li>
+    <li><strong>Send yesterday's digest now:</strong><br><code>python digest.py</code></li>
+    <li><strong>Backfill a specific date:</strong><br><code>python digest.py --date 2026-04-10</code></li>
+    <li><strong>Re-send today's digest (bypass duplicate guard):</strong><br><code>python digest.py --force</code></li>
+    <li><strong>Kill orphaned processes:</strong><br><code>powershell -File cleanup_stale.ps1</code></li>
+    <li><strong>Re-register the scheduled task:</strong><br><code>powershell -ExecutionPolicy Bypass -File register_task.ps1</code></li>
+  </ol>
+</div>
+
+</body>
+</html>

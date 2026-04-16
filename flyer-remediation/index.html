@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Flyer Remediation &mdash; User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Print This Guide</button>
+
+<h1>PDF Flyer Remediation &mdash; User Guide</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-04-16 &mdash; Initial guide created
+</div>
+
+<!-- ================================================================== -->
+<h2>What Is It?</h2>
+
+<p>
+  This tool takes PDF flyers exported from Canva (or any flat PDF) and rebuilds them so
+  screen readers can read them correctly. It is for the EUSD Communications or Technology
+  team to process event flyers before posting them publicly. No design experience is needed
+  &mdash; just drop in a PDF and run one command.
+</p>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>
+  <code>remediate.py</code> performs a full PDF/UA-1 accessibility remediation on each
+  input flyer. It uses an AI vision model to understand the layout, then rewrites the PDF's
+  internal structure so every piece of text and every image is properly tagged with a role
+  (heading, paragraph, figure, etc.) and reading order.
+</p>
+
+<table>
+  <tr><th>Step</th><th>What Happens</th></tr>
+  <tr>
+    <td>Analyze</td>
+    <td>The AI looks at a full-page image of each flyer and identifies all text blocks, headings, images, and their reading order.</td>
+  </tr>
+  <tr>
+    <td>Match</td>
+    <td>Identified regions are matched to real text and image objects already in the PDF.</td>
+  </tr>
+  <tr>
+    <td>OCR fallback</td>
+    <td>If text is embedded as a graphic (Canva outlined text or flat raster), the AI reads it and injects an invisible accessible text layer.</td>
+  </tr>
+  <tr>
+    <td>Tag &amp; save</td>
+    <td>A fresh tag tree is written, metadata is set (title, language, PDF/UA marker), and the output PDF is saved to <code>output/</code>.</td>
+  </tr>
+</table>
+
+<div class="callout callout-info">
+  <strong>Note:</strong> Every output is a <strong>draft</strong>. You must review the result
+  in Adobe Acrobat Pro and run PAC 2024 before publishing. See the Review Workflow section below.
+</div>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Python 3.10+</strong> installed</li>
+  <li><strong>Project folder:</strong> <code>~/projects/eusd/flyer-remediation/</code> with a virtual environment in <code>venv/</code></li>
+  <li><strong>API key configured</strong> in <code>~/projects/eusd/flyer-remediation/.env</code></li>
+  <li><strong>Dependencies installed</strong> (pikepdf, pymupdf, anthropic, google-genai, Pillow, python-dotenv)</li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Copy the project folder to ~/projects/eusd/flyer-remediation/
+
+# 2. Open a terminal in the project folder:
+cd ~/projects/eusd/flyer-remediation
+
+# 3. Create and activate a virtual environment:
+python -m venv venv
+source venv/Scripts/activate      # Git Bash / MSYS2
+# OR: venv\Scripts\activate        # PowerShell / cmd
+
+# 4. Install dependencies:
+pip install -r requirements.txt
+
+# 5. Copy the env template and fill in your API key:
+cp .env.example .env
+# Edit .env and set GOOGLE_API_KEY or ANTHROPIC_API_KEY</code></pre>
+
+<div class="callout">
+  <strong>API Key:</strong> The tool requires either a Google Gemini API key
+  (<code>GOOGLE_API_KEY</code>) or an Anthropic Claude API key
+  (<code>ANTHROPIC_API_KEY</code>). The <code>VISION_PROVIDER</code> setting in
+  <code>.env</code> controls which one is used. Contact the project owner to obtain
+  the correct key.
+</div>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step</h2>
+
+<p>Run this whenever you have new flyers to make accessible.</p>
+
+<h3><span class="step-num">1</span> Drop your PDF(s) into the input folder</h3>
+<p>Copy or move the flyer PDF(s) you want to process into:</p>
+<pre><code>~/projects/eusd/flyer-remediation/input/</code></pre>
+<p>You can drop in one file or an entire batch of files at once.</p>
+
+<h3><span class="step-num">2</span> Open a terminal and activate the virtual environment</h3>
+<pre><code>cd ~/projects/eusd/flyer-remediation
+source venv/Scripts/activate</code></pre>
+<p>Your prompt should change to show <code>(venv)</code> at the start.</p>
+
+<h3><span class="step-num">3</span> Run the tool</h3>
+<p>Process a single file:</p>
+<pre><code>python remediate.py input/MyFlyer.pdf</code></pre>
+
+<p>Process all PDFs in the input folder at once:</p>
+<pre><code>python remediate.py input/</code></pre>
+
+<h3><span class="step-num">4</span> Wait for it to finish</h3>
+<p>A typical 1-page flyer takes 15&ndash;30 seconds. You will see progress printed for each page. A successful run ends with:</p>
+<pre><code>Saved: output/MyFlyer_uaremediated.pdf
+
+============================================================
+Batch complete: 1 succeeded, 0 failed
+============================================================</code></pre>
+
+<h3><span class="step-num">5</span> Review the output in Acrobat Pro</h3>
+<p>Open <code>~/projects/eusd/flyer-remediation/output/MyFlyer_uaremediated.pdf</code> in Adobe Acrobat Pro and follow the Review Workflow below.</p>
+
+<h3><span class="step-num">6</span> Validate in PAC 2024</h3>
+<p>Drag the output PDF into PAC 2024. Expected result: zero errors on Matterhorn checkpoints 01&ndash;31.</p>
+
+<!-- ================================================================== -->
+<h2>Review Workflow</h2>
+
+<p>Every output is a draft. Complete these checks in Acrobat Pro before publishing.</p>
+
+<ol>
+  <li>
+    <strong>Tags panel:</strong> Go to <em>View &rarr; Tags panel</em>. Expand
+    <code>&lt;Document&gt;</code>. Click each tag &mdash; a pink border must appear
+    around the real visual element on the page. This is the acceptance criterion.
+  </li>
+  <li>
+    <strong>Accessibility Check:</strong> Run <em>Tools &rarr; Accessibility &rarr;
+    Accessibility Check</em>. Only the two manual checkpoints ("Logical Reading Order"
+    and "Color Contrast") should require human review. All machine checks must pass.
+  </li>
+  <li>
+    <strong>Reading Order panel:</strong> Confirm the numbered order matches how you
+    would naturally read the flyer top-to-bottom.
+  </li>
+  <li>
+    <strong>Document Properties:</strong> Go to <em>File &rarr; Properties</em>. Verify:
+    Title is present, Language is <code>en-US</code>, and "Tagged PDF: Yes" is shown.
+  </li>
+  <li>
+    <strong>PAC 2024:</strong> Drag the PDF into PAC 2024. Expect zero errors on
+    Matterhorn checkpoints 01&ndash;31.
+  </li>
+</ol>
+
+<div class="callout">
+  <strong>Most common manual fix needed:</strong> Reading order on dense layouts (hero image
+  + sidebar + callout + footer) is where AI errors appear most. If the pink border lands on
+  the wrong element, drag the tag to its correct position in the Tags panel.
+</div>
+
+<!-- ================================================================== -->
+<h2>CLI Reference</h2>
+
+<table>
+  <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
+  <tr>
+    <td><code>input_path</code></td>
+    <td><em>required</em></td>
+    <td>Path to a single PDF file or a folder of PDFs to process.</td>
+  </tr>
+  <tr>
+    <td><code>--dpi</code></td>
+    <td><code>200</code></td>
+    <td>Resolution (dots per inch) used when rendering pages for the AI. Higher values improve accuracy on small text but increase cost and time.</td>
+  </tr>
+  <tr>
+    <td><code>--force-raster</code></td>
+    <td>off</td>
+    <td>Skip live-text matching entirely and OCR every region. Use this if the PDF has no selectable text at all (fully rasterized).</td>
+  </tr>
+  <tr>
+    <td><code>--dry-run</code></td>
+    <td>off</td>
+    <td>Analyze and print the tagging plan without saving any files. Use to preview what will happen before committing.</td>
+  </tr>
+  <tr>
+    <td><code>--verify</code></td>
+    <td>off</td>
+    <td>After saving, re-open the PDF and confirm every tag in the structure tree is properly linked to a page content stream marker. Adds a few seconds per file.</td>
+  </tr>
+  <tr>
+    <td><code>--verbose</code></td>
+    <td>off</td>
+    <td>Print full AI responses and per-tag diagnostics. Use when troubleshooting a bad output &mdash; output can be very long.</td>
+  </tr>
+</table>
+
+<p><strong>Common invocations:</strong></p>
+<pre><code># Process one file
+python remediate.py input/SummerFlyer.pdf
+
+# Process a whole batch
+python remediate.py input/
+
+# Preview without saving
+python remediate.py input/SummerFlyer.pdf --dry-run
+
+# Extra quality check after saving
+python remediate.py input/SummerFlyer.pdf --verify
+
+# Troubleshoot a bad result
+python remediate.py input/SummerFlyer.pdf --verbose</code></pre>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+<pre><code>~/projects/eusd/flyer-remediation/
+  remediate.py        &lt;-- Main command to run
+  pipeline.py         &lt;-- Processing engine (one file at a time)
+  requirements.txt    &lt;-- Python package list
+  .env                &lt;-- Your API keys (never share this file)
+  .env.example        &lt;-- Template showing required variables
+  input/              &lt;-- Drop your PDFs here before running
+  output/             &lt;-- Remediated PDFs appear here (*_uaremediated.pdf)
+  processed/          &lt;-- Original files move here after success
+  docs/               &lt;-- This user guide
+  venv/               &lt;-- Python virtual environment (do not edit)
+</code></pre>
+
+<!-- ================================================================== -->
+<h2>Understanding the Output</h2>
+
+<p>
+  For each input PDF named <code>MyFlyer.pdf</code>, the tool creates
+  <code>output/MyFlyer_uaremediated.pdf</code>. The original is moved to
+  <code>processed/MyFlyer.pdf</code> so <code>input/</code> stays clean.
+</p>
+
+<p>Console output during a typical run:</p>
+<pre><code>Vision provider: gemini
+
+============================================================
+Processing: SummerFlyer.pdf
+============================================================
+
+  Page 1/1: analyzing content stream...
+  Page 1: extracting live text via fitz...
+  Page 1: fitz lines=38 images=2
+  Page 1: vision layout call...
+  Page 1: matching regions...
+  Page 1: leaves=7 {'text_live': 4, 'figure_live': 2, 'text_raster': 1}
+  Page 1: assembling wraps (OCR if needed)...
+
+  Saved: output/SummerFlyer_uaremediated.pdf
+
+============================================================
+Batch complete: 1 succeeded, 0 failed
+============================================================</code></pre>
+
+<p>
+  The <strong>leaves</strong> line summarizes how each region was handled:
+  <code>text_live</code> = live selectable text tagged in-place;
+  <code>text_raster</code> = graphic text read by OCR with an invisible text layer added;
+  <code>figure_live</code> = image tagged directly;
+  <code>figure_raster</code> = visual-only region with a placeholder marker.
+</p>
+
+<div class="callout callout-info">
+  <strong>Note:</strong> If a page shows <code>[WARN] layout fallback used</code>, the AI
+  could not parse the layout on that page and tagged the entire page as a single paragraph.
+  Review that page carefully in Acrobat.
+</div>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Error / Symptom</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td><code>GOOGLE_API_KEY not set</code> or <code>ANTHROPIC_API_KEY not set</code></td>
+    <td>The <code>.env</code> file is missing or the key variable is blank.</td>
+    <td>Open <code>.env</code> and set the correct API key for your <code>VISION_PROVIDER</code>. See <code>.env.example</code> for the required variable names.</td>
+  </tr>
+  <tr>
+    <td><code>Error: path not found</code></td>
+    <td>The file or folder path you typed does not exist.</td>
+    <td>Check spelling and confirm the file is in the <code>input/</code> folder. Use <code>ls input/</code> to list what is there.</td>
+  </tr>
+  <tr>
+    <td><code>No PDFs in [path]</code></td>
+    <td>The folder exists but contains no <code>.pdf</code> files.</td>
+    <td>Confirm the files you dropped in have a <code>.pdf</code> extension (not <code>.PDF</code> capitalized on some systems).</td>
+  </tr>
+  <tr>
+    <td><code>Error: PDF is encrypted</code></td>
+    <td>The input PDF is password-protected.</td>
+    <td>Open the PDF in Acrobat and remove the password (File &rarr; Properties &rarr; Security), then re-save and try again.</td>
+  </tr>
+  <tr>
+    <td><code>Error: could not open</code></td>
+    <td>The PDF is corrupted or not a valid PDF file.</td>
+    <td>Re-export from Canva or the original source and try again. If it opens fine in Acrobat, try File &rarr; Save As to re-save a clean copy.</td>
+  </tr>
+  <tr>
+    <td><code>[WARN] Could not move [filename] (locked)</code></td>
+    <td>Another application (Acrobat, antivirus) has the original file open.</td>
+    <td>Close the file in any other program and the warning is harmless &mdash; the output was still saved. Move the original manually to <code>processed/</code> when ready.</td>
+  </tr>
+  <tr>
+    <td><code>[WARN] layout fallback used</code></td>
+    <td>The AI returned an invalid response after two attempts on that page.</td>
+    <td>The page is tagged as one large paragraph. Review in Acrobat and fix the tag tree manually, or rerun with <code>--verbose</code> to see what the AI returned.</td>
+  </tr>
+  <tr>
+    <td>Verify shows <code>orphan=N FAIL</code></td>
+    <td>Some structure tree tags are not linked to a page content stream marker. Indicates an internal tool error.</td>
+    <td>Run again with <code>--verbose</code> and report the full output. As a workaround, open in Acrobat and manually fix or delete the orphaned tags.</td>
+  </tr>
+  <tr>
+    <td>Pink border lands on wrong element in Acrobat</td>
+    <td>AI misidentified the reading order or region boundaries (common on complex layouts).</td>
+    <td>Normal for v1. Drag the tag to its correct position in the Acrobat Tags panel. Use <code>--verbose</code> to inspect the AI layout response and understand what it saw.</td>
+  </tr>
+  <tr>
+    <td>Virtual environment not activated (<code>python: command not found</code> or wrong version)</td>
+    <td>You skipped the <code>source venv/Scripts/activate</code> step.</td>
+    <td>Run <code>source venv/Scripts/activate</code> from the project folder first, then re-run the command.</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Daily Workflow</h3>
+  <ol>
+    <li>Drop PDF(s) into <code>~/projects/eusd/flyer-remediation/input/</code></li>
+    <li>Open terminal: <code>cd ~/projects/eusd/flyer-remediation &amp;&amp; source venv/Scripts/activate</code></li>
+    <li>Run: <code>python remediate.py input/</code></li>
+    <li>Check: output saved to <code>output/</code>, originals moved to <code>processed/</code></li>
+    <li>Review output PDF in Acrobat Pro (Tags panel + Accessibility Check)</li>
+    <li>Validate in PAC 2024 &mdash; expect zero errors</li>
+    <li>Publish the <code>_uaremediated.pdf</code> file</li>
+  </ol>
+</div>
+
+</body>
+</html>

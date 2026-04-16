@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADA Presentations &mdash; User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Print This Guide</button>
+
+<h1>ADA Presentations</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-04-09 &mdash; Initial guide created.
+</div>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>ADA Presentations is a local Flask web app that converts inaccessible PDF presentations (typically exported from Google Slides) into ADA / WCAG 2.1 AA compliant HTML slide decks branded for EUSD. It uses the Claude Vision API to analyze slide images, generate alt text, and reconstruct tables, then assembles the result into a reveal.js-based slide deck.</p>
+
+<div class="callout callout-info">
+  <strong>Requirement:</strong> An <code>ANTHROPIC_API_KEY</code> must be set in <code>.env</code> at the project root for the AI enrichment step to work.
+</div>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Python 3.14</strong> installed</li>
+  <li><strong>Project folder:</strong> <code>~/projects/eusd/ada-presentations/</code></li>
+  <li><strong>Dependencies</strong> installed via <code>pip install -r requirements.txt</code></li>
+  <li><strong>API key</strong> set in <code>.env</code>: <code>ANTHROPIC_API_KEY=sk-ant-...</code></li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Clone the repo
+git clone https://github.com/Escondido-Union-School-District/ada-presentations.git
+cd ada-presentations
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Create a .env file with your Anthropic API key
+echo "ANTHROPIC_API_KEY=sk-ant-..." &gt; .env</code></pre>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step</h2>
+
+<h3><span class="step-num">1</span> Start the web app</h3>
+<pre><code>python run.py</code></pre>
+<p>The app starts at <a href="http://localhost:5000">http://localhost:5000</a>.</p>
+
+<h3><span class="step-num">2</span> Upload a PDF</h3>
+<p>Open the app in your browser and upload the source PDF presentation. A new project folder is created under <code>~/projects/eusd/ada-presentations/projects/</code>.</p>
+
+<h3><span class="step-num">3</span> Review and enrich</h3>
+<p>The app extracts each page, sends slide images to the Claude Vision API for alt text and table reconstruction, and saves the enriched content as JSON.</p>
+
+<h3><span class="step-num">4</span> Generate the accessible HTML deck</h3>
+<p>When enrichment is complete, the app assembles a reveal.js-based slide deck with EUSD branding. Download the result from the project page.</p>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+<pre><code>~/projects/eusd/ada-presentations/
+  run.py              &lt;-- Launches the Flask app
+  requirements.txt    &lt;-- Python dependencies
+  .env                &lt;-- ANTHROPIC_API_KEY (gitignored)
+  app/                &lt;-- Flask application
+    services/
+      pdf_extractor.py    &lt;-- PDF parsing and image extraction
+      ai_enrichment.py    &lt;-- Claude Vision API integration
+      html_generator.py   &lt;-- reveal.js HTML assembly
+    models/
+      project.py          &lt;-- JSON-backed project state
+    templates/        &lt;-- Jinja2 templates
+    static/           &lt;-- CSS/JS assets
+  projects/           &lt;-- Per-project working dirs (gitignored)
+  sources/            &lt;-- Sample source PDFs
+  docs/               &lt;-- This guide
+</code></pre>
+
+<!-- ================================================================== -->
+<h2>Understanding the Output</h2>
+
+<p>Each uploaded PDF becomes a project folder under <code>projects/</code> containing the extracted page images, enrichment JSON, and the final HTML slide deck. The deck uses reveal.js with EUSD branding (royal blue <code>#1B3A8C</code>, accent blue <code>#1a56db</code>, highlight gold <code>#f9a825</code>, Arial font) and meets WCAG 2.1 AA: semantic headings, alt text on every image, keyboard navigation, and accessible tables.</p>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td><code>ANTHROPIC_API_KEY not set</code></td>
+    <td>Missing or empty <code>.env</code> file</td>
+    <td>Create <code>.env</code> at project root with <code>ANTHROPIC_API_KEY=sk-ant-...</code></td>
+  </tr>
+  <tr>
+    <td><code>Address already in use</code></td>
+    <td>Port 5000 is occupied by another process</td>
+    <td>Stop the other process, or change the port in <code>run.py</code></td>
+  </tr>
+  <tr>
+    <td><code>ModuleNotFoundError</code></td>
+    <td>Dependencies not installed</td>
+    <td>Run <code>pip install -r requirements.txt</code></td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Daily Workflow</h3>
+  <ol>
+    <li>Type <code>ap</code> in any terminal to launch the project</li>
+    <li>Run <code>python run.py</code> and open <a href="http://localhost:5000">http://localhost:5000</a></li>
+    <li>Upload a PDF, wait for enrichment, download the accessible HTML deck</li>
+  </ol>
+</div>
+
+</body>
+</html>
