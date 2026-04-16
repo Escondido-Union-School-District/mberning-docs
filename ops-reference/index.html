@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code Operations Reference</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<div class="no-print" style="display: flex; gap: 0.5em; margin-bottom: 1em;">
+  <button class="print-btn" onclick="window.print()">Print this guide</button>
+  <a href="../" class="print-btn" style="text-decoration: none; display: inline-block; text-align: center;">All tools</a>
+</div>
+
+<h1>Claude Code Operations Reference</h1>
+<p><strong>Operational reference for Mark Berning's EUSD project automation</strong></p>
+
+<!-- ================================================================== -->
+<h2>Daily Schedule</h2>
+
+<table>
+  <tr><th>Time</th><th>What</th><th>Where</th><th>What it does</th></tr>
+  <tr>
+    <td>6:00 AM</td>
+    <td>Morning Digest Email</td>
+    <td>Your PC (Windows Task Scheduler)</td>
+    <td>Sends cross-project summary email of yesterday's activity to mberning@eusd.org. Logon rescue trigger fires if PC was off.</td>
+  </tr>
+  <tr>
+    <td>6 AM&ndash;4 PM (hourly)</td>
+    <td>Thrillshare Approval Checker</td>
+    <td>Your PC (Windows Task Scheduler)</td>
+    <td>Checks all 28 EUSD schools for pending Thrillshare approvals. Email only sent when issues found.</td>
+  </tr>
+  <tr>
+    <td>7:00 AM</td>
+    <td>Thrillshare Smore Link Scanner</td>
+    <td>Your PC (Windows Task Scheduler)</td>
+    <td>Checks Thrillshare alerts for principals using Smore links instead of Thrillshare alerts. 36-hour lookback.</td>
+  </tr>
+  <tr>
+    <td>2:50 PM</td>
+    <td>Afternoon Automation</td>
+    <td>Your PC (Windows Task Scheduler)</td>
+    <td>Captures session notes with reasoning per project, updates user guides, syncs to GitHub Pages, generates daily summary.</td>
+  </tr>
+  <tr>
+    <td>2:55 PM</td>
+    <td>Config Sync</td>
+    <td>Your PC (Windows Task Scheduler)</td>
+    <td>Backs up Claude Code config (skills, settings, profiles) to git.</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Expected Emails</h2>
+
+<table>
+  <tr><th>Email</th><th>When</th><th>Condition</th></tr>
+  <tr>
+    <td>EUSD Daily Digest</td>
+    <td>Every morning (~6 AM or at logon)</td>
+    <td>Always sent. A missing email means something broke.</td>
+  </tr>
+  <tr>
+    <td>Thrillshare Approval Alert</td>
+    <td>Hourly 6 AM&ndash;4 PM</td>
+    <td>Only when pending approvals are found</td>
+  </tr>
+  <tr>
+    <td>Thrillshare Smore Link Alert</td>
+    <td>7 AM daily</td>
+    <td>Only when Smore links found in principal alerts</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>How to Start a New Project</h2>
+
+<ol>
+  <li><code>cd ~/projects/eusd</code> and start claude</li>
+  <li>Explore the idea conversationally &mdash; take as long as you need</li>
+  <li>When ready to build, tell Claude (any phrasing: "let's build it", "set this up", "create the project")</li>
+  <li>Claude creates the directory, git, GitHub repo, aliases, user guide, and captures your reasoning</li>
+  <li>Open a new terminal and type the alias Claude gave you</li>
+</ol>
+
+<div class="callout callout-info">
+  <strong>Note:</strong> If you skip these steps and just create a directory and start coding, the system still works. The afternoon automation discovers new projects automatically. You just get less reasoning captured.
+</div>
+
+<!-- ================================================================== -->
+<h2>New Project Gut Check</h2>
+
+<table>
+  <tr><th>Check</th><th>How to verify</th><th>What to tell Claude if missing</th></tr>
+  <tr>
+    <td>Git initialized?</td>
+    <td><code>.git/</code> exists in project root</td>
+    <td>"Initialize git for this project"</td>
+  </tr>
+  <tr>
+    <td>CLAUDE.md exists?</td>
+    <td><code>CLAUDE.md</code> in project root</td>
+    <td>"Create a CLAUDE.md for this project"</td>
+  </tr>
+  <tr>
+    <td>GitHub repo created?</td>
+    <td><code>git remote -v</code> shows a remote</td>
+    <td>"Create a GitHub repo for this project"</td>
+  </tr>
+  <tr>
+    <td>Launch alias set up?</td>
+    <td>Type project initials in a new terminal</td>
+    <td>"Add a launch alias for this project"</td>
+  </tr>
+  <tr>
+    <td>Reasoning captured?</td>
+    <td>CLAUDE.md has a Background section, or <code>docs/superpowers/specs/</code> has a design spec</td>
+    <td>"Write up why we're building this, what approach we chose, and what alternatives we considered &mdash; put it in CLAUDE.md"</td>
+  </tr>
+  <tr>
+    <td>User guide started?</td>
+    <td><code>docs/user-guide.html</code> exists</td>
+    <td>"Create a user guide for this project"</td>
+  </tr>
+</table>
+
+<div class="callout">
+  <strong>If you can only do one thing:</strong> capture the reasoning. Everything else is automatic or can be backfilled later.
+</div>
+
+<!-- ================================================================== -->
+<h2>How to Come Back to a Project</h2>
+
+<ol>
+  <li>Type the project alias (see inventory below)</li>
+  <li>Say "where were we"</li>
+  <li>Claude reads session notes, design rationale, and git history, then briefs you on what you were doing, why, and what's next</li>
+</ol>
+
+<!-- ================================================================== -->
+<h2>Project Inventory</h2>
+
+<table>
+  <tr><th>Alias</th><th>Project</th><th>Description</th></tr>
+  <tr><td><code>ap</code></td><td>ADA Presentations</td><td>Flask web app converting PDF presentations to ADA/WCAG 2.1 AA HTML</td></tr>
+  <tr><td><code>dwa</code></td><td>DOJ WebRule Audit</td><td>Node.js web crawler for accessibility audits across EUSD sites</td></tr>
+  <tr><td><code>eat</code></td><td>EUSD ADA Toolkit</td><td>Step-by-step web accessibility audit workflow</td></tr>
+  <tr><td><code>edd</code></td><td>EUSD Daily Digest</td><td>Daily email summarizing activity across all EUSD projects</td></tr>
+  <tr><td><code>el</code></td><td>EUSD Linkcheck</td><td>Automated broken-link detection across 27 EUSD websites</td></tr>
+  <tr><td><code>fp</code></td><td>Find PDFs</td><td>Scanner for shortcode URLs on EUSD websites</td></tr>
+  <tr><td><code>fr</code></td><td>Flyer Remediation</td><td>CLI tool rebuilding PDF tag trees for PDF/UA-1 conformance</td></tr>
+  <tr><td><code>paf</code></td><td>PDF ADA Fixes</td><td>CLI fixing ADA/Section 508 issues in Word-exported PDFs</td></tr>
+  <tr><td><code>pfp</code></td><td>PDF Form Prep</td><td>Toolkit for automating PDF form accessibility</td></tr>
+  <tr><td><code>pp</code></td><td>Parent Portal</td><td>Mobile-first single-page web app for EUSD parents</td></tr>
+  <tr><td><code>qcc</code></td><td>QR Code Converter</td><td>Replaces video.link QR codes with YouTube QR codes in PDFs</td></tr>
+  <tr><td><code>sac</code></td><td>Smore ADA Checker</td><td>Browser automation checking Smore posts for accessibility</td></tr>
+  <tr><td><code>tc</code></td><td>Thrillshare Checker</td><td>Browser automation checking EUSD schools for pending Thrillshare approvals</td></tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Problem</th><th>Where to look</th><th>Fix</th></tr>
+  <tr>
+    <td>Session notes not appearing</td>
+    <td><code>~/projects/daily-summaries/eod-log.txt</code></td>
+    <td>Check for Failed/Timeout entries in Job 1 section</td>
+  </tr>
+  <tr>
+    <td>User guide not updating</td>
+    <td><code>~/projects/daily-summaries/eod-log.txt</code></td>
+    <td>Check Job 2 section for Gap/Failed entries</td>
+  </tr>
+  <tr>
+    <td>GitHub Pages stale</td>
+    <td><code>~/projects/daily-summaries/eod-log.txt</code></td>
+    <td>Check Job 3 section for sync errors</td>
+  </tr>
+  <tr>
+    <td>Morning digest not arriving</td>
+    <td><code>~/projects/eusd/eusd-daily-digest/log.txt</code></td>
+    <td>Check Windows Task Scheduler for "EusdDailyDigest" task</td>
+  </tr>
+  <tr>
+    <td>New project not discovered</td>
+    <td>Verify <code>.git/</code> exists in the project directory</td>
+    <td>Run <code>git init</code> in the project</td>
+  </tr>
+  <tr>
+    <td>Alias not working</td>
+    <td>Open a new terminal and try again</td>
+    <td>Check <code>~/.bashrc</code> and PowerShell profile for the alias</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>How to Update This Page</h2>
+
+<p>Tell Claude in any session: "update the ops reference page in mberning-docs". The afternoon automation also syncs this page to GitHub Pages daily.</p>
+
+</body>
+</html>
