@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Form Prep Toolkit — User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<a href="javascript:window.print()" class="no-print" style="font-size: 0.85em; color: #1a56db;">Print this guide</a>
+
+<h1>PDF Form Prep Toolkit</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-03-25 &mdash; Initial guide created
+</div>
+
+<h2>What This Toolkit Does</h2>
+
+<p>This toolkit automates accessibility remediation of Word-exported PDF forms. When you create a form in Word using underscores for fill-in lines (e.g., "First name:________________"), the label and underscores end up fused together in the PDF tag tree, making screen readers read them as one block. Fixing this manually in Acrobat's Reading Order tool is tedious.</p>
+
+<p>The toolkit has two scripts that handle different stages of the process:</p>
+
+<table>
+  <tr><th>Script</th><th>What It Does</th><th>When to Run</th></tr>
+  <tr>
+    <td><code>prep_form.py</code></td>
+    <td>Splits label text from underscore fill lines in the PDF tag tree. Underscores are moved to Artifact blocks so screen readers skip them. Cleans up empty tags.</td>
+    <td>After exporting the form from Word to PDF</td>
+  </tr>
+  <tr>
+    <td><code>post_prepare.py</code></td>
+    <td>Tags form field annotations, generates WCAG-compliant tooltips using Gemini AI, and creates proper <code>&lt;Form&gt;</code> structure elements.</td>
+    <td>After running Acrobat's "Prepare Form" on the prepped PDF</td>
+  </tr>
+</table>
+
+<div class="callout callout-info">
+  <strong>Requirement:</strong> Input PDFs must be <em>tagged</em> PDFs exported from Word. Untagged or scanned PDFs will not work.
+</div>
+
+<h2>The Full Workflow</h2>
+
+<table>
+  <tr><th>Step</th><th>Tool</th><th>Action</th></tr>
+  <tr><td>1</td><td>Word</td><td>Create form with underscore blank lines</td></tr>
+  <tr><td>2</td><td>Word</td><td>Export to PDF (Save As &rarr; PDF)</td></tr>
+  <tr><td>3</td><td><code>prep_form.py</code></td><td>Split labels from underscores, artifact the underscores</td></tr>
+  <tr><td>4</td><td>Acrobat</td><td>Open prepped PDF &rarr; Prepare Form &rarr; fix field types only</td></tr>
+  <tr><td>5</td><td><code>post_prepare.py</code></td><td>Tag fields, generate tooltips, create &lt;Form&gt; tags</td></tr>
+  <tr><td>6</td><td>Acrobat</td><td>Verify result</td></tr>
+</table>
+
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Python 3.10+</strong> must be installed</li>
+  <li><strong>Project folder:</strong> <code>C:\Users\mberning\projects\eusd\pdf-form-prep</code></li>
+  <li><strong>Dependencies</strong> installed via pip</li>
+  <li><strong>Google API key</strong> saved in the <code>.env</code> file (required only for <code>post_prepare.py</code>)</li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Clone or copy the project folder
+
+# 2. Open a terminal in the project folder and install dependencies:
+pip install -r requirements.txt
+
+# 3. Create the .env file (only needed for post_prepare.py):
+#    Copy .env.example to .env, then add your Google API key:
+GOOGLE_API_KEY=your-actual-api-key-here</code></pre>
+
+<div class="callout">
+  <strong>Getting a Google API Key:</strong> Go to <code>aistudio.google.com</code>, sign in, click "Get API key", and create a key. The free tier allows 15 requests per minute, which is sufficient for tooltip generation.
+</div>
+
+<h2>Step-by-Step: prep_form.py</h2>
+
+<p>This script handles Step 3 of the workflow: splitting labels from underscores.</p>
+
+<h3><span class="step-num">1</span> Place the Word-exported PDF in the <code>input\</code> folder</h3>
+<pre><code>C:\Users\mberning\projects\eusd\pdf-form-prep\input\</code></pre>
+
+<h3><span class="step-num">2</span> Open a terminal and navigate to the project</h3>
+<pre><code>cd C:\Users\mberning\projects\eusd\pdf-form-prep</code></pre>
+
+<h3><span class="step-num">3</span> Run the script</h3>
+<pre><code>python prep_form.py "input/Your Form.pdf"</code></pre>
+
+<h3><span class="step-num">4</span> Check the output</h3>
+<p>The prepped PDF is saved to <code>output\</code> with <code>_prepped</code> appended:</p>
+<pre><code>output/Your Form_prepped.pdf</code></pre>
+
+<p>You'll see a summary like this:</p>
+<pre><code>[Step 1] Splitting label text from underscores...
+  Page 1: split MCID 3
+  Page 1: split MCID 4
+  Page 1: split MCID 6 (3 segments)
+  ...
+[Step 2] Cleaning up empty tags...
+  Removed 1 empty tags
+
+=== Summary ===
+Labels split:      21
+Empty tags removed: 1
+Output:            output\Your Form_prepped.pdf</code></pre>
+
+<h3><span class="step-num">5</span> Open the prepped PDF in Acrobat</h3>
+<p>Run <strong>Prepare Form</strong> (Tools &rarr; Prepare Form). Acrobat will auto-detect form fields. Fix any wrong field type guesses:</p>
+<ul>
+  <li>Change text fields that should be checkboxes</li>
+  <li>Change text fields that should be radio buttons</li>
+  <li><strong>Do NOT</strong> fix titles, tooltips, or structural tags &mdash; <code>post_prepare.py</code> handles those</li>
+</ul>
+<p>Save the PDF (e.g., to <code>input/Your Form_prepared.pdf</code>).</p>
+
+<h2>Step-by-Step: post_prepare.py</h2>
+
+<p>This script handles Step 5: tagging fields, generating tooltips, and creating structure.</p>
+
+<h3><span class="step-num">1</span> Run the script on the Acrobat output</h3>
+<pre><code>python post_prepare.py "input/Your Form_prepared.pdf"</code></pre>
+
+<h3><span class="step-num">2</span> Review the proposed tooltips</h3>
+<p>The script matches each form field to its label, generates tooltips via Gemini AI, and shows you the proposals:</p>
+<pre><code>=== Proposed Titles and Tooltips ===
+
+  [1] Text "First name"
+      TU: "Enter your first name"
+  [2] Text "School"
+      TU: "Enter the name of the student's school"
+  [3] Checkbox "No aligned materials"
+      TU: "Select this option if a pupil does not have..."
+
+Accept all? (y/n/edit #):</code></pre>
+
+<ul>
+  <li><code>y</code> &mdash; accept all proposals and proceed</li>
+  <li><code>n</code> &mdash; abort without saving</li>
+  <li><code>edit 3</code> &mdash; re-prompt Gemini for field #3 with additional guidance</li>
+</ul>
+
+<h3><span class="step-num">3</span> Check the output</h3>
+<p>The final PDF is saved to <code>output\</code> with <code>_final</code> appended:</p>
+<pre><code>output/Your Form_prepared_final.pdf</code></pre>
+
+<h3>The <code>--skip-tooltips</code> Option</h3>
+<p>If you only want structural tagging (no Gemini tooltip generation), use:</p>
+<pre><code>python post_prepare.py "input/Your Form_prepared.pdf" --skip-tooltips</code></pre>
+<p>This skips the API calls and interactive review. Useful if you want to add tooltips manually in Acrobat.</p>
+
+<h2>Folder Structure</h2>
+<pre><code>pdf-form-prep\
+  prep_form.py        &lt;-- Step 3: split labels from underscores
+  post_prepare.py     &lt;-- Step 5: tag fields, generate tooltips
+  requirements.txt    &lt;-- Python dependencies
+  .env                &lt;-- Google API key (don't share!)
+  .env.example        &lt;-- Template for .env
+  input\              &lt;-- Put your PDFs here
+  output\             &lt;-- Processed PDFs appear here
+  docs\               &lt;-- This guide and project documentation
+  CONTEXT.md          &lt;-- Technical background on the approach
+</code></pre>
+
+<h2>Understanding the Output</h2>
+
+<p><strong>prep_form.py</strong> reports how many labels were split from underscores and how many empty tags were cleaned up. Each split means one form field label was successfully separated.</p>
+
+<p>"3 segments" means a multi-field line like "City:___ State:___ Zip:___" was split into 3 separate labels.</p>
+
+<p><strong>post_prepare.py</strong> reports fields processed by type, how many were matched to labels, tooltips generated, and WCAG compliance check results.</p>
+
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td><code>Error: PDF is not tagged</code></td>
+    <td>The PDF wasn't exported as a tagged PDF from Word</td>
+    <td>Re-export from Word: File &rarr; Save As &rarr; PDF &rarr; Options &rarr; check "Document structure tags for accessibility"</td>
+  </tr>
+  <tr>
+    <td><code>Error: file not found</code></td>
+    <td>Wrong path or filename</td>
+    <td>Check the filename and use quotes around paths with spaces</td>
+  </tr>
+  <tr>
+    <td><code>PermissionError</code></td>
+    <td>The output file is open in Acrobat</td>
+    <td>Close the PDF in Acrobat and run again</td>
+  </tr>
+  <tr>
+    <td><code>GOOGLE_API_KEY not set</code></td>
+    <td>Missing or empty <code>.env</code> file</td>
+    <td>Create/edit <code>.env</code> with your API key (only needed for post_prepare.py)</td>
+  </tr>
+  <tr>
+    <td><code>ResourceExhausted</code> / rate limit</td>
+    <td>Too many Gemini API calls too fast</td>
+    <td>Wait a minute and try again. The tool has built-in 4-second delays between calls.</td>
+  </tr>
+  <tr>
+    <td>No fields split (0 splits)</td>
+    <td>PDF doesn't use underscore fill lines, or underscores are drawn as lines rather than text characters</td>
+    <td>Check that the form uses actual underscore characters (_) in Word, not tab leaders or drawn lines</td>
+  </tr>
+  <tr>
+    <td><code>No form fields found</code></td>
+    <td>Acrobat's Prepare Form wasn't run before post_prepare.py</td>
+    <td>Open the prepped PDF in Acrobat, run Prepare Form, save, then run post_prepare.py</td>
+  </tr>
+  <tr>
+    <td>Fields not matched to labels</td>
+    <td>Field names don't resemble any label text</td>
+    <td>These are logged as warnings. Check manually in Acrobat.</td>
+  </tr>
+</table>
+
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Daily Workflow</h3>
+  <ol>
+    <li>Export form from Word to PDF</li>
+    <li>Drop PDF into <code>input\</code></li>
+    <li>Run: <code>python prep_form.py "input/form.pdf"</code></li>
+    <li>Open <code>output/form_prepped.pdf</code> in Acrobat &rarr; Prepare Form &rarr; fix field types</li>
+    <li>Save prepared PDF to <code>input/</code></li>
+    <li>Run: <code>python post_prepare.py "input/form_prepared.pdf"</code></li>
+    <li>Review tooltips &rarr; type <code>y</code> to accept</li>
+    <li>Pick up <code>output/form_prepared_final.pdf</code></li>
+  </ol>
+</div>
+
+</body>
+</html>

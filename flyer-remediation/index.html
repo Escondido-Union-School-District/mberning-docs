@@ -110,7 +110,7 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-04-16 &mdash; Initial guide created
+  <strong>Last updated:</strong> 2026-04-16 &mdash; v2 text-first pipeline, QR codes, clickable links, PDF bookmarks, text quality checks
 </div>
 
 <!-- ================================================================== -->
@@ -128,30 +128,41 @@
 
 <p>
   <code>remediate.py</code> performs a full PDF/UA-1 accessibility remediation on each
-  input flyer. It uses an AI vision model to understand the layout, then rewrites the PDF's
-  internal structure so every piece of text and every image is properly tagged with a role
-  (heading, paragraph, figure, etc.) and reading order.
+  input flyer. It extracts all text directly from the PDF, then asks an AI vision model to
+  classify each piece of text into semantic roles (heading, paragraph, figure, etc.) by
+  comparing it to the page image. A fresh, standards-compliant tag tree is then written
+  from scratch &mdash; the original (often broken) Canva tag tree is completely discarded.
 </p>
 
 <table>
   <tr><th>Step</th><th>What Happens</th></tr>
   <tr>
-    <td>Analyze</td>
-    <td>The AI looks at a full-page image of each flyer and identifies all text blocks, headings, images, and their reading order.</td>
+    <td>Extract text</td>
+    <td>All text lines are pulled directly from the PDF and de-duplicated (Canva exports each line twice for drop-shadow effects).</td>
   </tr>
   <tr>
-    <td>Match</td>
-    <td>Identified regions are matched to real text and image objects already in the PDF.</td>
+    <td>AI classification</td>
+    <td>The extracted text list and a full-page image are sent to the AI together. The AI assigns each text line a role (H1/H2/H3/P/Link/Artifact), a reading order, and writes alt text for images &mdash; in the document's language.</td>
   </tr>
   <tr>
-    <td>OCR fallback</td>
-    <td>If text is embedded as a graphic (Canva outlined text or flat raster), the AI reads it and injects an invisible accessible text layer.</td>
+    <td>Quality check</td>
+    <td>An automated check scans for missing spaces, single-character fragments, and encoding errors. A second Vision pass cross-checks the text against the page image.</td>
   </tr>
   <tr>
     <td>Tag &amp; save</td>
-    <td>A fresh tag tree is written, metadata is set (title, language, PDF/UA marker), and the output PDF is saved to <code>output/</code>.</td>
+    <td>The original content stream is preserved but wrapped as artifact content. An invisible accessible text layer is appended at the original text positions. A fresh tag tree, PDF bookmarks, clickable link annotations, and metadata (title, language, PDF/UA marker) are written.</td>
   </tr>
 </table>
+
+<h3>What Gets Tagged Automatically</h3>
+<ul>
+  <li><strong>Headings (H1&ndash;H3):</strong> Proper hierarchy enforced &mdash; no skipped levels. H1 is always the first element a screen reader encounters.</li>
+  <li><strong>Images:</strong> Each photo or graphic gets an alt-text description written by the AI in the document's language (English or Spanish).</li>
+  <li><strong>URLs and links:</strong> Any text containing a URL is tagged as a clickable Link &mdash; screen readers announce it as a navigable link, not plain text.</li>
+  <li><strong>QR codes:</strong> If a QR code image is detected, the AI decodes the URL it encodes and includes it in the alt text so screen reader users get equivalent access.</li>
+  <li><strong>PDF bookmarks:</strong> All headings are added as PDF bookmarks so users can jump between sections in Acrobat's Bookmarks panel.</li>
+  <li><strong>Language:</strong> The document language (e.g., <code>en-US</code>, <code>es</code>) is auto-detected from the visible text and set on the document. Spanish flyers get Spanish alt text.</li>
+</ul>
 
 <div class="callout callout-info">
   <strong>Note:</strong> Every output is a <strong>draft</strong>. You must review the result
@@ -348,16 +359,15 @@ python remediate.py input/SummerFlyer.pdf --verbose</code></pre>
 <pre><code>Vision provider: gemini
 
 ============================================================
-Processing: SummerFlyer.pdf
+Processing (v2): SummerFlyer.pdf
 ============================================================
 
-  Page 1/1: analyzing content stream...
-  Page 1: extracting live text via fitz...
-  Page 1: fitz lines=38 images=2
-  Page 1: vision layout call...
-  Page 1: matching regions...
-  Page 1: leaves=7 {'text_live': 4, 'figure_live': 2, 'text_raster': 1}
-  Page 1: assembling wraps (OCR if needed)...
+  Page 1/1: extracting text (dedup)...
+  Page 1: text_lines=38 images=6
+  Page 1: vision classify call...
+  Page 1: lang='en-US' elements=12
+  Page 1: analyzing content stream (images only)...
+  Text check: OK
 
   Saved: output/SummerFlyer_uaremediated.pdf
 
@@ -365,18 +375,18 @@ Processing: SummerFlyer.pdf
 Batch complete: 1 succeeded, 0 failed
 ============================================================</code></pre>
 
-<p>
-  The <strong>leaves</strong> line summarizes how each region was handled:
-  <code>text_live</code> = live selectable text tagged in-place;
-  <code>text_raster</code> = graphic text read by OCR with an invisible text layer added;
-  <code>figure_live</code> = image tagged directly;
-  <code>figure_raster</code> = visual-only region with a placeholder marker.
-</p>
+<p>Key lines to look for:</p>
+<ul>
+  <li><code>text_lines=N images=N</code> &mdash; how many text lines and images were extracted from the PDF. If <code>text_lines=0</code>, the PDF is fully rasterized and the AI will tag a placeholder.</li>
+  <li><code>lang='xx' elements=N</code> &mdash; language detected and number of semantic elements the AI classified.</li>
+  <li><code>Text check: OK</code> &mdash; automated quality check passed. If issues are found, details are printed before this line.</li>
+</ul>
 
 <div class="callout callout-info">
-  <strong>Note:</strong> If a page shows <code>[WARN] layout fallback used</code>, the AI
-  could not parse the layout on that page and tagged the entire page as a single paragraph.
-  Review that page carefully in Acrobat.
+  <strong>Note:</strong> If you see <code>[WARN] vision_classify returned None</code>, the AI
+  failed to classify the page after two attempts. The page will be tagged as a single paragraph.
+  Run again with <code>--verbose</code> to see the raw AI response, or try increasing
+  <code>--dpi</code> for better image quality.
 </div>
 
 <!-- ================================================================== -->
@@ -415,9 +425,9 @@ Batch complete: 1 succeeded, 0 failed
     <td>Close the file in any other program and the warning is harmless &mdash; the output was still saved. Move the original manually to <code>processed/</code> when ready.</td>
   </tr>
   <tr>
-    <td><code>[WARN] layout fallback used</code></td>
-    <td>The AI returned an invalid response after two attempts on that page.</td>
-    <td>The page is tagged as one large paragraph. Review in Acrobat and fix the tag tree manually, or rerun with <code>--verbose</code> to see what the AI returned.</td>
+    <td><code>[WARN] vision_classify returned None</code></td>
+    <td>The AI failed to return a valid classification after two attempts (often a JSON truncation on dense pages).</td>
+    <td>The page is tagged as a single paragraph. Re-run with <code>--verbose</code> to see the raw AI response. Try <code>--dpi 300</code> for a higher-quality image, or split a dense bilingual flyer into separate files.</td>
   </tr>
   <tr>
     <td>Verify shows <code>orphan=N FAIL</code></td>
@@ -426,13 +436,66 @@ Batch complete: 1 succeeded, 0 failed
   </tr>
   <tr>
     <td>Pink border lands on wrong element in Acrobat</td>
-    <td>AI misidentified the reading order or region boundaries (common on complex layouts).</td>
-    <td>Normal for v1. Drag the tag to its correct position in the Acrobat Tags panel. Use <code>--verbose</code> to inspect the AI layout response and understand what it saw.</td>
+    <td>AI misclassified the reading order or role on a complex layout (common on multi-column or sidebar designs).</td>
+    <td>Drag the tag to its correct position in the Acrobat Tags panel. Use <code>--verbose</code> to inspect the AI classification and understand what it saw.</td>
+  </tr>
+  <tr>
+    <td>Screen reader reads text out of order</td>
+    <td>Multi-column or sidebar layout confused the AI's reading-order assignment.</td>
+    <td>Open the Reading Order panel in Acrobat and drag items to the correct sequence. This is the most common manual fix needed on complex flyers.</td>
+  </tr>
+  <tr>
+    <td>Text quality issues printed during run</td>
+    <td>Automated check found potential word-boundary or encoding problems (single characters, missing spaces).</td>
+    <td>Check the flagged elements in the output PDF. If incorrect, the AI's Vision cross-check may have already corrected minor issues. For persistent problems, run with <code>--verbose</code> for full detail.</td>
   </tr>
   <tr>
     <td>Virtual environment not activated (<code>python: command not found</code> or wrong version)</td>
     <td>You skipped the <code>source venv/Scripts/activate</code> step.</td>
     <td>Run <code>source venv/Scripts/activate</code> from the project folder first, then re-run the command.</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Recent Changes</h2>
+
+<table>
+  <tr><th>Date</th><th>Change</th></tr>
+  <tr>
+    <td>2026-04-16</td>
+    <td><strong>Image fallback for Form XObjects:</strong> Photos embedded inside Canva Form XObjects (which have no direct <code>Do</code> op in the main stream) now get an invisible marker at the image bbox so they appear correctly in the tag tree.</td>
+  </tr>
+  <tr>
+    <td>2026-04-16</td>
+    <td><strong>Font size capping improved:</strong> Invisible text layer now uses a wider per-character width estimate to prevent off-page truncation on all-caps Spanish text.</td>
+  </tr>
+  <tr>
+    <td>2026-04-16</td>
+    <td><strong>H1 always first:</strong> Regardless of visual position, the H1 (page title) is moved to the first reading-order position so screen readers announce the document title before any other content.</td>
+  </tr>
+  <tr>
+    <td>2026-04-16</td>
+    <td><strong>Clickable link annotations:</strong> URL text elements tagged as Link now also create a clickable annotation in the PDF so users can navigate to the URL from any PDF viewer.</td>
+  </tr>
+  <tr>
+    <td>2026-04-16</td>
+    <td><strong>PDF bookmarks:</strong> Headings (H1&ndash;H4) are automatically added as PDF bookmarks, resolving a PAC 2024 quality check failure.</td>
+  </tr>
+  <tr>
+    <td>2026-04-16</td>
+    <td><strong>Link role and QR code support:</strong> Text containing URLs is tagged as Link. QR code images are decoded by the AI and the target URL is written into the alt text.</td>
+  </tr>
+  <tr>
+    <td>2026-04-16</td>
+    <td><strong>Text quality checks:</strong> Automated check for word-boundary and encoding errors plus a Vision cross-check against the page image, run on every element before saving.</td>
+  </tr>
+  <tr>
+    <td>2026-04-16</td>
+    <td><strong>Heading hierarchy enforcement:</strong> AI prompt now strictly prohibits skipping heading levels (e.g., H1 → H3 without an H2), which is an ADA violation.</td>
+  </tr>
+  <tr>
+    <td>2026-04-16</td>
+    <td><strong>v2 text-first pipeline (default):</strong> Replaced region-detection approach with text extraction + AI semantic classification. Produces correct tags on dense Canva flyers that v1 could not handle. Auto-detects document language; Spanish flyers get Spanish alt text.</td>
   </tr>
 </table>
 

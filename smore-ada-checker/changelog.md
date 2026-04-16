@@ -88,3 +88,13 @@ All changes to this project, logged automatically by the Daily User Guide Check.
 
 ## 2026-04-06
 - Added callout linking to Thrillshare Checker smore-scan feature as source for Smore URLs
+
+## [2026-04-13] Bug fixes: QR code double-flagging, Google Workspace detection
+- fix: stop double-flagging raw-URL link text in sections that also have a QR code
+- fix: Google Workspace links (Drive/Docs/Sheets/Slides) were slipping past detection due to sign-in redirect rewriting the URL to accounts.google.com — now short-circuits redirect resolution for known Workspace destinations
+- feat: upgrade Gemini vision provider from 2.5 Flash to 3 Flash preview (reduces hallucinated dates in flyer comparisons)
+
+## [2026-04-14] AI-based link text evaluation
+- feat: all links not already flagged by pattern checks are now evaluated by AI in a batched call for WCAG 2.4.4 compliance — catches action-based phrasing that describes what the user will DO rather than where the link goes (e.g. "Fill out the survey", "Sign up today", "Register now")
+- feat: added "fill out" to instructional link text patterns as an explicit pattern catch
+- Results are individually cached per link text + context, so repeat runs are fast

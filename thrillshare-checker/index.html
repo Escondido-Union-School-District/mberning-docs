@@ -107,10 +107,9 @@
 
 
 <h1>Thrillshare Checker &mdash; User Guide</h1>
-<p class="no-print" style="font-size: 0.85em; color: #666; margin-top: 0.25em;"><a href="../" style="color: #1a56db;">&#8592; All tools</a></p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-04-06 &mdash; Added Smore Link Scanner section (--smore-scan flag)
+  <strong>User guide last updated:</strong> 2026-04-16 &mdash; Always-email behavior, BAT wrappers for S4U scheduling, updated schedule
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -124,72 +123,36 @@
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
-        <td style="padding:8px; background: white;">Fix changelog table cell background color</td>
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-16</td>
+        <td style="padding:8px; background: white;">Always email after every run (subject line reflects result); replace VBS wrappers with BAT files for S4U scheduled task support (runs without active user session)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-15</td>
+        <td style="padding:8px; background: white;">Extend hung-run protection to smore scan path; reschedule smore scan to 3:00 AM + 6:50 AM, checker to 4:00 AM + 7:20 AM to eliminate simultaneous-launch collision</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-14</td>
+        <td style="padding:8px; background: white;">Add 15-min watchdog timer and cleanup_stale.ps1 to prevent hung-run orphan bug (stale processes blocking Task Scheduler)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-13</td>
+        <td style="padding:8px; background: white;">Send error email when smore scan fails (login failure or crash); fix page crash recovery in smore scan</td>
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
-        <td style="padding:8px; background: white;">Automated guide update</td>
+        <td style="padding:8px; background: white;">Fix changelog table cell background color; automated guide update</td>
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Remove print link</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Update guide styling — title, label, and changelog formatting</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Backfill changelog — last 30 days of commits</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Replace print button with simple link</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Remove 'Last project activity' line — replaced by automated changelog</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Update user guide — add changelog section and permanent changelog for Smore Link Scanner feature</td>
+        <td style="padding:8px; background: white;">Update guide styling; add changelog section; backfill last 30 days of commits</td>
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-06</td>
-        <td style="padding:8px; background: white;">chore: change smore scan lookback to 36 hours, schedule at 7 AM</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-06</td>
-        <td style="padding:8px; background: white;">feat: daily scheduled Smore scan with 24-hour lookback</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-06</td>
-        <td style="padding:8px; background: white;">feat: add --smore-scan flag to find Smore links in principal emails</td>
+        <td style="padding:8px; background: white;">Add --smore-scan flag; daily scheduled Smore scan with 36-hour lookback at 7:00 AM</td>
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-03-19</td>
         <td style="padding:8px; background: white;">Add CMS moderation checks, SMTP relay, date-organized reports</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-19</td>
-        <td style="padding:8px; background: white;">Fix run_hidden.vbs paths after project move to eusd subdirectory</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-11</td>
-        <td style="padding:8px; background: white;">Add report file output, longer school switch wait, scheduled task</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-11</td>
-        <td style="padding:8px; background: white;">Working Thrillshare approval checker with cookie-based sessions</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-11</td>
-        <td style="padding:8px; background: white;">Initial implementation of Thrillshare approval checker</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-06</td>
-        <td style="padding:8px; background: white;">Added --smore-scan flag to find Smore links in principal emails, added daily scheduled Smore scan at 7:00 AM with 36-hour lookback, updated user guide with Smore Link Scanner documentation</td>
       </tr>
     </tbody>
   </table>
@@ -204,10 +167,10 @@
 <table>
   <tr><th>Mode</th><th>Flag</th><th>What It Does</th><th>Schedule</th></tr>
   <tr><td>Approval Checker</td><td><em>(default)</em></td><td>Checks all schools for pending approvals in Live Feed, News, and CMS pages</td><td>Hourly on weekdays</td></tr>
-  <tr><td>Smore Link Scanner</td><td><code>--smore-scan</code></td><td>Scans specific principals' emails for Smore newsletter links</td><td>Daily at 7:00 AM</td></tr>
+  <tr><td>Smore Link Scanner</td><td><code>--smore-scan</code></td><td>Scans specific principals' emails for Smore newsletter links</td><td>Daily at 3:00 AM and 6:50 AM</td></tr>
 </table>
 
-<p>Both modes use browser automation (Playwright), log into Thrillshare via saved session cookies, and email results only when something is found.</p>
+<p>Both modes use browser automation (Playwright), log into Thrillshare via saved session cookies, and <strong>always send an email after every run</strong> — subject line reflects the result ("Pending Approval" vs "Check Complete — No Pending Approvals").</p>
 
 <div class="callout callout-info">
   <strong>Note:</strong> This tool uses browser automation (Playwright) to interact with Thrillshare. It requires an initial manual Google SSO login to establish a session cookie, which is then reused for automated headless runs.
@@ -275,13 +238,14 @@ Take your time — the script will wait.</code></pre>
 <pre><code>python checker.py --no-email</code></pre>
 
 <h3><span class="step-num">4</span> Scheduling (Optional)</h3>
-<p>The tool can run automatically via Windows Task Scheduler. VBS wrappers run the checker silently (no console window) and write output to log files.</p>
+<p>The tool runs automatically via Windows Task Scheduler using batch file wrappers. The wrappers run silently, write output to log files, and support S4U logon (run without an active user session — machine can be fully logged off).</p>
 <p>Two scheduled tasks are configured:</p>
 <table>
   <tr><th>Task Name</th><th>Schedule</th><th>Wrapper</th><th>Log File</th></tr>
-  <tr><td>ThrillshareChecker</td><td>Hourly, weekdays 6 AM &ndash; 4 PM</td><td><code>run_hidden.vbs</code></td><td><code>log.txt</code></td></tr>
-  <tr><td>Thrillshare Smore Scan</td><td>Daily at 7:00 AM</td><td><code>run_smore_scan.vbs</code></td><td><code>smore_scan_log.txt</code></td></tr>
+  <tr><td>ThrillshareChecker</td><td>Daily at 4:00 AM and 7:20 AM + hourly 6 AM &ndash; 4 PM</td><td><code>run_hidden.bat</code></td><td><code>log.txt</code></td></tr>
+  <tr><td>Thrillshare Smore Scan</td><td>Daily at 3:00 AM and 6:50 AM</td><td><code>run_smore_scan.bat</code></td><td><code>smore_scan_log.txt</code></td></tr>
 </table>
+<p>Both tasks have <strong>StartWhenAvailable</strong> enabled — if the machine was off or rebooting at the scheduled time, the task fires as soon as it comes back up. Each task runs <code>cleanup_stale.ps1</code> first to kill any processes left over from a previous hung run.</p>
 
 <h2>Step-by-Step: Smore Link Scanner</h2>
 
@@ -293,7 +257,7 @@ venv\Scripts\activate
 python checker.py --smore-scan --no-email</code></pre>
 
 <h3><span class="step-num">2</span> Run With Email Notification</h3>
-<p>Drop the <code>--no-email</code> flag. An email is sent only if Smore links are found.</p>
+<p>Drop the <code>--no-email</code> flag. An email is always sent — subject line indicates whether links were found.</p>
 <pre><code>python checker.py --smore-scan</code></pre>
 
 <h3><span class="step-num">3</span> Review the Report</h3>
@@ -339,7 +303,7 @@ Messages with Smore links: 4</code></pre>
   <tr><td><code>--smore-scan</code></td><td>Off</td><td>Scan configured principals' emails for Smore links instead of checking approvals. Covers the last 36 hours.</td></tr>
 </table>
 
-<p>With no flags, the tool runs headless and sends email only if pending approvals or errors are found.</p>
+<p>With no flags, the tool runs headless and always sends an email. Use <code>--no-email</code> for local testing without sending.</p>
 
 <!-- ================================================================== -->
 <h2>Folder Structure</h2>
@@ -347,8 +311,9 @@ Messages with Smore links: 4</code></pre>
   checker.py           &lt;-- Main script — runs approval checks or Smore scan
   smore_scanner.py     &lt;-- Smore link scanning logic and principal config
   config.py            &lt;-- Email, URL, and timeout settings (reads from .env)
-  run_hidden.vbs       &lt;-- VBScript wrapper for scheduled approval checks
-  run_smore_scan.vbs   &lt;-- VBScript wrapper for scheduled Smore scans
+  run_hidden.bat       &lt;-- Batch wrapper for scheduled approval checks (S4U compatible)
+  run_smore_scan.bat   &lt;-- Batch wrapper for scheduled Smore scans (S4U compatible)
+  cleanup_stale.ps1    &lt;-- Kills stale processes before each scheduled run
   requirements.txt     &lt;-- Python dependencies (playwright, python-dotenv)
   .env                 &lt;-- Email/SMTP settings (not committed)
   .env.example         &lt;-- Template for .env
@@ -427,8 +392,8 @@ With pending:     2</code></pre>
   </tr>
   <tr>
     <td>Scheduled task runs but no email and no report</td>
-    <td>The VBS wrapper or paths may be misconfigured</td>
-    <td>Check <code>log.txt</code> for error output. Verify the paths in <code>run_hidden.vbs</code> match your actual project location.</td>
+    <td>The batch wrapper or paths may be misconfigured, or a stale process is blocking the task</td>
+    <td>Check <code>log.txt</code> and <code>smore_scan_log.txt</code> for error output. Verify paths in <code>run_hidden.bat</code> / <code>run_smore_scan.bat</code> match your project location. If the Task Scheduler shows Status=Running but no python.exe is running, kill the stale wscript or cmd process and re-run.</td>
   </tr>
   <tr>
     <td><code>Error checking CMS: ...</code></td>

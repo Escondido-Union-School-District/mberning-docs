@@ -107,7 +107,6 @@
 
 
 <h1>Smore ADA Checker &mdash; User Guide</h1>
-<p class="no-print" style="font-size: 0.85em; color: #666; margin-top: 0.25em;"><a href="../" style="color: #1a56db;">&#8592; All tools</a></p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
   <strong>User guide last updated:</strong> 2026-03-27 &mdash; Initial guide created
@@ -123,6 +122,22 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-14</td>
+        <td style="padding:8px; background: white;">feat: AI-based link text evaluation — every link now AI-checked for descriptiveness; "fill out..." phrasing flagged as instructional</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-13</td>
+        <td style="padding:8px; background: white;">feat: upgrade Gemini vision provider to 3 Flash preview (reduces hallucinations on flyer date comparisons)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-13</td>
+        <td style="padding:8px; background: white;">fix: stop double-flagging raw-URL link text in QR code sections</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-13</td>
+        <td style="padding:8px; background: white;">fix: Google Workspace URL detection broken by sign-in redirect — now correctly flags Google Drive/Docs/Sheets links</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
         <td style="padding:8px; background: white;">Fix changelog table cell background color</td>
@@ -332,52 +347,8 @@
         <td style="padding:8px; background: white;">Fix flyer detection: thinking tokens, linked images, comparison prompts</td>
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-11</td>
-        <td style="padding:8px; background: white;">Merge pull request #4 from markberning/provider-label</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-11</td>
-        <td style="padding:8px; background: white;">feat: show vision provider in filename, review page, and PDF</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-11</td>
-        <td style="padding:8px; background: white;">Merge pull request #3 from markberning/cleanup-reports</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-11</td>
-        <td style="padding:8px; background: white;">refactor: save all PDF reports to reports/ folder</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-11</td>
-        <td style="padding:8px; background: white;">Merge pull request #2 from markberning/review-workflow</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-11</td>
-        <td style="padding:8px; background: white;">feat: add review workflow with WCAG 2.1 AA compliant review page</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-11</td>
-        <td style="padding:8px; background: white;">Merge pull request #1 from markberning/unified-vision-provider</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-10</td>
-        <td style="padding:8px; background: white;">feat: unified vision provider with Claude/Gemini support</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-09</td>
-        <td style="padding:8px; background: white;">Add README and requirements.txt</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-09</td>
-        <td style="padding:8px; background: white;">Add .claude/ to .gitignore</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-09</td>
-        <td style="padding:8px; background: white;">Initial commit: Smore ADA Accessibility Checker</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-06</td>
-        <td style="padding:8px; background: white;">Added callout linking to Thrillshare Checker smore-scan feature as source for Smore URLs</td>
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-18</td>
+        <td style="padding:8px; background: white;">Improve link checks: independent text/destination checks, Google Workspace detection</td>
       </tr>
     </tbody>
   </table>
@@ -426,7 +397,7 @@
   </tr>
   <tr>
     <td><strong>Links</strong></td>
-    <td>Generic text ("click here"), vague text ("more info here"), raw URLs as link text, instructional phrasing ("click here to..."), links to untagged file downloads (PDF, DOCX, PPTX), Google Workspace links</td>
+    <td>Generic text ("click here"), vague text ("more info here"), raw URLs as link text, instructional phrasing ("click here to...", "fill out the survey"), AI evaluation of all other links for descriptiveness (WCAG 2.4.4), links to untagged file downloads (PDF, DOCX, PPTX), Google Workspace links</td>
   </tr>
   <tr>
     <td><strong>Headings</strong></td>
