@@ -2,6 +2,26 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## 2026-04-16
+- Both checks now always send email after every run; subject line reflects result ("Posts Pending Approval" vs "Check Complete — No Pending Approvals")
+- Replaced VBS wrappers (`run_hidden.vbs`, `run_smore_scan.vbs`) with BAT files (`run_hidden.bat`, `run_smore_scan.bat`) — enables S4U logon so tasks run without an active user session
+- Updated user guide: scheduling table, email behavior description, folder structure, troubleshooting
+
+## 2026-04-15
+- Extended hung-run protection to smore scan path (`run_smore_scan.vbs` now runs `cleanup_stale.ps1` first)
+- `cleanup_stale.ps1` now also kills stale `wscript.exe` processes (previously only python + chrome-headless-shell)
+- Rescheduled: smore scan moved to 3:00 AM + 6:50 AM; ThrillshareChecker 7:00 AM trigger replaced with 4:00 AM + 7:20 AM (hourly 6–4 unchanged)
+- Both tasks set to `StartWhenAvailable=True` and `LogonType=Interactive`
+
+## 2026-04-14
+- Added 15-min watchdog timer to `checker.py` that force-kills the process tree if Playwright hangs
+- Added `cleanup_stale.ps1` to kill stale python/chrome-headless-shell processes (>30 min) before each scheduled run
+- `run_hidden.vbs` updated to run cleanup before the checker
+
+## 2026-04-13
+- Smore scan now sends an error email on login failure or unhandled exception (previously failed silently)
+- Added per-school try/except in smore scan with page crash recovery — continues to next school on Chromium crash
+
 ## 2026-04-08
 - Fix changelog table cell background color
 - Automated guide update
