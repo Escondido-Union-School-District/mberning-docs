@@ -123,6 +123,10 @@
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-21</td>
+        <td style="padding:8px; background: white;">feat: review page alt text improvements — current alt text shown prominently in amber box; suggested alt text has green background matching PDF/email report; AI prompt tip added to each alt text card</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-14</td>
         <td style="padding:8px; background: white;">feat: AI-based link text evaluation — every link now AI-checked for descriptiveness; "fill out..." phrasing flagged as instructional</td>
       </tr>
@@ -306,50 +310,6 @@
         <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
         <td style="padding:8px; background: white;">feat: add email sender module with SMTP and CID image support</td>
       </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-18</td>
-        <td style="padding:8px; background: white;">Fix plan review round 2: headings, current_alt, step numbering</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-18</td>
-        <td style="padding:8px; background: white;">Fix plan review issues: shutdown, current_text, copy button note, DRY</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-18</td>
-        <td style="padding:8px; background: white;">Fix spec review issues: duplicate alt text, generic links, input types</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-18</td>
-        <td style="padding:8px; background: white;">Add HTML email report design spec and mockup</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-18</td>
-        <td style="padding:8px; background: white;">Improve link checks: independent text/destination checks, Google Workspace detection</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-17</td>
-        <td style="padding:8px; background: white;">Fix false flyer detection for simple logos and assumption-based flagging</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-17</td>
-        <td style="padding:8px; background: white;">feat: extract QR code URLs and suggest link text</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-17</td>
-        <td style="padding:8px; background: white;">Fix false flyer detection for photos with background text</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-17</td>
-        <td style="padding:8px; background: white;">feat: add step-by-step progress indicator during audit</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-17</td>
-        <td style="padding:8px; background: white;">Fix flyer detection: thinking tokens, linked images, comparison prompts</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-18</td>
-        <td style="padding:8px; background: white;">Improve link checks: independent text/destination checks, Google Workspace detection</td>
-      </tr>
     </tbody>
   </table>
 </details>
@@ -480,7 +440,7 @@ venv\Scripts\activate</code></pre>
 <p>If issues are found, a review page opens automatically at <code>http://localhost:5050</code>. Here you can:</p>
 <ul>
   <li><strong>Toggle issues</strong> &mdash; uncheck any issue to exclude it from the report</li>
-  <li><strong>Edit suggestions</strong> &mdash; modify alt text, link text, or flyer detail suggestions before they go into the report</li>
+  <li><strong>Edit suggestions</strong> &mdash; modify alt text, link text, or flyer detail suggestions before they go into the report. Image alt text cards show the current alt text in an amber box and the AI suggestion in a green box; a blue "Tip" section provides a copyable AI prompt you can use with ChatGPT, Claude, or Gemini to write your own</li>
   <li><strong>View screenshots</strong> &mdash; click any screenshot to enlarge it in a lightbox</li>
 </ul>
 

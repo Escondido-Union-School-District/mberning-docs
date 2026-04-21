@@ -2,6 +2,11 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## [2026-04-21] Review page alt text card improvements
+- Current alt text on image issues now displayed in a prominent amber box (larger bold text, amber border)
+- Suggested alt text section restored to green background with uppercase green label, matching the PDF/email report style
+- AI prompt tip added to each alt text issue card — includes a copyable prompt staff can paste into ChatGPT, Claude, or Gemini to generate their own alt text
+
 ## 2026-04-08
 - Fix changelog table cell background color
 - Automated guide update
