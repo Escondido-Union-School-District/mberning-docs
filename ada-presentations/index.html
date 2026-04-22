@@ -110,16 +110,26 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-04-09 &mdash; Initial guide created.
+  <strong>Last updated:</strong> 2026-04-22
 </div>
 
 <!-- ================================================================== -->
 <h2>What This Tool Does</h2>
 
-<p>ADA Presentations is a local Flask web app that converts inaccessible PDF presentations (typically exported from Google Slides) into ADA / WCAG 2.1 AA compliant HTML slide decks branded for EUSD. It uses the Claude Vision API to analyze slide images, generate alt text, and reconstruct tables, then assembles the result into a reveal.js-based slide deck.</p>
+<p>ADA Presentations is a local Flask web app that converts PowerPoint (.pptx) presentations (typically exported from Google Slides via File &rarr; Download &rarr; Microsoft PowerPoint) into ADA / WCAG 2.1 AA compliant HTML slide decks. It reads the real structure of each slide via python-pptx, renders slide previews with headless LibreOffice, and uses the Claude Vision API only where structural data falls short &mdash; generating alt text for images without author-provided descriptions, summarizing charts, and decoding QR codes that the primary decoder can't read.</p>
+
+<p>Two theme modes:</p>
+<ul>
+  <li><strong>EUSD branding</strong> &mdash; uniform royal-blue/gold EUSD look, recommended for official presentations.</li>
+  <li><strong>Preserve original</strong> &mdash; keeps the author's colors and fonts from the source deck, while still enforcing WCAG contrast ratios.</li>
+</ul>
 
 <div class="callout callout-info">
-  <strong>Requirement:</strong> An <code>ANTHROPIC_API_KEY</code> must be set in <code>.env</code> at the project root for the AI enrichment step to work.
+  <strong>Requirements:</strong>
+  <ul>
+    <li><strong>LibreOffice</strong> installed (used headlessly to render slide previews). Install via <code>scoop install libreoffice</code> or from <a href="https://www.libreoffice.org/download/">libreoffice.org</a>.</li>
+    <li>An API key in <code>.env</code>: either <code>ANTHROPIC_API_KEY</code> (for Claude) or <code>GOOGLE_API_KEY</code> (for Gemini, the default).</li>
+  </ul>
 </div>
 
 <!-- ================================================================== -->
@@ -130,7 +140,8 @@
   <li><strong>Python 3.14</strong> installed</li>
   <li><strong>Project folder:</strong> <code>~/projects/eusd/ada-presentations/</code></li>
   <li><strong>Dependencies</strong> installed via <code>pip install -r requirements.txt</code></li>
-  <li><strong>API key</strong> set in <code>.env</code>: <code>ANTHROPIC_API_KEY=sk-ant-...</code></li>
+  <li><strong>LibreOffice</strong> installed (<code>scoop install libreoffice</code> or the installer from libreoffice.org)</li>
+  <li><strong>API key</strong> set in <code>.env</code>: <code>GOOGLE_API_KEY=...</code> (default) or <code>ANTHROPIC_API_KEY=sk-ant-...</code></li>
 </ol>
 
 <h3>If Setting Up on a New Machine</h3>
@@ -138,11 +149,15 @@
 git clone https://github.com/Escondido-Union-School-District/ada-presentations.git
 cd ada-presentations
 
-# 2. Install dependencies
+# 2. Install Python dependencies
 pip install -r requirements.txt
 
-# 3. Create a .env file with your Anthropic API key
-echo "ANTHROPIC_API_KEY=sk-ant-..." &gt; .env</code></pre>
+# 3. Install LibreOffice (one of the following)
+scoop install libreoffice
+# or download and install from https://www.libreoffice.org/download/
+
+# 4. Create a .env file with an API key
+echo "GOOGLE_API_KEY=..." &gt; .env</code></pre>
 
 <!-- ================================================================== -->
 <h2>Step-by-Step</h2>
@@ -151,39 +166,49 @@ echo "ANTHROPIC_API_KEY=sk-ant-..." &gt; .env</code></pre>
 <pre><code>python run.py</code></pre>
 <p>The app starts at <a href="http://localhost:5000">http://localhost:5000</a>.</p>
 
-<h3><span class="step-num">2</span> Upload a PDF</h3>
-<p>Open the app in your browser and upload the source PDF presentation. A new project folder is created under <code>~/projects/eusd/ada-presentations/projects/</code>.</p>
+<h3><span class="step-num">2</span> Export your Google Slides deck as PPTX</h3>
+<p>In Google Slides: <strong>File &rarr; Download &rarr; Microsoft PowerPoint (.pptx)</strong>.</p>
 
-<h3><span class="step-num">3</span> Review and enrich</h3>
-<p>The app extracts each page, sends slide images to the Claude Vision API for alt text and table reconstruction, and saves the enriched content as JSON.</p>
+<h3><span class="step-num">3</span> Upload the .pptx</h3>
+<p>Open the app in your browser, drop the file onto the upload zone, and choose a theme mode (EUSD branding vs preserve original). A new project folder is created under <code>~/projects/eusd/ada-presentations/projects/</code>.</p>
 
-<h3><span class="step-num">4</span> Generate the accessible HTML deck</h3>
-<p>When enrichment is complete, the app assembles a reveal.js-based slide deck with EUSD branding. Download the result from the project page.</p>
+<h3><span class="step-num">4</span> Wait for extraction, rendering, and enrichment</h3>
+<p>The status page progresses through three stages: extracting slide structure via python-pptx, rendering slide previews via LibreOffice, and generating alt text / chart summaries / QR fallback via the AI Vision API. When done, the app redirects to the editor.</p>
+
+<h3><span class="step-num">5</span> Review and edit</h3>
+<p>For each slide, review the original preview alongside the extracted blocks. Adjust headings, list items, table data, image alt text (with an Author/AI/Custom toggle), and speaker notes. Mark each slide reviewed with Ctrl+Enter and navigate with Arrow keys.</p>
+
+<h3><span class="step-num">6</span> Export the accessible HTML deck</h3>
+<p>Click "Export Deck" to assemble a reveal.js slide deck. Preview it in-browser or download as a zip.</p>
 
 <!-- ================================================================== -->
 <h2>Folder Structure</h2>
 <pre><code>~/projects/eusd/ada-presentations/
   run.py              &lt;-- Launches the Flask app
   requirements.txt    &lt;-- Python dependencies
-  .env                &lt;-- ANTHROPIC_API_KEY (gitignored)
+  .env                &lt;-- API keys (gitignored)
   app/                &lt;-- Flask application
     services/
-      pdf_extractor.py    &lt;-- PDF parsing and image extraction
-      ai_enrichment.py    &lt;-- Claude Vision API integration
-      html_generator.py   &lt;-- reveal.js HTML assembly
+      pptx_extractor.py   &lt;-- PPTX structure parsing
+      slide_rendering.py  &lt;-- LibreOffice + PyMuPDF PNG pipeline
+      qr_decode.py        &lt;-- zxing-cpp QR URL decoder
+      ai_enrichment.py    &lt;-- Claude/Gemini Vision (alt text only)
+      html_generator.py   &lt;-- reveal.js block-partial HTML assembly
+      theme_css_builder.py &lt;-- Per-project CSS with contrast enforcement
+      legacy/             &lt;-- Archived PDF pipeline (not wired in)
     models/
       project.py          &lt;-- JSON-backed project state
     templates/        &lt;-- Jinja2 templates
     static/           &lt;-- CSS/JS assets
   projects/           &lt;-- Per-project working dirs (gitignored)
-  sources/            &lt;-- Sample source PDFs
+  sources/            &lt;-- Sample source files
   docs/               &lt;-- This guide
 </code></pre>
 
 <!-- ================================================================== -->
 <h2>Understanding the Output</h2>
 
-<p>Each uploaded PDF becomes a project folder under <code>projects/</code> containing the extracted page images, enrichment JSON, and the final HTML slide deck. The deck uses reveal.js with EUSD branding (royal blue <code>#1B3A8C</code>, accent blue <code>#1a56db</code>, highlight gold <code>#f9a825</code>, Arial font) and meets WCAG 2.1 AA: semantic headings, alt text on every image, keyboard navigation, and accessible tables.</p>
+<p>Each uploaded .pptx becomes a project folder under <code>projects/</code> containing the original file, slide PNGs, extracted images (including any QR codes), a <code>project.json</code> holding all structural data and AI enrichment, and on export an <code>output/</code> folder with the final HTML deck. The deck uses reveal.js with the selected theme (EUSD branding &mdash; royal blue <code>#1B3A8C</code>, accent blue <code>#1a56db</code>, highlight gold <code>#f9a825</code>, Arial font &mdash; or preserve-original with contrast enforcement) and meets WCAG 2.1 AA: semantic headings that never skip levels, alt text on every image, author-set descriptions honored first, accessible tables with <code>scope</code> attributes, keyboard navigation, speaker notes delivered via <code>&lt;aside class="notes"&gt;</code>, and QR codes rendered as both image and clickable link.</p>
 
 <!-- ================================================================== -->
 <h2>Troubleshooting</h2>
@@ -191,9 +216,19 @@ echo "ANTHROPIC_API_KEY=sk-ant-..." &gt; .env</code></pre>
 <table>
   <tr><th>Error</th><th>Cause</th><th>Fix</th></tr>
   <tr>
-    <td><code>ANTHROPIC_API_KEY not set</code></td>
+    <td><code>LibreOfficeNotFoundError</code></td>
+    <td>soffice binary not found at known locations or on PATH</td>
+    <td>Install LibreOffice, or set <code>LIBREOFFICE_PATH</code> in <code>.env</code> to the full path of <code>soffice.exe</code></td>
+  </tr>
+  <tr>
+    <td><code>API key not set</code></td>
     <td>Missing or empty <code>.env</code> file</td>
-    <td>Create <code>.env</code> at project root with <code>ANTHROPIC_API_KEY=sk-ant-...</code></td>
+    <td>Create <code>.env</code> at project root with <code>GOOGLE_API_KEY=...</code> or <code>ANTHROPIC_API_KEY=sk-ant-...</code></td>
+  </tr>
+  <tr>
+    <td><code>Only .pptx files are supported.</code></td>
+    <td>Uploaded a PDF or other file type</td>
+    <td>Re-export from Google Slides as <strong>.pptx</strong> and upload that</td>
   </tr>
   <tr>
     <td><code>Address already in use</code></td>
@@ -208,13 +243,31 @@ echo "ANTHROPIC_API_KEY=sk-ant-..." &gt; .env</code></pre>
 </table>
 
 <!-- ================================================================== -->
+<h2>Recent Changes</h2>
+<table>
+  <tr><th>Date</th><th>Change</th></tr>
+  <tr>
+    <td>2026-04-22</td>
+    <td>Fixed blank preview deck — the reveal.js preview page now loads correctly instead of showing a blank or single-element screen.</td>
+  </tr>
+  <tr>
+    <td>2026-04-22</td>
+    <td>Fixed image overflow and heading order in preview — slides with multiple images no longer fill the entire viewport, and the slide title always appears before decorative images in reading order.</td>
+  </tr>
+  <tr>
+    <td>2026-04-22</td>
+    <td>Major pipeline rewrite: switched from PDF screenshot reconstruction to PPTX-native extraction via python-pptx. Real structure (headings, lists, tables, speaker notes, author alt text, chart data) is now read directly from the file instead of inferred by AI.</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
 <h2>Quick Reference Card</h2>
 <div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
   <h3 style="margin-top: 0; color: #1a56db;">Daily Workflow</h3>
   <ol>
     <li>Type <code>ap</code> in any terminal to launch the project</li>
     <li>Run <code>python run.py</code> and open <a href="http://localhost:5000">http://localhost:5000</a></li>
-    <li>Upload a PDF, wait for enrichment, download the accessible HTML deck</li>
+    <li>Upload a .pptx exported from Google Slides, review slides in the editor, export the accessible HTML deck</li>
   </ol>
 </div>
 

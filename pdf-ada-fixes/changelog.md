@@ -2,6 +2,12 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## 2026-04-22
+- Update user guide — prune stale 2026-03-19 changelog entries, add rebuild/ folder to Folder Structure section
+
+## 2026-04-14
+- Add rebuild/ workflow for PDFs too broken to patch with remediate.py — produces a clean Word document that exports to a properly tagged PDF
+
 ## 2026-04-08
 - Fix changelog table cell background color
 - Automated guide update
