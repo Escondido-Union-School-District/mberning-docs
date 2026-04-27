@@ -2,6 +2,11 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## [2026-04-27]
+- Add Step 5 to remediate.py — artifact-wraps runs of 3+ underscore characters (Word tab-leader signature lines) so screen readers skip them while the visual line remains
+- Add underscore_artifact.py module (port of pdf-form-prep/prep_form.py logic)
+- Add Quantum Glow Dance permission slip rebuild script (rebuild/quantum_glow_dance_permission_slip.py)
+
 ## 2026-04-22
 - Update user guide — prune stale 2026-03-19 changelog entries, add rebuild/ folder to Folder Structure section
 
