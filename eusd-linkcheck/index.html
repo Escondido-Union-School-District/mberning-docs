@@ -123,6 +123,18 @@
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-28</td>
+        <td style="padding:8px; background: white;">Pages-index: broken-link drill-down (click count badge) and "Only with broken links" filter checkbox</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-28</td>
+        <td style="padding:8px; background: white;">Add pages-index report — one row per crawled page with reverse-link lookup, site filter, and <code>npm run regen:pages</code></td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-28</td>
+        <td style="padding:8px; background: white;">Capture external links in inventory; wait for JS hydration before extracting links on Next.js pages</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
         <td style="padding:8px; background: white;">Fix changelog table cell background color</td>
       </tr>
@@ -137,10 +149,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
         <td style="padding:8px; background: white;">Update guide styling — title, label, and changelog formatting</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Backfill changelog — last 30 days of commits</td>
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
@@ -173,7 +181,8 @@
   <li><strong>External issues</strong> &mdash; broken links to outside sites</li>
   <li><strong>Anomalies</strong> &mdash; likely false positives (Google, Zoom, LinkedIn, etc. block bots)</li>
   <li><strong>Link matches</strong> &mdash; pages linking to a specific target URL (optional)</li>
-  <li><strong>Link inventory</strong> &mdash; catalog of all internal links discovered</li>
+  <li><strong>Link inventory</strong> &mdash; catalog of every link discovered (internal and external)</li>
+  <li><strong>Pages index</strong> &mdash; one row per crawled page with link counts and a "what links here?" reverse-lookup search</li>
 </ul>
 
 <!-- ================================================================== -->
@@ -257,6 +266,7 @@ $env:MAX_REQUESTS="100"; $env:MAX_CONCURRENCY="3"; npm start</code></pre>
   <tr><td><code>npm run build</code></td><td>Compile TypeScript to <code>dist\</code></td></tr>
   <tr><td><code>npm run email</code></td><td>Email the most recent reports</td></tr>
   <tr><td><code>npm run report</code></td><td>Full crawl + email in sequence</td></tr>
+  <tr><td><code>npm run regen:pages</code></td><td>Rebuild pages-index HTML from existing CSVs without re-crawling (uses latest stamp)</td></tr>
 </table>
 
 <!-- ================================================================== -->
@@ -265,6 +275,8 @@ $env:MAX_REQUESTS="100"; $env:MAX_CONCURRENCY="3"; npm start</code></pre>
   src\
     main.ts              &lt;-- Core crawler and link checker
     send-report.ts       &lt;-- Email sending utility
+    pages-index.ts       &lt;-- Pages-index report builder (shared module)
+    regen-pages-index.ts &lt;-- Rebuild pages-index HTML from existing CSVs
   cache\
     status-cache.json    &lt;-- Persistent disk cache (auto-generated)
   output\                &lt;-- Reports organized by YYYY\MM\
@@ -291,6 +303,8 @@ $env:MAX_REQUESTS="100"; $env:MAX_CONCURRENCY="3"; npm start</code></pre>
       link-issues-anomalies-2026-03-25_09-30.html
       link-inventory-2026-03-25_09-30.csv
       link-inventory-2026-03-25_09-30.html
+      pages-index-2026-03-25_09-30.csv
+      pages-index-2026-03-25_09-30.html
 </code></pre>
 <p>Reports are organized by year and month. Each run creates a timestamped set of files.</p>
 
@@ -301,7 +315,8 @@ $env:MAX_REQUESTS="100"; $env:MAX_CONCURRENCY="3"; npm start</code></pre>
   <tr><td><code>link-issues-external</code></td><td>Broken/unreachable links to outside sites</td></tr>
   <tr><td><code>link-issues-anomalies</code></td><td>Links that appear broken but are likely false positives (sites that block bots)</td></tr>
   <tr><td><code>link-matches</code></td><td>Pages linking to your <code>TARGET_URL</code> (only when TARGET_URL is set)</td></tr>
-  <tr><td><code>link-inventory</code></td><td>Complete catalog of all internal links found</td></tr>
+  <tr><td><code>link-inventory</code></td><td>Complete catalog of every link found, internal and external. Use this to answer "what pages link to <em>X</em>?" The HTML view has All / Internal / External filter buttons. CSV columns: <code>scope, page_title, source_url, link_text, link_href, link_resolved</code>.</td></tr>
+  <tr><td><code>pages-index</code></td><td>One row per crawled page with site, URL, title, and counts of internal/external/broken outbound links. The HTML view supports: search by URL/title, filter by site, "Pages linking to URL..." reverse lookup (prefix match by default with Exact toggle), an "Only with broken links" checkbox, and click on the broken count to expand an inline list of which links on that page are broken. The Broken count excludes anomaly domains (Google/Zoom/etc.); see the anomalies report for those. CSV columns: <code>site, page_url, page_title, internal_links, external_links, broken_links</code>. To rebuild the HTML report from existing CSVs without re-crawling, run <code>npm run regen:pages</code> (auto-picks the latest stamp).</td></tr>
 </table>
 
 <h3>Link categories</h3>

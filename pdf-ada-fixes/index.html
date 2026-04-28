@@ -109,7 +109,7 @@
 <h1>PDF Accessibility Remediation Tool &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-04-27
+  <strong>User guide last updated:</strong> 2026-04-28
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,10 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-28</td>
+        <td style="padding:8px; background: white;">Add FER guidelines bilingual rebuild (English + Spanish); document that Word's built-in Save As PDF must be used for alt text to carry through — Adobe PDFMaker does not reliably transfer image alt text</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-27</td>
         <td style="padding:8px; background: white;">Add Step 5 — artifact-wraps runs of underscore characters (e.g., from Word tab-leader signature lines) so screen readers skip them while the visual line remains for sighted users</td>
@@ -161,10 +165,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
         <td style="padding:8px; background: white;">Update user guide — add changelog section and permanent changelog for batch mode and Windows file lock fixes</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-06</td>
-        <td style="padding:8px; background: white;">feat: add batch mode and fix Windows file locking issues</td>
       </tr>
     </tbody>
   </table>
@@ -300,8 +300,13 @@ source venv/Scripts/activate</code></pre>
   input\          &lt;-- Put your PDFs here
   output\         &lt;-- Remediated PDFs appear here (*_remediated.pdf)
   processed\      &lt;-- Original PDFs are moved here after processing
-  rebuild\        &lt;-- Scripts for PDFs too broken to fix with remediate.py
+  rebuild\        &lt;-- Scripts for PDFs too broken to fix with remediate.py (see note below)
   remediate.py    &lt;-- The main tool
+</code></pre>
+<div class="callout">
+  <strong>Rebuild workflow note:</strong> When exporting a rebuilt <code>.docx</code> to PDF, always use <strong>File &rarr; Save As &rarr; PDF</strong> (Word's built-in export) — <em>not</em> "Save as Adobe PDF." Word's built-in exporter correctly transfers image alt text and heading structure to the PDF tag tree. Adobe PDFMaker does not reliably carry alt text through.
+</div>
+<pre><code>
   venv\           &lt;-- Python virtual environment (don't touch)
   .env            &lt;-- Your Google API key (don't share!)
 </code></pre>
@@ -338,8 +343,8 @@ Output:             output\filename_remediated.pdf</code></pre>
   </tr>
   <tr>
     <td><code>PDF is not tagged</code></td>
-    <td>The PDF wasn't exported as a tagged PDF</td>
-    <td>Re-export from Word with accessibility tags enabled</td>
+    <td>The PDF has no structure tree, or has a structure tree but is missing the <code>MarkInfo</code> metadata flag (common with older Acrobat PDFMaker exports)</td>
+    <td>Re-export from Word with accessibility tags enabled. If the PDF came from an old Acrobat PDFMaker workflow and re-exporting isn't possible, use the <code>rebuild\</code> workflow to reconstruct it as a clean Word document</td>
   </tr>
   <tr>
     <td><code>file not found</code></td>

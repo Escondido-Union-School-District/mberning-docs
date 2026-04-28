@@ -1,5 +1,10 @@
 # Changelog
 
+## [2026-04-28]
+- Add FER guidelines bilingual rebuild — `rebuild/fer_guidelines.py` produces `FER_Guidelines_English.docx` and `FER_Guidelines_Spanish.docx`; source PDF had StructTreeRoot but no MarkInfo and no heading tags so remediate.py could not process it
+- Document that Word's built-in Save As PDF must be used for alt text to carry through to the PDF tag tree — Adobe PDFMaker does not reliably transfer `wp:docPr/@descr` alt text to the `<Figure>` /Alt entry
+- Add troubleshooting note: "PDF is not tagged" error can occur on PDFs with a structure tree but missing MarkInfo flag (older Acrobat PDFMaker exports); rebuild workflow is the correct path for these
+
 All changes to this project, logged automatically by the Daily User Guide Check.
 
 ## [2026-04-27]

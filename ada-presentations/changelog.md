@@ -1,5 +1,12 @@
 # ADA Presentations — Changelog
 
+## [2026-04-28] Fix bullet list detection in text boxes
+- Bullet lists inside free-floating text boxes (common in Google Slides exports) now correctly produce `list` blocks instead of individual `paragraph` blocks
+- Detection reads XML bullet markers per paragraph: `buChar` → unordered list, `buAutoNum` → ordered list, `buNone` → explicit no-bullet
+- Body placeholder paragraphs without an explicit marker still default to list items (inheriting from slide layout, as before)
+- Consecutive bulleted paragraphs are grouped into a single list block; a non-bulleted paragraph between two bulleted groups correctly splits them into two separate list blocks
+- Nested indent levels (e.g., sub-bullets) are preserved in the output HTML
+
 ## [2026-04-22] Fix H1 ordering and image overflow in preview deck
 - H1 heading now always appears first in the block list so decorative images placed above the title in the PPTX don't precede it for screen readers or visually
 - `figure` max-width capped at 30% and `img` max-height at 25vh so multi-image slides no longer overflow the viewport

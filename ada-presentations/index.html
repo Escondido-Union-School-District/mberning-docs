@@ -110,7 +110,7 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-04-22
+  <strong>Last updated:</strong> 2026-04-28
 </div>
 
 <!-- ================================================================== -->
@@ -246,6 +246,10 @@ echo "GOOGLE_API_KEY=..." &gt; .env</code></pre>
 <h2>Recent Changes</h2>
 <table>
   <tr><th>Date</th><th>Change</th></tr>
+  <tr>
+    <td>2026-04-28</td>
+    <td>Fixed bullet list detection — slides that use free-floating text boxes with bullet points (common in Google Slides exports) now correctly produce accessible <code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code> list blocks in the output rather than a series of individual paragraphs. Nested indent levels are preserved.</td>
+  </tr>
   <tr>
     <td>2026-04-22</td>
     <td>Fixed blank preview deck — the reveal.js preview page now loads correctly instead of showing a blank or single-element screen.</td>
