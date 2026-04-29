@@ -1,5 +1,13 @@
 # ADA Presentations — Changelog
 
+## [2026-04-29] Rewrite list detection to use explicit XML bullet markers
+- Replaced heuristic list detection (body placeholder + >1 paragraph = list) with XML-aware per-paragraph inspection via lxml etree
+- `buChar` → unordered list (`<ul>`), `buAutoNum` → ordered list (`<ol>`), `buNone` → explicit no-bullet (never a list item)
+- Body placeholder paragraphs without any explicit marker still default to list items (layout-inherited bullets); free-floating text boxes do not
+- Title and subtitle placeholders are never treated as list items regardless of bullet markup
+- Pending-accumulator pattern replaces the all-or-nothing list block: a single text shape can now emit interleaved paragraph and list blocks correctly
+- Fixes incorrect `<ul>` wrapping of non-bulleted multi-paragraph text boxes (e.g., slide body containing prose paragraphs)
+
 ## [2026-04-28] Fix bullet list detection in text boxes
 - Bullet lists inside free-floating text boxes (common in Google Slides exports) now correctly produce `list` blocks instead of individual `paragraph` blocks
 - Detection reads XML bullet markers per paragraph: `buChar` → unordered list, `buAutoNum` → ordered list, `buNone` → explicit no-bullet

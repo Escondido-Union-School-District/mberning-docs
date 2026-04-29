@@ -110,7 +110,7 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-04-28
+  <strong>Last updated:</strong> 2026-04-29
 </div>
 
 <!-- ================================================================== -->
@@ -247,8 +247,8 @@ echo "GOOGLE_API_KEY=..." &gt; .env</code></pre>
 <table>
   <tr><th>Date</th><th>Change</th></tr>
   <tr>
-    <td>2026-04-28</td>
-    <td>Fixed bullet list detection — slides that use free-floating text boxes with bullet points (common in Google Slides exports) now correctly produce accessible <code>&lt;ul&gt;</code> / <code>&lt;ol&gt;</code> list blocks in the output rather than a series of individual paragraphs. Nested indent levels are preserved.</td>
+    <td>2026-04-29</td>
+    <td>Rewrote bullet list detection to read XML bullet markers per paragraph (<code>buChar</code> → <code>&lt;ul&gt;</code>, <code>buAutoNum</code> → <code>&lt;ol&gt;</code>, <code>buNone</code> → explicit no-bullet). Fixes incorrect list wrapping of non-bulleted multi-paragraph text boxes. Mixed content (some paragraphs bulleted, some not) in a single text box now correctly produces interleaved list and paragraph blocks. Nested indent levels preserved.</td>
   </tr>
   <tr>
     <td>2026-04-22</td>

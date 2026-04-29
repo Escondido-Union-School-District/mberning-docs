@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thrillshare Page Edit &mdash; User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Print This Guide</button>
+
+<h1>Thrillshare Page Edit</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-04-29 &mdash; Initial guide created<br>
+  <strong>Last project activity:</strong> 2026-04-29 &mdash; Project scaffolded
+</div>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>Finds the <strong>Student Resources</strong> and <strong>Parent Resources</strong> pages on every EUSD school's Thrillshare CMS site &mdash; even though those pages are named inconsistently across schools (e.g. "Students", "Resources for Students", "Parents and Families") &mdash; and adds an accessible text caption beneath every graphical button on those pages. The caption is a centered text link that points to the same destination as the graphic, so screen-reader and keyboard users get a real, selectable label.</p>
+
+<div class="callout callout-info">
+  <strong>Why this matters:</strong> Image-only navigation buttons fail WCAG 2.1 and were flagged in the EUSD DOJ Web Rule audit. Adding a captioned text link preserves the visual design while giving assistive tech something meaningful to announce.
+</div>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup</h3>
+<ol>
+  <li><strong>Python 3.10+</strong> installed</li>
+  <li><strong>Playwright</strong> with Chromium installed (<code>playwright install chromium</code>)</li>
+  <li><strong>Project folder:</strong> <code>~/projects/eusd/thrillshare-page-edit/</code></li>
+  <li><strong>Thrillshare access</strong> &mdash; an EUSD Google account with CMS edit permissions on the schools you intend to update</li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># 1. Clone the repo
+git clone https://github.com/Escondido-Union-School-District/thrillshare-page-edit.git
+cd thrillshare-page-edit
+
+# 2. Install dependencies
+pip install -r requirements.txt
+playwright install chromium</code></pre>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+<pre><code>~/projects/eusd/thrillshare-page-edit/
+  CLAUDE.md          &lt;-- Project context for Claude Code
+  .gitignore
+  docs/
+    user-guide.html  &lt;-- This guide
+</code></pre>
+
+<p>Additional files (the main script, config, session cookies, reports) will be added as the tool is built.</p>
+
+</body>
+</html>
