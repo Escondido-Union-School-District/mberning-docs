@@ -2,6 +2,14 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## 2026-05-01
+- Smore scanner rewritten to cover every school the account can see (was: hardcoded 3-school principal allowlist)
+- No sender filter — picks up principals, office managers, and district staff alike
+- Lookback window shortened from 36h to 26h (daily schedule + small overlap for delayed starts)
+- Sender column auto-discovered per school from "Published By" table header (resilient to layout changes)
+- Fixed "Applying filters" overlay being misread as a message row date
+- Fixed UTF-8 stdout crash on Windows cp1252 console (was silently killing Miller Elementary's run on non-breaking hyphens/smart quotes)
+
 ## 2026-04-16
 - Both checks now always send email after every run; subject line reflects result ("Posts Pending Approval" vs "Check Complete — No Pending Approvals")
 - Replaced VBS wrappers (`run_hidden.vbs`, `run_smore_scan.vbs`) with BAT files (`run_hidden.bat`, `run_smore_scan.bat`) — enables S4U logon so tasks run without an active user session
