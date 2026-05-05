@@ -99,6 +99,11 @@ All changes to this project, logged automatically by the Daily User Guide Check.
 - fix: Google Workspace links (Drive/Docs/Sheets/Slides) were slipping past detection due to sign-in redirect rewriting the URL to accounts.google.com — now short-circuits redirect resolution for known Workspace destinations
 - feat: upgrade Gemini vision provider from 2.5 Flash to 3 Flash preview (reduces hallucinated dates in flyer comparisons)
 
+## [2026-05-05] AI prompt tips in PDF and email reports; Coming Soon banner default off
+- feat: alt text and flyer issues now include a copyable AI prompt tip in the final PDF and staff email — same "upload the image AND the prompt" guidance previously shown only on the review page
+- feat: new flyer-text tip for "Flyer Info Not in Text" issues — prompt extracts all visible English text from the flyer image so staff can paste it into the post's text section
+- ux: "Include Coming Soon: automated fixes" banner checkbox on the review page now starts unchecked by default; auditors can still enable it per-report before previewing
+
 ## [2026-04-14] AI-based link text evaluation
 - feat: all links not already flagged by pattern checks are now evaluated by AI in a batched call for WCAG 2.4.4 compliance — catches action-based phrasing that describes what the user will DO rather than where the link goes (e.g. "Fill out the survey", "Sign up today", "Register now")
 - feat: added "fill out" to instructional link text patterns as an explicit pattern catch

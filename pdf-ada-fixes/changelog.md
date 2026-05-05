@@ -1,5 +1,11 @@
 # Changelog
 
+## [2026-05-05]
+- Add Allergy Waiver bilingual rebuild — `rebuild/waiver_form.py` generates `Allergy_Waiver_English.docx` (en-US) and `Allergy_Waiver_Spanish.docx` (es-ES) from original single bilingual PDF; logos extracted from source PDF via PyMuPDF rasterization to avoid color-profile artifacts
+- Add `rebuild/verify_page_count.py` — drives Word via COM to confirm each rebuilt .docx is exactly 1 page before PDF export; exits non-zero if any file exceeds the limit
+- Add page-count rule and per-step tightening ladder to `waiver_form.py` docstring; add page-fit constants (BODY_PT, H1_PT, PARA_AFTER_PT, WRITE_AFTER_PT, PAGE_MARGIN_IN) so future editors adjust one place
+- Add `python-docx` to `requirements.txt` (was already needed by all rebuild scripts but missing from the file)
+
 ## [2026-04-28]
 - Add FER guidelines bilingual rebuild — `rebuild/fer_guidelines.py` produces `FER_Guidelines_English.docx` and `FER_Guidelines_Spanish.docx`; source PDF had StructTreeRoot but no MarkInfo and no heading tags so remediate.py could not process it
 - Document that Word's built-in Save As PDF must be used for alt text to carry through to the PDF tag tree — Adobe PDFMaker does not reliably transfer `wp:docPr/@descr` alt text to the `<Figure>` /Alt entry

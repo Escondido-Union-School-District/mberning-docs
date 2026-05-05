@@ -109,7 +109,7 @@
 <h1>Smore ADA Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-03-27 &mdash; Initial guide created
+  <strong>User guide last updated:</strong> 2026-05-05 &mdash; AI prompt tips in PDF and email reports; Coming Soon banner defaults off
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,14 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-05</td>
+        <td style="padding:8px; background: white;">feat: AI prompt tips now appear in the final PDF and staff email for alt text and flyer issues — same copyable prompts as on the review page</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-05</td>
+        <td style="padding:8px; background: white;">ux: "Include Coming Soon" banner checkbox on review page now defaults to unchecked</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-21</td>
         <td style="padding:8px; background: white;">feat: review page alt text improvements — current alt text shown prominently in amber box; suggested alt text has green background matching PDF/email report; AI prompt tip added to each alt text card</td>
@@ -173,142 +181,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
         <td style="padding:8px; background: white;">Update user guide — add changelog section and permanent changelog for Thrillshare smore-scan callout</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
-        <td style="padding:8px; background: white;">feat: add timestamps to reports, kill stale servers, increase email note font</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
-        <td style="padding:8px; background: white;">chore: auto-delete reports older than 30 days at startup</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
-        <td style="padding:8px; background: white;">feat: auto-save PDF archive when sending email reports</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-26</td>
-        <td style="padding:8px; background: white;">Remove dead reference to nonexistent WCAG-CHECKLIST.md</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-26</td>
-        <td style="padding:8px; background: white;">feat: make opt-in banner toggleable in review page</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-26</td>
-        <td style="padding:8px; background: white;">fix: duplicate alt text suggestions missing from email, treat Smore placeholder as missing alt text</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: update raw URL description in email mockup</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: align labels and fix blocks across all three report templates</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: label 'Current Link Text' for link issues in PDF report</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">Merge feature/html-email-report: HTML email delivery for accessibility reports</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: show friendly error when PDF file is locked, with back link</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: add CC logging to preview and send routes for debugging</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: skip redundant red URL pill for Raw URL issues in email</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">feat: make file download fix text editable, match templates</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: hide redundant 'How to fix' for file download issues in email</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: add 'Back to review' link on preview-sent page</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: remove print tip and checkboxes from email â€” Gmail strips @media print</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">revert: remove text extent cropping â€” parent width is correct</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: crop link screenshots to actual text extent, not container width</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: tighten link screenshot crop to parent paragraph width</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">chore: widen email report max-width from 800px to 900px</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: use fixed 350px width for screenshot column in email</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: use spacer td column for Gmail-compatible column gap</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: add timestamp to preview email subject to prevent Gmail threading</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: convert email layout from flex to table for Gmail compatibility</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: Gmail layout issues â€” replace CSS gap with margins throughout</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: don't generate PDF during preview, only on Generate Final Report</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">fix: handle locked PDF file in preview route gracefully</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">feat: support EUSD mail relay (no-auth) alongside Gmail</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">feat: add /preview and /send routes for email delivery flow</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">feat: add email report HTML generator with action-first layout</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">feat: add Notes, To, CC fields and Preview button to review page</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">feat: add SMTP and auditor config to .env.example</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-23</td>
-        <td style="padding:8px; background: white;">feat: add email sender module with SMTP and CID image support</td>
       </tr>
     </tbody>
   </table>
@@ -440,7 +312,7 @@ venv\Scripts\activate</code></pre>
 <p>If issues are found, a review page opens automatically at <code>http://localhost:5050</code>. Here you can:</p>
 <ul>
   <li><strong>Toggle issues</strong> &mdash; uncheck any issue to exclude it from the report</li>
-  <li><strong>Edit suggestions</strong> &mdash; modify alt text, link text, or flyer detail suggestions before they go into the report. Image alt text cards show the current alt text in an amber box and the AI suggestion in a green box; a blue "Tip" section provides a copyable AI prompt you can use with ChatGPT, Claude, or Gemini to write your own</li>
+  <li><strong>Edit suggestions</strong> &mdash; modify alt text, link text, or flyer detail suggestions before they go into the report. Image alt text cards show the current alt text in an amber box and the AI suggestion in a green box; a blue "Tip" section provides a copyable AI prompt you can use with ChatGPT, Claude, or Gemini to write your own (upload the image and the prompt together). Flyer cards include a similar tip with a prompt to extract all visible text from the flyer so it can be pasted into the post's text section</li>
   <li><strong>View screenshots</strong> &mdash; click any screenshot to enlarge it in a lightbox</li>
 </ul>
 
@@ -448,7 +320,7 @@ venv\Scripts\activate</code></pre>
 <p>At the bottom of the review page, choose one of:</p>
 <ul>
   <li><strong>Generate Final Report</strong> &mdash; saves a PDF to the <code>reports\</code> folder</li>
-  <li><strong>Send Preview to Me</strong> &mdash; emails an HTML report to your auditor email for review, then offers a "Send to Staff" button to forward to the newsletter author</li>
+  <li><strong>Send Preview to Me</strong> &mdash; emails an HTML report to your auditor email for review, then offers a "Send to Staff" button to forward to the newsletter author. An optional "Coming Soon: automated fixes" banner can be included by checking the checkbox before previewing (unchecked by default)</li>
 </ul>
 
 <div class="callout">
@@ -510,6 +382,7 @@ venv\Scripts\activate</code></pre>
       <li>Plain English description of the problem</li>
       <li>Current value (the alt text, link text, or missing details)</li>
       <li>Suggested fix (your edited suggestion from the review step)</li>
+      <li>AI prompt tip for alt text and flyer issues &mdash; a ready-made prompt staff can paste into ChatGPT, Claude, or Gemini along with the image to write their own alt text or extract flyer content</li>
       <li>Screenshot of the issue on the page</li>
     </ul>
   </li>
@@ -521,6 +394,7 @@ venv\Scripts\activate</code></pre>
   <li>Page title and URL at the top</li>
   <li>Optional notes-to-staff message (entered during review)</li>
   <li>All included issues with embedded screenshots</li>
+  <li>AI prompt tips for alt text and flyer issues (same prompts as the PDF)</li>
 </ul>
 
 <h3>Vision Cache</h3>

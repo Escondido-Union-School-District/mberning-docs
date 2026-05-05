@@ -109,7 +109,7 @@
 <h1>PDF Accessibility Remediation Tool &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-04-28
+  <strong>User guide last updated:</strong> 2026-05-05
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,10 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-05</td>
+        <td style="padding:8px; background: white;">Add Allergy Waiver bilingual rebuild — <code>rebuild/waiver_form.py</code> produces <code>Allergy_Waiver_English.docx</code> and <code>Allergy_Waiver_Spanish.docx</code> from the original bilingual single-PDF; logos extracted and rasterized from the source PDF; add <code>rebuild/verify_page_count.py</code> (Word COM helper that confirms each .docx is exactly 1 page before export); add <code>python-docx</code> to requirements.txt</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-28</td>
         <td style="padding:8px; background: white;">Add FER guidelines bilingual rebuild (English + Spanish); document that Word's built-in Save As PDF must be used for alt text to carry through — Adobe PDFMaker does not reliably transfer image alt text</td>
