@@ -181,7 +181,7 @@
 <table>
   <tr><th>#</th><th>Fix</th><th>What It Does</th></tr>
   <tr><td>1</td><td>Figure Alt Text</td><td>Uses Google Gemini AI to generate descriptive alt text for all images</td></tr>
-  <tr><td>2</td><td>Document Language</td><td>Sets the document language to English (en-US)</td></tr>
+  <tr><td>2</td><td>Document Language</td><td>Sets the document language (default <code>en-US</code>; pass <code>--lang es-ES</code> for Spanish or any other BCP-47 tag)</td></tr>
   <tr><td>3</td><td>Document Title</td><td>Extracts the first &lt;H1&gt; heading and sets it as the document title</td></tr>
   <tr><td>4</td><td>Table Headers</td><td>Marks table header cells so screen readers can navigate tables</td></tr>
   <tr><td>5</td><td>Underscore Fill-in Lines</td><td>Wraps runs of 3 or more underscore characters in PDF artifact blocks so screen readers skip them. The visible line stays on the page for sighted users to write on.</td></tr>
@@ -255,6 +255,9 @@ source venv/Scripts/activate</code></pre>
 
 <p><strong>Example with header option:</strong></p>
 <pre><code>python remediate.py input/ --headers row</code></pre>
+
+<p><strong>Spanish (or other non-English) PDFs:</strong></p>
+<pre><code>python remediate.py "input/YourFile_Spanish.pdf" --lang es-ES</code></pre>
 
 <h3><span class="step-num">5</span> Collect your output</h3>
 <p>Remediated files are saved to the <code>output\</code> folder with <code>_remediated</code> appended to the filename. The original input file is automatically moved to the <code>processed\</code> folder.</p>

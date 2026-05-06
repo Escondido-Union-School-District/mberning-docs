@@ -123,6 +123,22 @@
     </thead>
     <tbody>
       <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-06</td>
+        <td style="padding:8px; background: white;">Landing-page nav strip made more explicit: pills now show full names ("Broken internal links", "Anomalies (likely false positives)", etc.), a "You are viewing: Pages Index" current-view label, a "Switch to →" prefix, and hover tooltips describing each report.</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-06</td>
+        <td style="padding:8px; background: white;">Schedule monthly full crawl on the 1st at 06:00 PT via Windows Task Scheduler ("EUSD Link Checker Monthly"). Landing page now shows both last-crawled time and next-scheduled-crawl date.</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-06</td>
+        <td style="padding:8px; background: white;">Combined landing page: <code>docs/reports/index.html</code> is now the searchable Pages Index (with reverse-link lookup) plus a nav strip at top linking to the broken-link reports.</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-06</td>
+        <td style="padding:8px; background: white;">Mirror latest reports to <code>docs/reports/</code> with stable filenames so you can bookmark a single URL per report. Adds a landing page at <code>docs/reports/index.html</code> with last-updated time and counts.</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-28</td>
         <td style="padding:8px; background: white;">Pages-index: broken-link drill-down (click count badge) and "Only with broken links" filter checkbox</td>
       </tr>
@@ -157,10 +173,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
         <td style="padding:8px; background: white;">Remove 'Last project activity' line — replaced by automated changelog</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-27</td>
-        <td style="padding:8px; background: white;">Add persistent disk cache and CLAUDE.md; tune concurrency defaults</td>
       </tr>
     </tbody>
   </table>
@@ -307,6 +319,26 @@ $env:MAX_REQUESTS="100"; $env:MAX_CONCURRENCY="3"; npm start</code></pre>
       pages-index-2026-03-25_09-30.html
 </code></pre>
 <p>Reports are organized by year and month. Each run creates a timestamped set of files.</p>
+
+<h3>Bookmarkable "latest" reports</h3>
+<p>Every full crawl also mirrors its output to <code>docs/reports/</code> with stable filenames (no timestamp). Bookmark these once and they always point to the latest run:</p>
+<pre><code>docs\reports\
+  index.html                      &larr; landing page with counts &amp; last-updated time
+  link-issues-internal.html
+  link-issues-external.html
+  link-issues-anomalies.html
+  link-matches.html
+  link-inventory.html
+  pages-index.html
+  (matching .csv files for each)
+</code></pre>
+<p>Open <code>docs\reports\index.html</code> directly in your browser via <code>file:///</code> &mdash; you can bookmark it and never have to hunt for the latest timestamped folder again. Partial runs are not mirrored, so the published "latest" always reflects a finished crawl.</p>
+
+<h3>Automatic monthly crawl</h3>
+<p>A Windows Task Scheduler entry named <strong>"EUSD Link Checker Monthly"</strong> runs <code>npm run start:full</code> on the 1st of every month at 06:00 PT. The launcher script is <code>run-monthly-crawl.cmd</code> at the repo root; logs go to <code>output\monthly-crawl-YYYY-MM-DD.log</code>.</p>
+<p>If your machine is off at 06:00 on the 1st, the task is configured with <em>StartWhenAvailable</em> &mdash; it'll fire as soon as you next log in. The landing page nav shows both the last-crawled time and the next-scheduled date so you know when fresh data is coming.</p>
+<p><strong>To change the schedule</strong> (different day, different time, weekly instead of monthly), open Task Scheduler &rarr; Task Scheduler Library &rarr; "EUSD Link Checker Monthly" &rarr; Properties &rarr; Triggers. Or run from PowerShell: <code>schtasks /Change /TN "EUSD Link Checker Monthly" /ST 07:30</code>.</p>
+<p><strong>To disable</strong>: <code>schtasks /Change /TN "EUSD Link Checker Monthly" /Disable</code>. To remove entirely: <code>schtasks /Delete /TN "EUSD Link Checker Monthly" /F</code>.</p>
 
 <h3>Report types</h3>
 <table>

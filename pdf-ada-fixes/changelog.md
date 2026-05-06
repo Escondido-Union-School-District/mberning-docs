@@ -1,5 +1,13 @@
 # Changelog
 
+## [2026-05-06]
+- Add fillable-form pass — `rebuild/add_form_widgets.py` injects AcroForm text widgets (single-line + multi-line) into a tagged PDF, anchored by invisible `[[F:Name]]` markers placed in the .docx by the rebuild script. Widgets are tagged in the structure tree as `/Form` elements with `/OBJR` children (PDF/UA Matterhorn 28-010); pages with widgets get `/Tab /S` for structure-order tabbing (Matterhorn 28-002); `/AcroForm/DR/Font/Helv` is populated so fields render on first focus
+- Add `rebuild/form_fields.py` — helpers (`add_invisible_marker`, `add_field_fill_line`, `write_fields_json`) used by rebuild scripts to declare fillable fields and emit a sidecar `.fields.json`
+- Wire `rebuild/waiver_form.py` to emit fields — same .docx now drives both static-print and fillable-PDF pipelines (markers are 1pt white-on-white, so static print output is unchanged)
+- Lift shared struct-tree helpers (`get_kids`, `find_struct_elements`, `get_mcids`, `page_index`) into `rebuild/_pdf_struct.py` — `remediate.py` and `underscore_artifact.py` now import from it
+- Fix pre-existing crash in `underscore_artifact.clean_empty_tags` when `StructTreeRoot/K` is an Array (Word PDFs vary; was masked until widget-injection touched the tree)
+- New pipeline order: `waiver_form.py` → Word Save As PDF → `add_form_widgets.py` → `remediate.py`. Skip `add_form_widgets.py` to get the static printable PDF instead
+
 ## [2026-05-05]
 - Add Allergy Waiver bilingual rebuild — `rebuild/waiver_form.py` generates `Allergy_Waiver_English.docx` (en-US) and `Allergy_Waiver_Spanish.docx` (es-ES) from original single bilingual PDF; logos extracted from source PDF via PyMuPDF rasterization to avoid color-profile artifacts
 - Add `rebuild/verify_page_count.py` — drives Word via COM to confirm each rebuilt .docx is exactly 1 page before PDF export; exits non-zero if any file exceeds the limit
