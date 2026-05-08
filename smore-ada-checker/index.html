@@ -109,7 +109,7 @@
 <h1>Smore ADA Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-05 &mdash; AI prompt tips in PDF and email reports; Coming Soon banner defaults off
+  <strong>User guide last updated:</strong> 2026-05-08 &mdash; Screenshot bug fix (each issue now shows its own image); vision cache now provider-scoped
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,14 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-08</td>
+        <td style="padding:8px; background: white;">fix: screenshot bug — report cards now show the correct image for each issue (previously all images in the same section showed the first image)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-08</td>
+        <td style="padding:8px; background: white;">feat: vision cache is now provider-scoped — switching between Claude and Gemini no longer serves cached results from the other provider</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-05</td>
         <td style="padding:8px; background: white;">feat: AI prompt tips now appear in the final PDF and staff email for alt text and flyer issues — same copyable prompts as on the review page</td>
@@ -398,7 +406,7 @@ venv\Scripts\activate</code></pre>
 </ul>
 
 <h3>Vision Cache</h3>
-<p>API results are cached in <code>smore_checker\vision_cache.json</code>. Re-running the same URL reuses cached results, saving time and API costs. Use <code>--clear-cache</code> to force fresh analysis.</p>
+<p>API results are cached in <code>smore_checker\vision_cache.json</code>. Re-running the same URL reuses cached results, saving time and API costs. Use <code>--clear-cache</code> to force fresh analysis. Results are stored per-provider, so switching between Claude and Gemini always produces independent results.</p>
 
 <!-- ================================================================== -->
 <h2>Troubleshooting</h2>

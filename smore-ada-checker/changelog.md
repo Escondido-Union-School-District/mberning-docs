@@ -2,6 +2,14 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## [2026-05-08] Screenshot bug fix and provider-scoped cache
+- fix: report cards for image issues now capture the correct screenshot for each image — previously all images within the same Smore section would show the first image in the section
+- feat: vision cache keys now include the provider name (claude/gemini), so results from different providers are stored independently and switching providers always produces fresh analysis
+
+## [2026-05-05] AI prompt tips in PDF and email
+- AI prompt tips (copyable prompts for ChatGPT/Claude/Gemini) now appear in the final PDF report and the HTML staff email for alt text and flyer issues
+- "Include Coming Soon" banner checkbox on review page now defaults to unchecked
+
 ## [2026-04-21] Review page alt text card improvements
 - Current alt text on image issues now displayed in a prominent amber box (larger bold text, amber border)
 - Suggested alt text section restored to green background with uppercase green label, matching the PDF/email report style

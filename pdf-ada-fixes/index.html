@@ -109,7 +109,7 @@
 <h1>PDF Accessibility Remediation Tool &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-05
+  <strong>User guide last updated:</strong> 2026-05-08
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,18 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-08</td>
+        <td style="padding:8px; background: white;">Add <code>--vision-fix</code> flag — opt-in pass that uses Claude vision to fix two ADA failures the rule-based steps can't reach: table cells with mismatched column/row spans (Tables &gt; Regularity) and headings on text that shouldn't be a heading at all (Appropriate Nesting). Runs as Step 6 and Step 7 after the existing 5 steps; requires <code>ANTHROPIC_API_KEY</code> in <code>.env</code>. Writes a sidecar audit log (<code>output/&lt;name&gt;_remediated.fixes.json</code>) recording every change with Claude's reasoning. Without the flag the tool's behavior is unchanged</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-08</td>
+        <td style="padding:8px; background: white;">Add checkbox and radio AcroForm widgets to the rebuild pipeline — rebuild scripts can now declare <code>checkbox</code> and <code>radio</code> field types in the sidecar JSON, producing fillable PDFs where parents can tick boxes and pick options. Visible glyphs are <code>&#9744;</code> and <code>&#9675;</code> in the docx body font so the static-print case still works; the AcroForm widget paints only the selected indicator (checkmark / dot) on top of the typeset glyph</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-06</td>
+        <td style="padding:8px; background: white;">Add fillable-form pass — <code>rebuild/add_form_widgets.py</code> injects AcroForm text widgets (single-line + multi-line) into a tagged PDF, anchored by invisible <code>[[F:Name]]</code> markers placed in the .docx; widgets are tagged in the structure tree and pages get <code>/Tab /S</code> for structure-order tabbing. Add <code>rebuild/form_fields.py</code> helpers and rewire <code>waiver_form.py</code> to emit fields. New pipeline order: rebuild script → Word Save As PDF → <code>add_form_widgets.py</code> → <code>remediate.py</code></td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-05</td>
         <td style="padding:8px; background: white;">Add Allergy Waiver bilingual rebuild — <code>rebuild/waiver_form.py</code> produces <code>Allergy_Waiver_English.docx</code> and <code>Allergy_Waiver_Spanish.docx</code> from the original bilingual single-PDF; logos extracted and rasterized from the source PDF; add <code>rebuild/verify_page_count.py</code> (Word COM helper that confirms each .docx is exactly 1 page before export); add <code>python-docx</code> to requirements.txt</td>
@@ -176,7 +188,7 @@
 <p style="font-size:0.85em; color:#666; margin-top:4px;">Showing last 30 days. <a href="changelog.md">View full changelog</a>.</p>
 
 <h2>What This Tool Does</h2>
-<p>This tool automatically fixes five common PDF accessibility issues required for ADA/Section 508 compliance:</p>
+<p>This tool automatically fixes five common PDF accessibility issues required for ADA/Section 508 compliance, plus two additional fixes available via the optional <code>--vision-fix</code> flag:</p>
 
 <table>
   <tr><th>#</th><th>Fix</th><th>What It Does</th></tr>
@@ -185,6 +197,8 @@
   <tr><td>3</td><td>Document Title</td><td>Extracts the first &lt;H1&gt; heading and sets it as the document title</td></tr>
   <tr><td>4</td><td>Table Headers</td><td>Marks table header cells so screen readers can navigate tables</td></tr>
   <tr><td>5</td><td>Underscore Fill-in Lines</td><td>Wraps runs of 3 or more underscore characters in PDF artifact blocks so screen readers skip them. The visible line stays on the page for sighted users to write on.</td></tr>
+  <tr><td>6</td><td>Table Regularity <em>(opt-in: <code>--vision-fix</code>)</em></td><td>Uses Claude vision to detect rows where the cell count doesn't match the table's actual visual width and writes the correct <code>ColSpan</code>/<code>RowSpan</code> (Acrobat Pro: Tables &gt; Regularity)</td></tr>
+  <tr><td>7</td><td>Heading Hierarchy <em>(opt-in: <code>--vision-fix</code>)</em></td><td>Uses Claude vision to demote headings that aren't really headings (e.g., a closing courtesy phrase Word stamped as <code>&lt;H3&gt;</code>) so the heading outline matches the document's actual structure (Acrobat Pro: Appropriate Nesting)</td></tr>
 </table>
 
 <div class="callout callout-info">
@@ -199,6 +213,7 @@
   <li><strong>Project folder:</strong> <code>C:\Users\mberning\projects\eusd\pdf-ada-fixes</code></li>
   <li><strong>Virtual environment</strong> with dependencies is already created in <code>venv\</code></li>
   <li><strong>Google API key</strong> is saved in the <code>.env</code> file</li>
+  <li><strong>Anthropic API key</strong> is saved in <code>.env</code> as <code>ANTHROPIC_API_KEY</code> (only needed if you use <code>--vision-fix</code>)</li>
 </ol>
 
 <h3>If Setting Up on a New Machine</h3>
@@ -218,10 +233,17 @@ pip install -r requirements.txt
 
 # 5. Create the .env file with your Google API key:
 #    Copy .env.example to .env, then edit .env and replace the placeholder:
-GOOGLE_API_KEY=your-actual-api-key-here</code></pre>
+GOOGLE_API_KEY=your-actual-api-key-here
+
+# 6. (Optional, only for --vision-fix) Add an Anthropic API key:
+ANTHROPIC_API_KEY=your-anthropic-key-here</code></pre>
 
 <div class="callout">
   <strong>Getting a Google API Key:</strong> Go to <code>aistudio.google.com</code>, sign in, click "Get API key", and create a key. The free tier allows 15 requests per minute which is sufficient for this tool.
+</div>
+
+<div class="callout">
+  <strong>Getting an Anthropic API Key (only if you plan to use <code>--vision-fix</code>):</strong> Go to <code>console.anthropic.com</code>, sign in, and create a key under API Keys. This is paid-only and bills per token used; budget a few cents per PDF.
 </div>
 
 <h2>How to Run the Tool</h2>
@@ -258,6 +280,14 @@ source venv/Scripts/activate</code></pre>
 
 <p><strong>Spanish (or other non-English) PDFs:</strong></p>
 <pre><code>python remediate.py "input/YourFile_Spanish.pdf" --lang es-ES</code></pre>
+
+<p><strong>With Claude vision fixes (optional, opt-in):</strong></p>
+<pre><code>python remediate.py input/ --vision-fix</code></pre>
+<p>Adds Step 6 (table regularity) and Step 7 (heading hierarchy). See the <a href="#vision-fix">Claude Vision Fixes</a> section below for details.</p>
+
+<p><strong>With Table&rarr;List review queue (optional, opt-in):</strong></p>
+<pre><code>python remediate.py "input/YourFile.pdf" --review-tables</code></pre>
+<p>Detects matrix-style tables that screen readers handle poorly and queues each one for an interactive review-and-apply pass. See the <a href="#review-tables">Table&rarr;List Review</a> section below.</p>
 
 <h3><span class="step-num">5</span> Collect your output</h3>
 <p>Remediated files are saved to the <code>output\</code> folder with <code>_remediated</code> appended to the filename. The original input file is automatically moved to the <code>processed\</code> folder.</p>
@@ -296,6 +326,67 @@ source venv/Scripts/activate</code></pre>
 <div class="callout callout-info">
   <strong>Default:</strong> If you don't specify <code>--headers</code>, it defaults to <code>row</code> (first row = column headers). This is correct for most EUSD implementation plan templates.
 </div>
+
+<h2 id="vision-fix">The <code>--vision-fix</code> Option</h2>
+<p>The five default steps fix the most common ADA issues using rule-based logic alone. But two failures from Acrobat Pro's Accessibility Checker need a model that can actually <em>look</em> at the page:</p>
+<ul>
+  <li><strong>Tables &gt; Regularity</strong> — fires when a row's tagged cell count doesn't match the table's visual column count. Fix requires deciding which cell should span multiple columns (or rows), which depends on what the page actually looks like.</li>
+  <li><strong>Appropriate Nesting</strong> — fires when a heading is in the wrong place (e.g., Word silently stamped <code>&lt;H3&gt;</code> on a closing courtesy phrase). Fix requires reading the surrounding context to decide what the text actually <em>is</em>.</li>
+</ul>
+<p>Pass <code>--vision-fix</code> to enable a Claude vision pass that handles both:</p>
+<pre><code>python remediate.py input/ --vision-fix</code></pre>
+
+<h3>Prerequisites</h3>
+<ul>
+  <li><code>ANTHROPIC_API_KEY</code> in <code>.env</code> (paid; budget a few cents per PDF)</li>
+  <li>Internet access (calls the Anthropic API for each detected issue)</li>
+</ul>
+
+<h3>What you get</h3>
+<ul>
+  <li><strong>Steps 6 and 7</strong> run after the existing 5 steps. Each detected issue (irregular row, suspect heading) gets its own Claude call with a rendered PNG of the relevant page plus a structured snippet of the tag tree.</li>
+  <li><strong>Sidecar audit log</strong> at <code>output/&lt;basename&gt;_remediated.fixes.json</code>. Every applied or skipped change is recorded with Claude's reasoning, so a reviewer can spot-check decisions in seconds without re-running the model.</li>
+</ul>
+
+<div class="callout">
+  <strong>Opt-in by design.</strong> Don't burn tokens on PDFs that already pass Acrobat's accessibility check. Run the tool without <code>--vision-fix</code> first; only re-run with the flag if Acrobat Pro flags Tables &gt; Regularity or Appropriate Nesting failures.
+</div>
+
+<h2 id="review-tables">The <code>--review-tables</code> Option</h2>
+<p>Word frequently emits "matrix-style" tables (e.g., a survey grid where rows are questions and columns are response choices) as <code>&lt;Table&gt;</code> elements with an empty top-left <code>&lt;TH&gt;</code> corner cell. Screen readers handle these poorly because each data cell announces its row header but the column header above it is empty. The accessibility fix is to restructure the table into a list (<code>&lt;L&gt;</code> / <code>&lt;LI&gt;</code>) where each row becomes a list item and each cell carries an <code>/ActualText</code> entry that injects the column header into the cell's announced text.</p>
+<p>Because that restructure is destructive (the visual table stays, but the tag tree is rewritten), it runs in a two-phase workflow: <strong>queue, then walk and apply</strong>. You see Claude's proposal for every candidate before anything mutates the PDF.</p>
+
+<h3>Phase 1 — Queue candidates</h3>
+<pre><code>python remediate.py "input/YourFile.pdf" --review-tables</code></pre>
+<p>This runs the existing 5 steps, then a Step 8 pass that:</p>
+<ul>
+  <li>Detects every <code>&lt;Table&gt;</code> with empty <code>&lt;TH&gt;</code> corner cells.</li>
+  <li>Asks Claude to look at a rendered page image and propose a Table→List restructure for each one (including the new column header per cell).</li>
+  <li>Writes the queue to <code>output/&lt;basename&gt;_remediated.review.json</code>.</li>
+  <li>Saves rendered page PNGs (one per candidate page) to <code>output/&lt;basename&gt;_remediated.review/</code>.</li>
+</ul>
+<p>The remediated PDF is still saved as <code>output/&lt;basename&gt;_remediated.pdf</code>, but the queued restructures are <em>not</em> applied yet.</p>
+
+<h3>Phase 2 — Walk the queue and apply</h3>
+<pre><code>python remediate.py review "output/YourFile_remediated.review.json"</code></pre>
+<p>The tool walks each proposal interactively. For each entry it shows the page image path, the table snippet, and Claude's proposed list structure, then prompts:</p>
+<table>
+  <tr><th>Key</th><th>Action</th></tr>
+  <tr><td><code>a</code></td><td><strong>Accept</strong> — queue this restructure to apply</td></tr>
+  <tr><td><code>s</code></td><td><strong>Skip</strong> — leave the table alone</td></tr>
+  <tr><td><code>n</code></td><td><strong>Note and skip</strong> — record a reason in the queue, leave table alone</td></tr>
+  <tr><td><code>q</code></td><td><strong>Quit</strong> — stops the walk; pending entries remain so you can resume</td></tr>
+</table>
+<p>Each decision is persisted to the queue file immediately, so Ctrl-C or <code>q</code> is safe. Re-run the same <code>review</code> command to resume where you left off. When every entry has a decision, accepted restructures are applied to the remediated PDF in place and recorded in the audit log.</p>
+
+<h3>Audit log</h3>
+<p>Restructure entries are appended to the same <code>output/&lt;basename&gt;_remediated.fixes.json</code> audit log used by <code>--vision-fix</code>, so a reviewer can see every accepted change with Claude's reasoning and the original/new tag structure.</p>
+
+<h3>Prerequisites</h3>
+<ul>
+  <li><code>ANTHROPIC_API_KEY</code> in <code>.env</code> (paid; budget a few cents per candidate)</li>
+  <li>Internet access (calls the Anthropic API for each candidate during the queue pass)</li>
+</ul>
 
 <h2>Processing Multiple Files</h2>
 <p>The easiest way to process all PDFs at once is to pass the folder path:</p>
@@ -347,6 +438,11 @@ Output:             output\filename_remediated.pdf</code></pre>
     <td><code>GOOGLE_API_KEY not set</code></td>
     <td>Missing or empty <code>.env</code> file</td>
     <td>Create/edit <code>.env</code> with your API key</td>
+  </tr>
+  <tr>
+    <td><code>ANTHROPIC_API_KEY not set</code></td>
+    <td>Used <code>--vision-fix</code> without an Anthropic key in <code>.env</code></td>
+    <td>Add <code>ANTHROPIC_API_KEY=...</code> to <code>.env</code>, or omit <code>--vision-fix</code></td>
   </tr>
   <tr>
     <td><code>PDF is not tagged</code></td>

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Forms Creator &mdash; User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+    h2 { page-break-before: auto; }
+    .page-break { page-break-before: always; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Print This Guide</button>
+
+<h1>Forms Creator</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-05-08 &mdash; Initial guide created<br>
+  <strong>Last project activity:</strong> 2026-05-08 &mdash; Phase 1 MVP release (v0.1.0)
+</div>
+
+<!-- ================================================================== -->
+<h2>What Is Forms Creator?</h2>
+
+<p>
+  Forms Creator is a tool that lets school office staff build and publish bilingual (English and Spanish)
+  web forms without writing any code. You start from a pre-approved template &mdash; such as an allergy
+  waiver or permission slip &mdash; rename it for your school or program, edit the labels right on screen,
+  and click <strong>Publish</strong>. The tool generates a complete web form that parents can fill out
+  online, along with a Google Apps Script that saves every submission directly into a Google Sheet.
+</p>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>
+  Forms Creator runs as a small local web application. You open it in your browser, do your editing,
+  and publish. The published form is a folder of static files you can drop onto GitHub Pages or your
+  district web server. Submissions come back to a Google Sheet of your choice.
+</p>
+
+<table>
+  <tr><th>Step</th><th>What Happens</th><th>Where You Do It</th></tr>
+  <tr>
+    <td>Clone a template</td>
+    <td>Copies a vetted form and gives it a new name</td>
+    <td>Forms Creator dashboard (browser)</td>
+  </tr>
+  <tr>
+    <td>Edit labels</td>
+    <td>Change field names in English and Spanish</td>
+    <td>Forms Creator edit page (browser)</td>
+  </tr>
+  <tr>
+    <td>Configure outputs</td>
+    <td>Set the publish path and Google Sheet ID</td>
+    <td>Forms Creator outputs panel (browser)</td>
+  </tr>
+  <tr>
+    <td>Publish</td>
+    <td>Generates the export folder: HTML form + Apps Script</td>
+    <td>Forms Creator (one-click)</td>
+  </tr>
+  <tr>
+    <td>Wire Apps Script</td>
+    <td>Paste the generated script into your Sheet; deploy as web app</td>
+    <td>Google Sheets (browser)</td>
+  </tr>
+  <tr>
+    <td>Host the form</td>
+    <td>Upload the export folder to GitHub Pages or internal server</td>
+    <td>GitHub / web server</td>
+  </tr>
+</table>
+
+<div class="callout callout-info">
+  <strong>Bilingual by design:</strong> Every label you enter has an English version and a Spanish version.
+  Visitors can switch languages with a toggle button at the top of the form.
+</div>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup (already done on your machine)</h3>
+<ol>
+  <li><strong>Python 3.10 or later</strong> must be installed</li>
+  <li><strong>Project folder:</strong> <code>~/projects/eusd/forms-creator/</code></li>
+  <li><strong>Python dependencies</strong> installed via pip (see setup steps below if on a new machine)</li>
+</ol>
+
+<h3>If Setting Up on a New Machine</h3>
+<pre><code># Open PowerShell and navigate to the project folder
+cd C:\Users\YourName\projects\eusd\forms-creator
+
+# Create a virtual environment (one time only)
+python -m venv venv
+
+# Activate it
+.\venv\Scripts\Activate.ps1
+
+# Install dependencies (one time only)
+pip install -r requirements.txt</code></pre>
+
+<div class="callout">
+  <strong>If Activate.ps1 is blocked:</strong> Run PowerShell as Administrator and execute
+  <code>Set-ExecutionPolicy RemoteSigned</code>, then try again.
+</div>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step</h2>
+
+<p>Follow these steps each time you create a new form, from cloning a template to a live published form.</p>
+
+<h3><span class="step-num">1</span> Start Forms Creator</h3>
+
+<p>Open a PowerShell terminal in the project folder and run:</p>
+
+<pre><code>.\venv\Scripts\Activate.ps1
+python app.py</code></pre>
+
+<p>You should see output like:</p>
+<pre><code> * Running on http://127.0.0.1:5000
+ * Debug mode: on</code></pre>
+
+<p>Open your browser and go to <strong>http://localhost:5000</strong>. Leave the terminal open while you work &mdash; closing it stops the server.</p>
+
+<h3><span class="step-num">2</span> Clone a Template</h3>
+
+<p>The dashboard shows two panels: <strong>My Forms</strong> (forms you have already created) and <strong>Templates</strong> (the pre-approved starting points).</p>
+
+<ol class="steps">
+  <li>In the <strong>Templates</strong> panel, find the template closest to your form (for example, <em>allergy-waiver</em> or <em>permission-slip</em>).</li>
+  <li>Click the template name. A small form appears asking for a <strong>New Form ID</strong>.</li>
+  <li>Type a short, lowercase ID using only letters, numbers, and hyphens (for example: <code>2026-allergy-waiver</code> or <code>spring-field-trip</code>). No spaces.</li>
+  <li>Click <strong>Create</strong>. You land on the edit page for your new form.</li>
+</ol>
+
+<img src="img/dashboard.png" alt="Dashboard showing My Forms and Templates panels" style="max-width:100%; border:1px solid #ccc; border-radius:6px; margin:0.5em 0;">
+
+<h3><span class="step-num">3</span> Edit the Form</h3>
+
+<p>The edit page shows the form's title, description, and all sections with their fields.</p>
+
+<ol class="steps">
+  <li>
+    <strong>Rename the form title:</strong> Click on the title text. An edit popover appears with two boxes &mdash; one for English and one for Spanish. Type your new title in both, then click <strong>Save</strong>.
+  </li>
+  <li>
+    <strong>Edit a field label:</strong> Click on any field label. The same EN/ES popover appears. Update both languages and save.
+  </li>
+  <li>
+    <strong>Add a field:</strong> At the bottom of any section, click <strong>+ Add Field</strong>. Choose a field type (text, date, checkbox, radio, dropdown), enter the ID and labels, and click <strong>Add</strong>.
+  </li>
+  <li>
+    <strong>Delete a field:</strong> Click the trash icon to the right of any field, then confirm.
+  </li>
+  <li>
+    <strong>Reorder fields:</strong> Drag the handle (&#8597;) on the left of any field row up or down to change its position in the section.
+  </li>
+</ol>
+
+<div class="callout callout-info">
+  <strong>Field types:</strong>
+  <code>text</code> (single line),
+  <code>text_multiline</code> (paragraph),
+  <code>date</code> (date picker),
+  <code>checkbox</code> (yes/no tick),
+  <code>radio</code> (pick one from a list),
+  <code>dropdown</code> (pick one from a menu).
+  Radio and dropdown fields require at least one option.
+</div>
+
+<img src="img/edit-page.png" alt="Edit page showing EN/ES popover for a field label" style="max-width:100%; border:1px solid #ccc; border-radius:6px; margin:0.5em 0;">
+
+<h3><span class="step-num">4</span> Configure Outputs</h3>
+
+<p>Click <strong>Outputs</strong> in the edit page's sidebar (or the Outputs tab at the top). This panel controls what gets generated when you publish.</p>
+
+<table>
+  <tr><th>Setting</th><th>What It Does</th></tr>
+  <tr>
+    <td><strong>Live web form &mdash; Enabled</strong></td>
+    <td>Generates the public HTML form. Leave this checked.</td>
+  </tr>
+  <tr>
+    <td><strong>Publish path</strong></td>
+    <td>The folder name for the export (e.g. <code>2026-allergy-waiver</code>). Use lowercase letters, digits, and hyphens only.</td>
+  </tr>
+  <tr>
+    <td><strong>Spreadsheet &mdash; Enabled</strong></td>
+    <td>Generates an Apps Script to capture submissions in a Google Sheet. Check this if you want responses saved automatically.</td>
+  </tr>
+  <tr>
+    <td><strong>Sheet ID</strong></td>
+    <td>The ID of the Google Sheet where submissions will be saved (see step 6 for how to find it).</td>
+  </tr>
+</table>
+
+<div class="callout">
+  <strong>Sheet ID format:</strong> Open the Google Sheet in your browser. The Sheet ID is the long string of letters and numbers in the URL between <code>/d/</code> and <code>/edit</code>.<br>
+  Example URL: <code>https://docs.google.com/spreadsheets/d/<strong>1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms</strong>/edit</code>
+</div>
+
+<h3><span class="step-num">5</span> Preview the Form</h3>
+
+<p>Before publishing, click <strong>Preview</strong> to see the live form exactly as parents will see it. The preview is for review only &mdash; it does not save submissions. Use the language toggle button at the top of the preview to confirm both English and Spanish look correct.</p>
+
+<h3><span class="step-num">6</span> Publish</h3>
+
+<p>When everything looks right, click <strong>Publish</strong> on the edit page. Forms Creator generates the export folder at:</p>
+
+<pre><code>~/projects/eusd/forms-creator/data/exports/&lt;publish-path&gt;\</code></pre>
+
+<p>Inside you will find:</p>
+<table>
+  <tr><th>File</th><th>What It Is</th></tr>
+  <tr><td><code>index.html</code></td><td>The bilingual web form parents fill out</td></tr>
+  <tr><td><code>form.css</code></td><td>Styling for the web form (do not edit)</td></tr>
+  <tr><td><code>form.js</code></td><td>Language switching and submission logic (do not edit)</td></tr>
+  <tr><td><code>config.json</code></td><td>Form metadata; you will paste the submission URL here after step 7</td></tr>
+  <tr><td><code>apps_script.gs</code></td><td>The Google Apps Script to paste into your Sheet</td></tr>
+</table>
+
+<h3><span class="step-num">7</span> Set Up the Apps Script</h3>
+
+<p>The Apps Script is Google's server-side code that catches each form submission, saves a row in your Sheet, and stores a PDF copy in Google Drive.</p>
+
+<ol class="steps">
+  <li>Open your Google Sheet in a browser.</li>
+  <li>Click <kbd>Extensions</kbd> &rarr; <kbd>Apps Script</kbd>. A code editor opens in a new tab.</li>
+  <li>Select all the existing placeholder code (Ctrl+A) and delete it.</li>
+  <li>Open <code>apps_script.gs</code> from your export folder in a text editor (Notepad works). Select all, copy.</li>
+  <li>Paste into the Apps Script editor and click the floppy-disk <strong>Save</strong> icon (or press Ctrl+S).</li>
+  <li>Click <kbd>Deploy</kbd> &rarr; <kbd>New deployment</kbd>.</li>
+  <li>Next to "Select type," click the gear icon and choose <strong>Web app</strong>.</li>
+  <li>Set <strong>Execute as</strong> to <em>Me</em> and <strong>Who has access</strong> to <em>Anyone</em>.</li>
+  <li>Click <strong>Deploy</strong>. Google will ask you to authorize the script &mdash; click <strong>Authorize access</strong> and sign in with your district Google account.</li>
+  <li>Copy the <strong>Web app URL</strong> that appears (it looks like <code>https://script.google.com/macros/s/AKfyc.../exec</code>).</li>
+</ol>
+
+<div class="callout">
+  <strong>Authorization warning:</strong> Google may show a screen saying "Google hasn't verified this app." Click <strong>Advanced</strong> &rarr; <strong>Go to [your project name] (unsafe)</strong>. This is expected for district-internal scripts and is safe to proceed.
+</div>
+
+<h3><span class="step-num">8</span> Wire the Submission URL</h3>
+
+<p>After deploying the Apps Script, you need to tell the web form where to send submissions.</p>
+
+<ol class="steps">
+  <li>Open the <code>config.json</code> file from your export folder in a text editor.</li>
+  <li>Find the line <code>"submission_url": ""</code>.</li>
+  <li>Paste the Web app URL between the quotes: <code>"submission_url": "https://script.google.com/macros/s/AKfyc.../exec"</code></li>
+  <li>Save <code>config.json</code>.</li>
+</ol>
+
+<div class="callout callout-info">
+  <strong>Why this is a separate step:</strong> The URL is only known after you deploy the Apps Script in Google, so the initial publish leaves it blank for you to fill in.
+</div>
+
+<h3><span class="step-num">9</span> Host the Form</h3>
+
+<p>The export folder is a self-contained static website. You can host it in two ways:</p>
+
+<h4>Option A &mdash; GitHub Pages</h4>
+<ol class="steps">
+  <li>Open your district GitHub account and open (or create) a Pages repository.</li>
+  <li>Copy the contents of your export folder into a subfolder of the repo (for example, <code>forms/2026-allergy-waiver/</code>).</li>
+  <li>Commit and push. GitHub will publish the files within a few minutes.</li>
+  <li>The form URL will be something like <code>https://eusd.github.io/forms/2026-allergy-waiver/</code>.</li>
+</ol>
+
+<h4>Option B &mdash; Internal Web Server</h4>
+<ol class="steps">
+  <li>Connect to the district web server share (ask your tech coordinator for the path).</li>
+  <li>Copy the export folder into the appropriate web-accessible directory.</li>
+  <li>Confirm the URL with your tech coordinator and test it in a browser.</li>
+</ol>
+
+<h3><span class="step-num">10</span> Submit a Test Entry</h3>
+
+<p>Before sending the form link to parents, do a quick test to make sure everything is connected.</p>
+
+<ol class="steps">
+  <li>Open the live form URL in your browser.</li>
+  <li>Fill out all the required fields with test data (e.g., student name "Test Student").</li>
+  <li>Click <strong>Submit</strong>. A confirmation message should appear.</li>
+  <li>Open your Google Sheet. A new row should appear at the bottom with the submission time and your test data.</li>
+  <li>Check your Google Drive for a new folder named <code>&lt;form-id&gt; submissions</code>. Inside you should find a PDF and an HTML file for the test submission.</li>
+  <li>Delete the test row from the Sheet before sharing the form link.</li>
+</ol>
+
+<img src="img/submission-sheet.png" alt="Google Sheet showing a submitted form row" style="max-width:100%; border:1px solid #ccc; border-radius:6px; margin:0.5em 0;">
+
+<!-- ================================================================== -->
+<h2>Understanding the Output</h2>
+
+<p>When you click <strong>Publish</strong>, Forms Creator writes the following to <code>~/projects/eusd/forms-creator/data/exports/&lt;publish-path&gt;/</code>:</p>
+
+<ul>
+  <li><strong>index.html</strong> &mdash; The form itself. Contains all field labels in both languages embedded as data attributes. Parents see whichever language they choose.</li>
+  <li><strong>form.css / form.js</strong> &mdash; Shared styling and the language-switching and form-submission logic. Do not edit these files.</li>
+  <li><strong>config.json</strong> &mdash; Machine-readable config the browser reads to know where to POST the submission. You must fill in <code>submission_url</code> before the form can submit.</li>
+  <li><strong>apps_script.gs</strong> &mdash; The Google Apps Script source code. Paste this into your Sheet's Apps Script editor and deploy it as a web app.</li>
+</ul>
+
+<div class="callout callout-info">
+  <strong>What happens on submit:</strong> The browser sends the form data as JSON to your Apps Script URL. The script saves a row in the Sheet and creates a PDF + HTML file in a Google Drive folder. The browser shows the parent a confirmation.
+</div>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+<pre><code>~/projects/eusd/forms-creator/
+  app.py               &lt;-- Start the server with: python app.py
+  config.py            &lt;-- Internal paths config (do not edit)
+  requirements.txt     &lt;-- Python dependencies
+  creator/             &lt;-- Server code (do not edit)
+  render/              &lt;-- Output generators (do not edit)
+  templates_lib/       &lt;-- Pre-approved form templates (JSON)
+    allergy-waiver.json
+    permission-slip.json
+  data/                &lt;-- Runtime data (auto-created)
+    forms.db           &lt;-- Your saved forms (SQLite)
+    exports/           &lt;-- Published form bundles go here
+      2026-allergy-waiver\
+        index.html
+        form.css
+        form.js
+        config.json
+        apps_script.gs
+  docs/
+    user-guide.html    &lt;-- This guide
+</code></pre>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Problem</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td><code>python: command not found</code> or <code>'python' is not recognized</code></td>
+    <td>Python is not installed or not on the system PATH</td>
+    <td>Install Python 3.10+ from python.org. During install, check "Add Python to PATH".</td>
+  </tr>
+  <tr>
+    <td>Browser shows "This site can't be reached" at localhost:5000</td>
+    <td>The server is not running</td>
+    <td>Make sure <code>python app.py</code> is still running in a terminal window. If the terminal closed, start it again.</td>
+  </tr>
+  <tr>
+    <td>Activate.ps1 is blocked by execution policy</td>
+    <td>Windows PowerShell default policy blocks scripts</td>
+    <td>Run PowerShell as Administrator and run <code>Set-ExecutionPolicy RemoteSigned</code>. Then try again in a regular terminal.</td>
+  </tr>
+  <tr>
+    <td>Publish succeeds but the form doesn't submit (no Sheet row)</td>
+    <td><code>submission_url</code> in <code>config.json</code> is empty or incorrect</td>
+    <td>Open <code>config.json</code> in your export folder, paste the Apps Script Web app URL into the <code>submission_url</code> field, save, and re-upload the file.</td>
+  </tr>
+  <tr>
+    <td>Apps Script authorization error on submit</td>
+    <td>The Apps Script was not authorized, or the deployment was revoked</td>
+    <td>In Google Sheets, go to <kbd>Extensions</kbd> &rarr; <kbd>Apps Script</kbd>, click <kbd>Deploy</kbd> &rarr; <kbd>Manage deployments</kbd>, and re-deploy. Re-authorize when prompted.</td>
+  </tr>
+  <tr>
+    <td>Sheet row appears but no PDF in Drive</td>
+    <td>Drive storage may be full, or the script lacked Drive permission</td>
+    <td>Check available Drive storage. Re-authorize the Apps Script (it requests Drive access). If the folder already exists with a different owner, rename it in Drive settings.</td>
+  </tr>
+  <tr>
+    <td>Spanish text shows garbled characters</td>
+    <td>File was saved or uploaded with the wrong character encoding</td>
+    <td>Always use UTF-8 when saving edited files. In Notepad, use <kbd>File</kbd> &rarr; <kbd>Save As</kbd> and set Encoding to <em>UTF-8</em>.</td>
+  </tr>
+  <tr>
+    <td>"Field type 'radio' requires non-empty options" when adding a field</td>
+    <td>A radio or dropdown field was created without any options</td>
+    <td>When adding a radio or dropdown field, use the Options section in the Add Field form to enter at least one option before saving.</td>
+  </tr>
+  <tr>
+    <td>Publish path validation error: "must be lowercase letters/digits/hyphens"</td>
+    <td>The publish path contains spaces, uppercase letters, or special characters</td>
+    <td>Use only lowercase letters, digits, and hyphens (e.g. <code>spring-field-trip-2026</code>). The path must start with a letter or digit.</td>
+  </tr>
+  <tr>
+    <td>Changes to a form were lost after restarting the server</td>
+    <td>The <code>data/forms.db</code> file was deleted or corrupted</td>
+    <td>Always stop the server cleanly (Ctrl+C in the terminal). Never delete <code>data/forms.db</code> while the server is running.</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Creating a New Form &mdash; Checklist</h3>
+  <ol>
+    <li>Open PowerShell in <code>~/projects/eusd/forms-creator/</code> and run <code>python app.py</code></li>
+    <li>Open <strong>http://localhost:5000</strong> in your browser</li>
+    <li>Click a template name, enter a unique Form ID, click <strong>Create</strong></li>
+    <li>Click field labels to edit English and Spanish text</li>
+    <li>Open <strong>Outputs</strong>, enable web form and spreadsheet, enter Sheet ID</li>
+    <li>Click <strong>Preview</strong> to review both languages</li>
+    <li>Click <strong>Publish</strong> &mdash; export folder appears in <code>data/exports/</code></li>
+    <li>In Google Sheets: <kbd>Extensions</kbd> &rarr; <kbd>Apps Script</kbd> &rarr; paste <code>apps_script.gs</code> &rarr; Deploy as web app</li>
+    <li>Copy the Web app URL into <code>config.json</code> (<code>submission_url</code> field)</li>
+    <li>Upload the export folder to GitHub Pages or the district web server</li>
+    <li>Submit a test entry and verify the Sheet row + Drive files appear</li>
+    <li>Delete the test row, then share the form URL with parents</li>
+  </ol>
+</div>
+
+</body>
+</html>

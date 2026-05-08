@@ -1,5 +1,27 @@
 # Changelog
 
+## [2026-05-08]
+### Added — 2026-05-08 (later)
+- `--review-tables` flag: detects matrix-style tables Word emitted with empty
+  TH corner cells, asks Claude to propose a Table→List restructure, queues
+  each proposal to `output/<basename>_remediated.review.json` for review
+  (paired with rendered page images).
+- New `review <queue.json>` subcommand: walks the queue interactively
+  (accept / skip / note-and-skip / quit per entry, persists progress after
+  every decision so Ctrl-C is safe), then applies accepted restructures
+  to the remediated PDF by mutating the tag tree (Table → L/LI with
+  /ActualText on data sub-LIs to inject column-header context).
+- Restructure entries are appended to the existing
+  `output/<basename>_remediated.fixes.json` audit log alongside any
+  `--vision-fix` entries.
+
+- Add `--vision-fix` CLI flag to `remediate.py` — opt-in pass that uses Claude vision (Anthropic API) to fix two ADA issues the rule-based steps can't reach: Tables > Regularity (cells with mismatched ColSpan/RowSpan that fail the row-width audit) and Appropriate Nesting (e.g. an `<H3>` Word stamped onto a closing courtesy phrase that shouldn't be a heading at all). Runs as Step 6 (table regularity) and Step 7 (heading hierarchy) after the existing 5 steps; each step is wrapped so a failure in one doesn't block the save. Requires `ANTHROPIC_API_KEY` in `.env` and internet access; without the flag the tool's behavior is byte-for-byte unchanged
+- Sidecar audit log written to `output/<basename>_remediated.fixes.json` whenever `--vision-fix` runs — records every applied/skipped change with Claude's reasoning, so reviewers can spot-check decisions without re-running the model
+- Add checkbox + radio AcroForm widgets to the rebuild pipeline — `rebuild/form_fields.py` gains `add_checkbox` and `add_radio_group` helpers; `rebuild/add_form_widgets.py` learns to inject `/Btn` widgets anchored on the right side of invisible `[[F:Name]]` (checkbox) and `[[F:Group=Value]]` (radio) markers
+- Visible glyphs are Unicode `☐` (U+2610) and `○` (U+25CB) in the docx body font — the static-print case (skip `add_form_widgets.py`) still produces a clean printable
+- Appearance streams live in the new `rebuild/_appearance_streams.py`. The off-state Form-XObject is intentionally empty so the docx glyph beneath supplies the visible outline; the on-state paints only the indicator (checkmark or filled dot) over the glyph. This avoids the doubled-outline rendering that came from drawing the widget border alongside the typeset glyph
+- `find_markers` now uses PyMuPDF `rawdict` per-character bboxes so the widget rect overlays the actual ☐/○ glyph ink rather than the line-height bbox of the whole word
+
 ## [2026-05-06]
 - Add fillable-form pass — `rebuild/add_form_widgets.py` injects AcroForm text widgets (single-line + multi-line) into a tagged PDF, anchored by invisible `[[F:Name]]` markers placed in the .docx by the rebuild script. Widgets are tagged in the structure tree as `/Form` elements with `/OBJR` children (PDF/UA Matterhorn 28-010); pages with widgets get `/Tab /S` for structure-order tabbing (Matterhorn 28-002); `/AcroForm/DR/Font/Helv` is populated so fields render on first focus
 - Add `rebuild/form_fields.py` — helpers (`add_invisible_marker`, `add_field_fill_line`, `write_fields_json`) used by rebuild scripts to declare fillable fields and emit a sidecar `.fields.json`
