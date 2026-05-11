@@ -109,7 +109,7 @@
 <h1>Smore ADA Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-08 &mdash; Screenshot bug fix (each issue now shows its own image); vision cache now provider-scoped
+  <strong>User guide last updated:</strong> 2026-05-11 &mdash; Email send log: every staff send is now recorded to <code>reports\email-log.csv</code>
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,10 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-11</td>
+        <td style="padding:8px; background: white;">feat: every "Send to Staff" action is now logged to <code>reports\email-log.csv</code> — timestamp, recipients, issue count, your note, and PDF path. Open in Excel for a paper trail to send to the director.</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-08</td>
         <td style="padding:8px; background: white;">fix: screenshot bug — report cards now show the correct image for each issue (previously all images in the same section showed the first image)</td>
@@ -157,38 +161,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-13</td>
         <td style="padding:8px; background: white;">fix: Google Workspace URL detection broken by sign-in redirect — now correctly flags Google Drive/Docs/Sheets links</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
-        <td style="padding:8px; background: white;">Fix changelog table cell background color</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
-        <td style="padding:8px; background: white;">Automated guide update</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Remove print link</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Update guide styling — title, label, and changelog formatting</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Backfill changelog — last 30 days of commits</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Replace print button with simple link</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Remove 'Last project activity' line — replaced by automated changelog</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Update user guide — add changelog section and permanent changelog for Thrillshare smore-scan callout</td>
       </tr>
     </tbody>
   </table>
@@ -339,6 +311,7 @@ venv\Scripts\activate</code></pre>
 <p>PDF reports are saved to:</p>
 <pre><code>reports\smore-report-{slug}-{date}-{provider}.pdf</code></pre>
 <p>For example: <code>reports\smore-report-jtycf-2026-03-25-claude.pdf</code></p>
+<p>Every time you click <strong>Send to Staff</strong>, a row is automatically appended to <code>reports\email-log.csv</code> with the timestamp, recipients, issue count, your note, and the PDF filename. Open it in Excel for a paper trail — useful if you need to report to the director which principals have received reports and haven't responded.</p>
 
 <!-- ================================================================== -->
 <h2>CLI Reference</h2>
@@ -362,6 +335,7 @@ venv\Scripts\activate</code></pre>
   .env.example          &lt;-- Template for .env
   requirements.txt      &lt;-- Python dependencies
   reports\              &lt;-- Generated PDF reports appear here
+    email-log.csv       &lt;-- Audit log of all staff sends (auto-created)
   docs\                 &lt;-- This guide and other documentation
   smore_checker\        &lt;-- Source code (do not modify)
     core.py             &lt;-- Orchestration: scrape, check, review

@@ -77,6 +77,10 @@
     background: #e8f0fe;
     border-left-color: #1a56db;
   }
+  .callout-new {
+    background: #e6f4ea;
+    border-left-color: #2e7d32;
+  }
   .step-num {
     display: inline-block;
     background: #1a56db;
@@ -102,6 +106,18 @@
   .print-btn:hover { background: #1342a8; }
   ul, ol { margin: 0.5em 0; }
   li { margin: 0.3em 0; }
+  .badge-new {
+    display: inline-block;
+    background: #2e7d32;
+    color: white;
+    font-size: 0.7em;
+    padding: 0.1em 0.4em;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 0.3em;
+    font-weight: bold;
+    letter-spacing: 0.03em;
+  }
 </style>
 </head>
 <body>
@@ -112,18 +128,58 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-05-08 &mdash; Initial guide created<br>
-  <strong>Last project activity:</strong> 2026-05-08 &mdash; Phase 1 MVP release (v0.1.0)
+  <strong>Last updated:</strong> 2026-05-11 &mdash; Language modes, AI translation, modal editors<br>
+  <strong>Last project activity:</strong> 2026-05-11 &mdash; Per-form language mode, Translate All, ES&harr;EN AI translation
 </div>
+
+<!-- ================================================================== -->
+<h2>Recent Changes</h2>
+
+<table>
+  <tr><th>Date</th><th>Change</th></tr>
+  <tr>
+    <td>2026-05-11</td>
+    <td><strong>Per-form language mode</strong> &mdash; each form can now be set to English-only, Spanish-only, or Bilingual. The edit page adapts to show only the relevant language fields.</td>
+  </tr>
+  <tr>
+    <td>2026-05-11</td>
+    <td><strong>AI translation (ES&harr;EN)</strong> &mdash; "Translate All" banner bulk-translates every missing label in either direction using Gemini. Individual fields have a "Generate Spanish" (or "Generate English") button in the label modal. Requires <code>GOOGLE_API_KEY</code> in <code>.env</code>.</td>
+  </tr>
+  <tr>
+    <td>2026-05-11</td>
+    <td><strong>Modal label editor</strong> &mdash; clicking a field label now opens a polished dialog (replaces the old inline popover). Includes a "Regenerate" button to re-run AI translation for that field.</td>
+  </tr>
+  <tr>
+    <td>2026-05-11</td>
+    <td><strong>Edit radio/dropdown options</strong> &mdash; existing radio and dropdown fields now have an Edit Options button that opens a dedicated modal to add, remove, or reorder EN/ES option pairs.</td>
+  </tr>
+  <tr>
+    <td>2026-05-11</td>
+    <td><strong>Add Field modal</strong> &mdash; the "Add Field" flow is now a proper dialog (replaces the old chain of browser prompts). Includes a visual field-type picker and an inline options editor for radio/dropdown fields.</td>
+  </tr>
+  <tr>
+    <td>2026-05-11</td>
+    <td><strong>Editable section headings &amp; required toggle</strong> &mdash; click any section heading to rename it; toggle the Required checkbox on any field directly from the edit page.</td>
+  </tr>
+  <tr>
+    <td>2026-05-11</td>
+    <td><strong>Friendlier dashboard</strong> &mdash; templates display as cards with descriptions; internal dev templates are hidden; form names display in a human-readable format.</td>
+  </tr>
+  <tr>
+    <td>2026-05-08</td>
+    <td>Initial user guide created (Phase 1 MVP release).</td>
+  </tr>
+</table>
 
 <!-- ================================================================== -->
 <h2>What Is Forms Creator?</h2>
 
 <p>
-  Forms Creator is a tool that lets school office staff build and publish bilingual (English and Spanish)
-  web forms without writing any code. You start from a pre-approved template &mdash; such as an allergy
-  waiver or permission slip &mdash; rename it for your school or program, edit the labels right on screen,
-  and click <strong>Publish</strong>. The tool generates a complete web form that parents can fill out
+  Forms Creator is a tool that lets school office staff build and publish web forms without writing any code.
+  Each form can be set to <strong>English-only</strong>, <strong>Spanish-only</strong>, or <strong>Bilingual</strong>
+  (English and Spanish with a parent-facing language toggle). You start from a pre-approved template &mdash;
+  such as an allergy waiver or permission slip &mdash; rename it for your school or program, edit the labels right
+  on screen, and click <strong>Publish</strong>. The tool generates a complete web form that parents can fill out
   online, along with a Google Apps Script that saves every submission directly into a Google Sheet.
 </p>
 
@@ -144,8 +200,13 @@
     <td>Forms Creator dashboard (browser)</td>
   </tr>
   <tr>
+    <td>Set language mode</td>
+    <td>Choose English-only, Spanish-only, or Bilingual</td>
+    <td>Forms Creator edit page (browser)</td>
+  </tr>
+  <tr>
     <td>Edit labels</td>
-    <td>Change field names in English and Spanish</td>
+    <td>Change field names; use AI to generate translations</td>
     <td>Forms Creator edit page (browser)</td>
   </tr>
   <tr>
@@ -171,8 +232,8 @@
 </table>
 
 <div class="callout callout-info">
-  <strong>Bilingual by design:</strong> Every label you enter has an English version and a Spanish version.
-  Visitors can switch languages with a toggle button at the top of the form.
+  <strong>Language modes:</strong> Bilingual forms include a language toggle so parents can switch between
+  English and Spanish. English-only and Spanish-only forms publish in a single language with no toggle.
 </div>
 
 <!-- ================================================================== -->
@@ -183,6 +244,7 @@
   <li><strong>Python 3.10 or later</strong> must be installed</li>
   <li><strong>Project folder:</strong> <code>~/projects/eusd/forms-creator/</code></li>
   <li><strong>Python dependencies</strong> installed via pip (see setup steps below if on a new machine)</li>
+  <li><strong>Google API Key</strong> (optional) &mdash; required only to use AI translation features (Generate Spanish / Translate All). See below.</li>
 </ol>
 
 <h3>If Setting Up on a New Machine</h3>
@@ -201,6 +263,21 @@ pip install -r requirements.txt</code></pre>
 <div class="callout">
   <strong>If Activate.ps1 is blocked:</strong> Run PowerShell as Administrator and execute
   <code>Set-ExecutionPolicy RemoteSigned</code>, then try again.
+</div>
+
+<h3>Setting Up AI Translation (optional)</h3>
+<p>
+  The AI translation features (Generate Spanish, Generate English, Translate All) use Google Gemini.
+  To enable them, you need a Google API key:
+</p>
+<ol>
+  <li>Go to <strong>Google AI Studio</strong> and create an API key for your Google account.</li>
+  <li>In the project folder, copy <code>.env.example</code> to <code>.env</code>.</li>
+  <li>Open <code>.env</code> in a text editor and paste your key: <code>GOOGLE_API_KEY=your-key-here</code></li>
+  <li>Save the file and restart the server (<code>python app.py</code>).</li>
+</ol>
+<div class="callout callout-info">
+  If no API key is configured, the Generate Spanish / Generate English buttons will be disabled, but all other features work normally.
 </div>
 
 <!-- ================================================================== -->
@@ -223,38 +300,92 @@ python app.py</code></pre>
 
 <h3><span class="step-num">2</span> Clone a Template</h3>
 
-<p>The dashboard shows two panels: <strong>My Forms</strong> (forms you have already created) and <strong>Templates</strong> (the pre-approved starting points).</p>
+<p>The dashboard shows two panels: <strong>My Forms</strong> (forms you have already created) and <strong>Templates</strong> (the pre-approved starting points). Templates display as cards with a name and short description.</p>
 
 <ol class="steps">
-  <li>In the <strong>Templates</strong> panel, find the template closest to your form (for example, <em>allergy-waiver</em> or <em>permission-slip</em>).</li>
-  <li>Click the template name. A small form appears asking for a <strong>New Form ID</strong>.</li>
+  <li>In the <strong>Templates</strong> panel, find the template closest to your form (for example, <em>Allergy Waiver</em> or <em>Permission Slip</em>).</li>
+  <li>Click the template card. A naming dialog appears.</li>
   <li>Type a short, lowercase ID using only letters, numbers, and hyphens (for example: <code>2026-allergy-waiver</code> or <code>spring-field-trip</code>). No spaces.</li>
   <li>Click <strong>Create</strong>. You land on the edit page for your new form.</li>
 </ol>
 
-<img src="img/dashboard.png" alt="Dashboard showing My Forms and Templates panels" style="max-width:100%; border:1px solid #ccc; border-radius:6px; margin:0.5em 0;">
+<h3><span class="step-num">3</span> Set the Language Mode</h3>
 
-<h3><span class="step-num">3</span> Edit the Form</h3>
+<p>
+  At the top of the edit page, choose the language mode for your form. This controls what language fields
+  are shown to staff during editing and what language(s) are included in the published form.
+</p>
+
+<table>
+  <tr><th>Mode</th><th>Published Form</th><th>When to Use</th></tr>
+  <tr>
+    <td><strong>Bilingual</strong></td>
+    <td>English + Spanish with a parent-facing language toggle</td>
+    <td>Most school forms sent home to families</td>
+  </tr>
+  <tr>
+    <td><strong>English-only</strong></td>
+    <td>English only, no language toggle</td>
+    <td>Staff-facing forms, internal workflows</td>
+  </tr>
+  <tr>
+    <td><strong>Spanish-only</strong></td>
+    <td>Spanish only, no language toggle</td>
+    <td>Forms for a Spanish-speaking-only audience</td>
+  </tr>
+</table>
+
+<div class="callout callout-info">
+  <strong>Switching modes:</strong> You can change the language mode at any time before publishing. If you
+  switch from Bilingual to English-only, existing Spanish text is preserved in the database but will not
+  appear in the published form. Switching back to Bilingual restores it.
+</div>
+
+<h3><span class="step-num">4</span> Edit the Form</h3>
 
 <p>The edit page shows the form's title, description, and all sections with their fields.</p>
 
-<ol class="steps">
-  <li>
-    <strong>Rename the form title:</strong> Click on the title text. An edit popover appears with two boxes &mdash; one for English and one for Spanish. Type your new title in both, then click <strong>Save</strong>.
-  </li>
-  <li>
-    <strong>Edit a field label:</strong> Click on any field label. The same EN/ES popover appears. Update both languages and save.
-  </li>
-  <li>
-    <strong>Add a field:</strong> At the bottom of any section, click <strong>+ Add Field</strong>. Choose a field type (text, date, checkbox, radio, dropdown), enter the ID and labels, and click <strong>Add</strong>.
-  </li>
-  <li>
-    <strong>Delete a field:</strong> Click the trash icon to the right of any field, then confirm.
-  </li>
-  <li>
-    <strong>Reorder fields:</strong> Drag the handle (&#8597;) on the left of any field row up or down to change its position in the section.
-  </li>
+<h4>Rename the Form Title or Description</h4>
+<p>Click on the title or description text. A label editor dialog opens with an English field and (in Bilingual or Spanish-only mode) a Spanish field. You can also click <strong>Generate</strong> to have AI suggest a translation. Type your text and click <strong>Save</strong>.</p>
+
+<h4>Edit a Section Heading</h4>
+<p>Click on any section heading. The same label editor dialog opens. Update the text and click <strong>Save</strong>.</p>
+
+<h4>Edit a Field Label</h4>
+<p>Click on any field label. The label editor dialog opens showing the English field and (in Bilingual/Spanish-only mode) the Spanish field. Click <strong>Generate Spanish</strong> (or <strong>Generate English</strong>) to use AI to fill in the translation automatically, then review and click <strong>Save</strong>.</p>
+
+<h4>Toggle Required</h4>
+<p>Each field row has a <strong>Required</strong> checkbox. Check it to make the field required before submission; uncheck it to make it optional. Changes save automatically.</p>
+
+<h4>Add a Field</h4>
+<p>At the bottom of any section, click <strong>+ Add Field</strong>. A dialog opens:</p>
+<ol>
+  <li>Click the icon for the <strong>field type</strong> you want (text, paragraph, date, checkbox, radio, or dropdown).</li>
+  <li>Enter the <strong>English label</strong>. The field ID is derived automatically.</li>
+  <li>For Bilingual or Spanish-only forms, enter the <strong>Spanish label</strong> (or click <strong>Generate Spanish</strong>).</li>
+  <li>For radio or dropdown fields, add at least one option in the <strong>Options</strong> section: enter the English option text and (if Bilingual) the Spanish equivalent.</li>
+  <li>Click <strong>Add Field</strong>.</li>
 </ol>
+
+<h4>Edit Radio or Dropdown Options</h4>
+<p>For existing radio or dropdown fields, click the <strong>Edit Options</strong> button that appears below the field. A dialog opens where you can add, remove, or reorder the EN/ES option pairs.</p>
+
+<h4>Delete a Field</h4>
+<p>Click the trash icon to the right of any field, then confirm.</p>
+
+<h4>Reorder Fields</h4>
+<p>Drag the handle (&updownarrow;) on the left of any field row up or down to change its position within the section.</p>
+
+<h4>Translate All (Bilingual forms)</h4>
+<p>
+  If your form has fields with English but no Spanish (or Spanish but no English), a banner appears at the
+  top of the edit page offering to <strong>Translate All</strong>. Click it to have Gemini fill in every
+  missing translation in one step. Review the results and edit any that need adjustment.
+</p>
+<div class="callout callout-info">
+  <strong>Translate All requires</strong> a valid <code>GOOGLE_API_KEY</code> in your <code>.env</code> file.
+  If the key is missing or invalid, the button is disabled.
+</div>
 
 <div class="callout callout-info">
   <strong>Field types:</strong>
@@ -267,9 +398,7 @@ python app.py</code></pre>
   Radio and dropdown fields require at least one option.
 </div>
 
-<img src="img/edit-page.png" alt="Edit page showing EN/ES popover for a field label" style="max-width:100%; border:1px solid #ccc; border-radius:6px; margin:0.5em 0;">
-
-<h3><span class="step-num">4</span> Configure Outputs</h3>
+<h3><span class="step-num">5</span> Configure Outputs</h3>
 
 <p>Click <strong>Outputs</strong> in the edit page's sidebar (or the Outputs tab at the top). This panel controls what gets generated when you publish.</p>
 
@@ -289,7 +418,7 @@ python app.py</code></pre>
   </tr>
   <tr>
     <td><strong>Sheet ID</strong></td>
-    <td>The ID of the Google Sheet where submissions will be saved (see step 6 for how to find it).</td>
+    <td>The ID of the Google Sheet where submissions will be saved (see step 7 for how to find it).</td>
   </tr>
 </table>
 
@@ -298,11 +427,16 @@ python app.py</code></pre>
   Example URL: <code>https://docs.google.com/spreadsheets/d/<strong>1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms</strong>/edit</code>
 </div>
 
-<h3><span class="step-num">5</span> Preview the Form</h3>
+<h3><span class="step-num">6</span> Preview the Form</h3>
 
-<p>Before publishing, click <strong>Preview</strong> to see the live form exactly as parents will see it. The preview is for review only &mdash; it does not save submissions. Use the language toggle button at the top of the preview to confirm both English and Spanish look correct.</p>
+<p>Before publishing, click <strong>Preview</strong> to see the live form exactly as parents will see it. The preview is for review only &mdash; it does not save submissions.</p>
 
-<h3><span class="step-num">6</span> Publish</h3>
+<ul>
+  <li>For <strong>Bilingual</strong> forms, use the language toggle button at the top of the preview to confirm both English and Spanish look correct.</li>
+  <li>For <strong>English-only</strong> or <strong>Spanish-only</strong> forms, the preview shows in that language only with no toggle.</li>
+</ul>
+
+<h3><span class="step-num">7</span> Publish</h3>
 
 <p>When everything looks right, click <strong>Publish</strong> on the edit page. Forms Creator generates the export folder at:</p>
 
@@ -311,14 +445,14 @@ python app.py</code></pre>
 <p>Inside you will find:</p>
 <table>
   <tr><th>File</th><th>What It Is</th></tr>
-  <tr><td><code>index.html</code></td><td>The bilingual web form parents fill out</td></tr>
+  <tr><td><code>index.html</code></td><td>The web form parents fill out (in your chosen language mode)</td></tr>
   <tr><td><code>form.css</code></td><td>Styling for the web form (do not edit)</td></tr>
   <tr><td><code>form.js</code></td><td>Language switching and submission logic (do not edit)</td></tr>
-  <tr><td><code>config.json</code></td><td>Form metadata; you will paste the submission URL here after step 7</td></tr>
+  <tr><td><code>config.json</code></td><td>Form metadata; you will paste the submission URL here after step 8</td></tr>
   <tr><td><code>apps_script.gs</code></td><td>The Google Apps Script to paste into your Sheet</td></tr>
 </table>
 
-<h3><span class="step-num">7</span> Set Up the Apps Script</h3>
+<h3><span class="step-num">8</span> Set Up the Apps Script</h3>
 
 <p>The Apps Script is Google's server-side code that catches each form submission, saves a row in your Sheet, and stores a PDF copy in Google Drive.</p>
 
@@ -339,7 +473,7 @@ python app.py</code></pre>
   <strong>Authorization warning:</strong> Google may show a screen saying "Google hasn't verified this app." Click <strong>Advanced</strong> &rarr; <strong>Go to [your project name] (unsafe)</strong>. This is expected for district-internal scripts and is safe to proceed.
 </div>
 
-<h3><span class="step-num">8</span> Wire the Submission URL</h3>
+<h3><span class="step-num">9</span> Wire the Submission URL</h3>
 
 <p>After deploying the Apps Script, you need to tell the web form where to send submissions.</p>
 
@@ -354,7 +488,7 @@ python app.py</code></pre>
   <strong>Why this is a separate step:</strong> The URL is only known after you deploy the Apps Script in Google, so the initial publish leaves it blank for you to fill in.
 </div>
 
-<h3><span class="step-num">9</span> Host the Form</h3>
+<h3><span class="step-num">10</span> Host the Form</h3>
 
 <p>The export folder is a self-contained static website. You can host it in two ways:</p>
 
@@ -373,7 +507,7 @@ python app.py</code></pre>
   <li>Confirm the URL with your tech coordinator and test it in a browser.</li>
 </ol>
 
-<h3><span class="step-num">10</span> Submit a Test Entry</h3>
+<h3><span class="step-num">11</span> Submit a Test Entry</h3>
 
 <p>Before sending the form link to parents, do a quick test to make sure everything is connected.</p>
 
@@ -386,15 +520,13 @@ python app.py</code></pre>
   <li>Delete the test row from the Sheet before sharing the form link.</li>
 </ol>
 
-<img src="img/submission-sheet.png" alt="Google Sheet showing a submitted form row" style="max-width:100%; border:1px solid #ccc; border-radius:6px; margin:0.5em 0;">
-
 <!-- ================================================================== -->
 <h2>Understanding the Output</h2>
 
 <p>When you click <strong>Publish</strong>, Forms Creator writes the following to <code>~/projects/eusd/forms-creator/data/exports/&lt;publish-path&gt;/</code>:</p>
 
 <ul>
-  <li><strong>index.html</strong> &mdash; The form itself. Contains all field labels in both languages embedded as data attributes. Parents see whichever language they choose.</li>
+  <li><strong>index.html</strong> &mdash; The form itself. For Bilingual forms, contains all field labels in both languages embedded as data attributes; parents see whichever language they choose. For single-language forms, contains only that language.</li>
   <li><strong>form.css / form.js</strong> &mdash; Shared styling and the language-switching and form-submission logic. Do not edit these files.</li>
   <li><strong>config.json</strong> &mdash; Machine-readable config the browser reads to know where to POST the submission. You must fill in <code>submission_url</code> before the form can submit.</li>
   <li><strong>apps_script.gs</strong> &mdash; The Google Apps Script source code. Paste this into your Sheet's Apps Script editor and deploy it as a web app.</li>
@@ -408,6 +540,7 @@ python app.py</code></pre>
 <h2>Folder Structure</h2>
 <pre><code>~/projects/eusd/forms-creator/
   app.py               &lt;-- Start the server with: python app.py
+  .env                 &lt;-- Your GOOGLE_API_KEY (create from .env.example)
   config.py            &lt;-- Internal paths config (do not edit)
   requirements.txt     &lt;-- Python dependencies
   creator/             &lt;-- Server code (do not edit)
@@ -449,6 +582,11 @@ python app.py</code></pre>
     <td>Run PowerShell as Administrator and run <code>Set-ExecutionPolicy RemoteSigned</code>. Then try again in a regular terminal.</td>
   </tr>
   <tr>
+    <td>Generate Spanish / Translate All buttons are disabled or show an error</td>
+    <td><code>GOOGLE_API_KEY</code> is missing or invalid in <code>.env</code></td>
+    <td>Copy <code>.env.example</code> to <code>.env</code> and paste a valid Google AI Studio API key into the <code>GOOGLE_API_KEY</code> field. Restart the server.</td>
+  </tr>
+  <tr>
     <td>Publish succeeds but the form doesn't submit (no Sheet row)</td>
     <td><code>submission_url</code> in <code>config.json</code> is empty or incorrect</td>
     <td>Open <code>config.json</code> in your export folder, paste the Apps Script Web app URL into the <code>submission_url</code> field, save, and re-upload the file.</td>
@@ -471,7 +609,7 @@ python app.py</code></pre>
   <tr>
     <td>"Field type 'radio' requires non-empty options" when adding a field</td>
     <td>A radio or dropdown field was created without any options</td>
-    <td>When adding a radio or dropdown field, use the Options section in the Add Field form to enter at least one option before saving.</td>
+    <td>When adding a radio or dropdown field, use the Options section in the Add Field dialog to enter at least one option before saving.</td>
   </tr>
   <tr>
     <td>Publish path validation error: "must be lowercase letters/digits/hyphens"</td>
@@ -492,10 +630,12 @@ python app.py</code></pre>
   <ol>
     <li>Open PowerShell in <code>~/projects/eusd/forms-creator/</code> and run <code>python app.py</code></li>
     <li>Open <strong>http://localhost:5000</strong> in your browser</li>
-    <li>Click a template name, enter a unique Form ID, click <strong>Create</strong></li>
-    <li>Click field labels to edit English and Spanish text</li>
+    <li>Click a template card, enter a unique Form ID, click <strong>Create</strong></li>
+    <li>Choose the <strong>language mode</strong>: English-only, Spanish-only, or Bilingual</li>
+    <li>Click field labels and section headings to edit text; use <strong>Generate</strong> for AI translations</li>
+    <li>For Bilingual forms with missing translations, use <strong>Translate All</strong> to fill them in bulk</li>
     <li>Open <strong>Outputs</strong>, enable web form and spreadsheet, enter Sheet ID</li>
-    <li>Click <strong>Preview</strong> to review both languages</li>
+    <li>Click <strong>Preview</strong> to review the form</li>
     <li>Click <strong>Publish</strong> &mdash; export folder appears in <code>data/exports/</code></li>
     <li>In Google Sheets: <kbd>Extensions</kbd> &rarr; <kbd>Apps Script</kbd> &rarr; paste <code>apps_script.gs</code> &rarr; Deploy as web app</li>
     <li>Copy the Web app URL into <code>config.json</code> (<code>submission_url</code> field)</li>

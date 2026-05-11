@@ -2,6 +2,12 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## [2026-05-11] Email send audit log
+- Every "Send to Staff" action now appends a row to `reports/email-log.csv`
+- Columns: sent_at, page_title, page_url, to, cc, subject, issue_count, note, pdf_path
+- File is auto-created with header on first send; opens directly in Excel
+- Purpose: paper trail for escalating unresponsive principals to the director
+
 ## [2026-05-08] Screenshot bug fix and provider-scoped cache
 - fix: report cards for image issues now capture the correct screenshot for each image — previously all images within the same Smore section would show the first image in the section
 - feat: vision cache keys now include the provider name (claude/gemini), so results from different providers are stored independently and switching providers always produces fresh analysis
