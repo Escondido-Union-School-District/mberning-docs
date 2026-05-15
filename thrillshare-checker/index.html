@@ -109,7 +109,7 @@
 <h1>Thrillshare Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-01 &mdash; Smore scan now covers every school + every sender (no allowlist)
+  <strong>User guide last updated:</strong> 2026-05-15 &mdash; Smore scan now runs 24h/48h follow-up checks on discovered links; lookback extended to 7 days
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,10 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-15</td>
+        <td style="padding:8px; background: white;">Smore follow-up pass: scanner now re-checks discovered URLs at ~24h and ~48h, emails a diff if content changed or an unreachable notice if the URL went down; lookback extended 26h&rarr;168h (7 days); added <code>--no-followup</code> flag to skip follow-up checks; added <code>smore_snapshot.py</code> and <code>session/smore_snapshots/</code> for snapshot storage</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-01</td>
         <td style="padding:8px; background: white;">Smore scan rewritten: covers all 27 schools + all senders (no principal allowlist); lookback shortened 36h→26h; sender column auto-discovered from table headers</td>
@@ -171,7 +175,7 @@
 <table>
   <tr><th>Mode</th><th>Flag</th><th>What It Does</th><th>Schedule</th></tr>
   <tr><td>Approval Checker</td><td><em>(default)</em></td><td>Checks all schools for pending approvals in Live Feed, News, and CMS pages</td><td>Hourly on weekdays</td></tr>
-  <tr><td>Smore Link Scanner</td><td><code>--smore-scan</code></td><td>Scans all schools for Smore links in any message sent in the last 26 hours (no sender filter)</td><td>Daily at 3:00 AM and 6:50 AM</td></tr>
+  <tr><td>Smore Link Scanner</td><td><code>--smore-scan</code></td><td>Scans all schools for Smore links in messages from the last 7 days (168h); also re-checks discovered links at ~24h and ~48h and emails a diff if the page changed</td><td>Daily at 3:00 AM and 6:50 AM</td></tr>
 </table>
 
 <p>Both modes use browser automation (Playwright), log into Thrillshare via saved session cookies, and <strong>always send an email after every run</strong> — subject line reflects the result ("Pending Approval" vs "Check Complete — No Pending Approvals").</p>
@@ -253,7 +257,13 @@ Take your time — the script will wait.</code></pre>
 
 <h2>Step-by-Step: Smore Link Scanner</h2>
 
-<p>The Smore scanner walks every school the account can see, opens each message sent in the lookback window, and extracts any <code>app.smore.com</code> URLs. There is no sender filter — it picks up principals, office managers, and district staff. Lookback is 26 hours by default (24h + small overlap to cover late starts), set via <code>LOOKBACK_HOURS</code> in <code>smore_scanner.py</code>.</p>
+<p>The Smore scanner walks every school the account can see and extracts any <code>app.smore.com</code> URLs from messages. There is no sender filter — it picks up principals, office managers, and district staff. For every row in the analytics table the scanner reads the message text directly (7-day / 168h lookback). For Email rows sent in the last 48h it also opens the "View Message" popup to expand the full body.</p>
+
+<p>After the initial discovery pass, the scanner runs a <strong>follow-up pass</strong>: it re-fetches every previously discovered Smore URL whose first snapshot is approximately 24h or 48h old, captures the current page text, and emails you a unified diff if the content changed. If a URL is no longer reachable, a separate "unreachable" email is sent instead.</p>
+
+<div class="callout callout-info">
+  <strong>Deduplication:</strong> Each unique Smore URL is emailed only once on first detection (tracked in <code>session/seen_smore.json</code>). Follow-up emails are sent separately when the page changes or becomes unreachable. Entries auto-expire after 30 days.
+</div>
 
 <h3><span class="step-num">1</span> Run a Manual Smore Scan</h3>
 <pre><code>cd C:\Users\mberning\projects\eusd\thrillshare-checker
@@ -261,10 +271,14 @@ venv\Scripts\activate
 python checker.py --smore-scan --no-email</code></pre>
 
 <h3><span class="step-num">2</span> Run With Email Notification</h3>
-<p>Drop the <code>--no-email</code> flag. An email is always sent — subject line indicates whether links were found.</p>
+<p>Drop the <code>--no-email</code> flag. An email is always sent — subject line indicates whether links were found. Follow-up diff/unreachable emails are sent in the same run if any 24h/48h checks are due.</p>
 <pre><code>python checker.py --smore-scan</code></pre>
 
-<h3><span class="step-num">3</span> Review the Report</h3>
+<h3><span class="step-num">3</span> Skip Follow-Up Checks</h3>
+<p>To run only the initial discovery pass (no re-fetch of previously seen URLs):</p>
+<pre><code>python checker.py --smore-scan --no-followup</code></pre>
+
+<h3><span class="step-num">4</span> Review the Report</h3>
 <p>The report lists each finding with school, sender, date, message subject, and the Smore URL. Example:</p>
 <pre><code>Thrillshare Smore Link Report
 Generated: April 06, 2026 at 02:08 PM
@@ -284,11 +298,11 @@ Date:    4/1/26 4:00 PM
 Message: Here is this week's Coyote Connection
   Link:  https://app.smore.com/n/g67t8
 
-Lookback: 26h
+Lookback: 168h (row-text), 48h (popup expansion)
 Messages with Smore links: 2</code></pre>
 
-<h3><span class="step-num">4</span> Adjusting Coverage</h3>
-<p>The scanner uses whatever schools the dropdown returns from <code>discover_schools</code> — no allowlist to maintain. To change the time window, edit <code>LOOKBACK_HOURS</code> at the top of <code>smore_scanner.py</code>. The scheduled task fires daily (including weekends), so 26h is enough to cover the previous day's messages with a small overlap buffer.</p>
+<h3><span class="step-num">5</span> Adjusting Coverage</h3>
+<p>The scanner uses whatever schools the dropdown returns from <code>discover_schools</code> — no allowlist to maintain. To change the time window, edit <code>LOOKBACK_HOURS</code> (default: 168) or <code>POPUP_LOOKBACK_HOURS</code> (default: 48) at the top of <code>smore_scanner.py</code>. The scheduled task fires daily (including weekends).</p>
 
 <!-- ================================================================== -->
 <h2>CLI Reference</h2>
@@ -297,7 +311,8 @@ Messages with Smore links: 2</code></pre>
   <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
   <tr><td><code>--login</code></td><td>Off</td><td>Force a visible browser login. Use for first-time setup or when your session expires.</td></tr>
   <tr><td><code>--no-email</code></td><td>Off</td><td>Print results to the terminal only. No email is sent regardless of findings.</td></tr>
-  <tr><td><code>--smore-scan</code></td><td>Off</td><td>Scan every school's analytics for Smore links instead of checking approvals. Covers the last 26 hours (configurable via <code>LOOKBACK_HOURS</code> in <code>smore_scanner.py</code>).</td></tr>
+  <tr><td><code>--smore-scan</code></td><td>Off</td><td>Scan every school's analytics for Smore links instead of checking approvals. Row-text lookback: 168h (configurable via <code>LOOKBACK_HOURS</code>); popup expansion: 48h (<code>POPUP_LOOKBACK_HOURS</code>).</td></tr>
+  <tr><td><code>--no-followup</code></td><td>Off</td><td>Skip the 24h/48h follow-up re-check pass when running <code>--smore-scan</code>. Only the initial discovery pass runs; no diff or unreachable emails are sent.</td></tr>
 </table>
 
 <p>With no flags, the tool runs headless and always sends an email. Use <code>--no-email</code> for local testing without sending.</p>
@@ -306,7 +321,8 @@ Messages with Smore links: 2</code></pre>
 <h2>Folder Structure</h2>
 <pre><code>thrillshare-checker\
   checker.py           &lt;-- Main script — runs approval checks or Smore scan
-  smore_scanner.py     &lt;-- Smore link scanning logic (LOOKBACK_HOURS configurable)
+  smore_scanner.py     &lt;-- Smore link scanning logic (LOOKBACK_HOURS, POPUP_LOOKBACK_HOURS configurable)
+  smore_snapshot.py    &lt;-- Smore page snapshot capture module (used by follow-up checks)
   config.py            &lt;-- Email, URL, and timeout settings (reads from .env)
   run_hidden.bat       &lt;-- Batch wrapper for scheduled approval checks (S4U compatible)
   run_smore_scan.bat   &lt;-- Batch wrapper for scheduled Smore scans (S4U compatible)
@@ -314,8 +330,10 @@ Messages with Smore links: 2</code></pre>
   requirements.txt     &lt;-- Python dependencies (playwright, python-dotenv)
   .env                 &lt;-- Email/SMTP settings (not committed)
   .env.example         &lt;-- Template for .env
-  session\             &lt;-- Saved browser cookies (not committed)
+  session\             &lt;-- Saved browser cookies and dedupe cache (not committed)
     cookies.json       &lt;-- Session cookies from last login
+    seen_smore.json    &lt;-- Dedupe cache; also tracks snapshot_sha and follow-up status
+    smore_snapshots\   &lt;-- Plain-text page snapshots keyed by URL hash (for follow-up diffs)
   reports\             &lt;-- Date-organized report files (auto-cleaned after 3 days)
     2026-03-25\        &lt;-- One folder per day
       0810.txt         &lt;-- Report file named by time (HHMM)
@@ -409,13 +427,16 @@ With pending:     2</code></pre>
     <li><strong>Approval check (no email):</strong> <code>python checker.py --no-email</code></li>
     <li><strong>Smore scan (with email):</strong> <code>python checker.py --smore-scan</code></li>
     <li><strong>Smore scan (no email):</strong> <code>python checker.py --smore-scan --no-email</code></li>
+    <li><strong>Smore scan (skip follow-ups):</strong> <code>python checker.py --smore-scan --no-followup</code></li>
     <li><strong>Re-authenticate:</strong> <code>python checker.py --login</code></li>
   </ol>
   <h3 style="margin-top: 0.8em; color: #1a56db;">Key Files</h3>
   <ul>
     <li><code>.env</code> &mdash; SMTP host, port, sender/recipient email</li>
     <li><code>session\cookies.json</code> &mdash; saved login session</li>
-    <li><code>smore_scanner.py</code> &mdash; principal list (edit <code>SMORE_SCAN_SCHOOLS</code> to add schools)</li>
+    <li><code>session\seen_smore.json</code> &mdash; dedupe cache + follow-up state for Smore links</li>
+    <li><code>session\smore_snapshots\</code> &mdash; plain-text page snapshots used for follow-up diffs</li>
+    <li><code>smore_scanner.py</code> &mdash; time window settings (<code>LOOKBACK_HOURS</code>, <code>POPUP_LOOKBACK_HOURS</code>)</li>
     <li><code>reports\</code> &mdash; date-organized report history (auto-cleaned after 3 days)</li>
     <li><code>log.txt</code> / <code>smore_scan_log.txt</code> &mdash; output from scheduled runs</li>
   </ul>

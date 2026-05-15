@@ -128,8 +128,8 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-05-13 &mdash; Inline preview, subheading field, style variants, new templates, native PDF engine<br>
-  <strong>Last project activity:</strong> 2026-05-13 &mdash; Native PDF engine, PDF bookmarks, split-pane preview, 6 office templates
+  <strong>Last updated:</strong> 2026-05-15 &mdash; Per-form branding (logo, school name, colors), 8 web layouts, submissions inbox improvements, dashboard card redesign<br>
+  <strong>Last project activity:</strong> 2026-05-15 &mdash; Branding system, Paper/Friendly/Varsity/Compact/Editorial/Minimal/Cards layouts, cross-form master inbox, student/grade columns
 </div>
 
 <!-- ================================================================== -->
@@ -137,6 +137,42 @@
 
 <table>
   <tr><th>Date</th><th>Change</th></tr>
+  <tr>
+    <td>2026-05-15</td>
+    <td><strong>Per-form branding</strong> <span class="badge-new">NEW</span> &mdash; Each form can now display your school&rsquo;s name, logo, and colors on the published web form. Set these in the new <strong>Branding</strong> panel on the edit page (school name text field, logo image upload, primary and accent color pickers).</td>
+  </tr>
+  <tr>
+    <td>2026-05-15</td>
+    <td><strong>8 web form visual styles</strong> <span class="badge-new">NEW</span> &mdash; A new <strong>Web form style</strong> selector in the editor settings bar lets you choose from 8 WCAG-compliant layouts: Classic, Cards, Minimal, Paper, Friendly, Varsity, Compact, and Editorial. All styles honor your school&rsquo;s brand colors.</td>
+  </tr>
+  <tr>
+    <td>2026-05-15</td>
+    <td><strong>Dashboard redesign</strong> &mdash; My Forms now shows a card per form with a submission count and amber &ldquo;N new&rdquo; pill. Buttons are stacked: Edit, Submissions, Archive/Restore.</td>
+  </tr>
+  <tr>
+    <td>2026-05-15</td>
+    <td><strong>Submissions inbox improvements</strong> &mdash; The per-form inbox now shows student name and grade columns (when the form collects them) and a &ldquo;Response totals&rdquo; block for checkbox and radio fields. A new <strong>All Submissions</strong> master view (linked from the dashboard) shows submissions across all your forms.</td>
+  </tr>
+  <tr>
+    <td>2026-05-14</td>
+    <td><strong>Server-based submissions (Apps Script removed)</strong> &mdash; Parent submissions are now stored directly on the forms-creator server. The Google Sheets / Apps Script path has been removed. Review submissions through the built-in inbox; export to CSV any time.</td>
+  </tr>
+  <tr>
+    <td>2026-05-12</td>
+    <td><strong>Live inline preview</strong> &mdash; The edit page now shows a live side-by-side preview of the form that refreshes on every save. A <strong>Mobile / Desktop</strong> toggle lets you check both viewport sizes without publishing.</td>
+  </tr>
+  <tr>
+    <td>2026-05-12</td>
+    <td><strong>Subheading &amp; Static text field types</strong> &mdash; <em>Subheading</em> inserts a bold sub-title within a section (appears in the web form and PDFs). <em>Static text</em> inserts a block of instructional text that is not a form field.</td>
+  </tr>
+  <tr>
+    <td>2026-05-12</td>
+    <td><strong>Add Section / Add Paragraph buttons</strong> &mdash; Add a new labeled section or a heading-less paragraph block from the edit page without leaving the editor.</td>
+  </tr>
+  <tr>
+    <td>2026-05-12</td>
+    <td><strong>Archive / Restore forms</strong> &mdash; Each My Forms card has an <strong>Archive</strong> button. Archived forms collapse into a separate &ldquo;Archived&rdquo; section on the dashboard and can be restored at any time.</td>
+  </tr>
   <tr>
     <td>2026-05-11</td>
     <td><strong>Per-form language mode</strong> &mdash; each form can now be set to English-only, Spanish-only, or Bilingual. The edit page adapts to show only the relevant language fields.</td>
@@ -180,16 +216,16 @@
   (English and Spanish with a parent-facing language toggle). You start from a pre-approved template &mdash;
   such as an allergy waiver or permission slip &mdash; rename it for your school or program, edit the labels right
   on screen, and click <strong>Publish</strong>. The tool generates a complete web form that parents can fill out
-  online, along with a Google Apps Script that saves every submission directly into a Google Sheet.
+  online. Submissions are saved on the forms-creator server, where staff can review them through a built-in submissions inbox.
 </p>
 
 <!-- ================================================================== -->
 <h2>What This Tool Does</h2>
 
 <p>
-  Forms Creator runs as a small local web application. You open it in your browser, do your editing,
+  Forms Creator runs as a web application on the district server. You open it in your browser, do your editing,
   and publish. The published form is a folder of static files you can drop onto GitHub Pages or your
-  district web server. Submissions come back to a Google Sheet of your choice.
+  district web server. Submissions are saved on the forms-creator server and reviewed through the dashboard.
 </p>
 
 <table>
@@ -210,24 +246,19 @@
     <td>Forms Creator edit page (browser)</td>
   </tr>
   <tr>
-    <td>Configure outputs</td>
-    <td>Set the publish path and Google Sheet ID</td>
-    <td>Forms Creator outputs panel (browser)</td>
-  </tr>
-  <tr>
     <td>Publish</td>
-    <td>Generates the export folder: HTML form + Apps Script</td>
+    <td>Generates the export folder with HTML form + submission config</td>
     <td>Forms Creator (one-click)</td>
-  </tr>
-  <tr>
-    <td>Wire Apps Script</td>
-    <td>Paste the generated script into your Sheet; deploy as web app</td>
-    <td>Google Sheets (browser)</td>
   </tr>
   <tr>
     <td>Host the form</td>
     <td>Upload the export folder to GitHub Pages or internal server</td>
     <td>GitHub / web server</td>
+  </tr>
+  <tr>
+    <td>Review submissions</td>
+    <td>View and manage form submissions from the dashboard</td>
+    <td>Forms Creator dashboard (browser)</td>
   </tr>
 </table>
 
@@ -343,7 +374,40 @@ python app.py</code></pre>
 
 <h3><span class="step-num">4</span> Edit the Form</h3>
 
-<p>The edit page shows the form's title, description, and all sections with their fields.</p>
+<p>The edit page shows the form&rsquo;s settings bar at the top, the field editor on the left, and a live preview pane on the right. Changes you save appear in the preview immediately.</p>
+
+<h4>Choose a Web Form Style</h4>
+<p>
+  In the <strong>settings bar</strong> at the top of the edit page, use the <strong>Web form style</strong>
+  selector to choose from 8 WCAG-compliant visual designs:
+</p>
+<table>
+  <tr><th>Style</th><th>Look &amp; Feel</th></tr>
+  <tr><td><strong>Classic</strong></td><td>Clean, neutral default &mdash; works for any school</td></tr>
+  <tr><td><strong>Cards</strong></td><td>Each section in a floating card with a numbered badge</td></tr>
+  <tr><td><strong>Minimal</strong></td><td>Spacious, modern, Manrope typeface</td></tr>
+  <tr><td><strong>Paper</strong></td><td>Cream background, serif type, classic letterhead feel</td></tr>
+  <tr><td><strong>Friendly</strong></td><td>Warm peach tones, rounded corners, playful feel</td></tr>
+  <tr><td><strong>Varsity</strong></td><td>Bold navy blocks, Oswald typeface &mdash; great for athletics</td></tr>
+  <tr><td><strong>Compact</strong></td><td>Dense monospace layout for information-heavy forms</td></tr>
+  <tr><td><strong>Editorial</strong></td><td>Magazine-style serif headings, DM Serif Display typeface</td></tr>
+</table>
+<p>All styles automatically apply your school&rsquo;s brand colors (set in the Branding panel below). The live preview updates as soon as you pick a style.</p>
+
+<h4>Add School Branding</h4>
+<p>
+  The <strong>Branding</strong> panel (below the settings bar) lets you personalize the published form with your
+  school&rsquo;s identity. Changes are saved automatically as you type or pick.
+</p>
+<ul>
+  <li><strong>School name</strong> &mdash; Displayed in the form header (e.g. &ldquo;Rincon Elementary&rdquo;).</li>
+  <li><strong>Logo</strong> &mdash; Click <strong>Upload logo</strong> to select an image file. The logo appears in the form header next to the school name. Maximum 200 KB; PNG with a transparent background works best.</li>
+  <li><strong>Primary color</strong> &mdash; Main brand color used for headings, buttons, and accents. Click the color swatch or type a hex value (e.g. <code>#7d1d2e</code>). Click <strong>Reset</strong> to return to the default blue.</li>
+  <li><strong>Accent color</strong> &mdash; Secondary brand color used for highlights and tinted backgrounds. Works the same as primary color.</li>
+</ul>
+<div class="callout callout-info">
+  <strong>Tip:</strong> Use the <strong>Mobile / Desktop</strong> toggle in the preview pane to verify your logo and school name look right on both screen sizes before publishing.
+</div>
 
 <h4>Rename the Form Title or Description</h4>
 <p>Click on the title or description text. A label editor dialog opens with an English field and (in Bilingual or Spanish-only mode) a Spanish field. You can also click <strong>Generate</strong> to have AI suggest a translation. Type your text and click <strong>Save</strong>.</p>
@@ -357,10 +421,17 @@ python app.py</code></pre>
 <h4>Toggle Required</h4>
 <p>Each field row has a <strong>Required</strong> checkbox. Check it to make the field required before submission; uncheck it to make it optional. Changes save automatically.</p>
 
+<h4>Add a Section or Instructional Block</h4>
+<p>At the bottom of the edit page use:</p>
+<ul>
+  <li><strong>+ Add section</strong> &mdash; Adds a new labeled section with its own heading. A dialog lets you name it in English (and Spanish if Bilingual).</li>
+  <li><strong>+ Add paragraph</strong> &mdash; Adds a heading-less block of static text (instructional content, reminders, disclaimers) between or after sections.</li>
+</ul>
+
 <h4>Add a Field</h4>
 <p>At the bottom of any section, click <strong>+ Add Field</strong>. A dialog opens:</p>
 <ol>
-  <li>Click the icon for the <strong>field type</strong> you want (text, paragraph, date, checkbox, radio, or dropdown).</li>
+  <li>Click the icon for the <strong>field type</strong> you want (short answer, long answer, date, checkbox, radio, dropdown, static text, or subheading).</li>
   <li>Enter the <strong>English label</strong>. The field ID is derived automatically.</li>
   <li>For Bilingual or Spanish-only forms, enter the <strong>Spanish label</strong> (or click <strong>Generate Spanish</strong>).</li>
   <li>For radio or dropdown fields, add at least one option in the <strong>Options</strong> section: enter the English option text and (if Bilingual) the Spanish equivalent.</li>
@@ -389,12 +460,14 @@ python app.py</code></pre>
 
 <div class="callout callout-info">
   <strong>Field types:</strong>
-  <code>text</code> (single line),
-  <code>text_multiline</code> (paragraph),
-  <code>date</code> (date picker),
-  <code>checkbox</code> (yes/no tick),
-  <code>radio</code> (pick one from a list),
-  <code>dropdown</code> (pick one from a menu).
+  <em>Short answer</em> (single line),
+  <em>Long answer</em> (multi-line text),
+  <em>Date</em> (date picker),
+  <em>Checkbox</em> (yes/no tick box),
+  <em>Radio</em> (pick one from a list),
+  <em>Dropdown</em> (pick one from a menu),
+  <em>Static text</em> (instructional paragraph, not a fillable field),
+  <em>Subheading</em> (bold sub-title within a section, not a fillable field).
   Radio and dropdown fields require at least one option.
 </div>
 
@@ -405,27 +478,14 @@ python app.py</code></pre>
 <table>
   <tr><th>Setting</th><th>What It Does</th></tr>
   <tr>
-    <td><strong>Live web form &mdash; Enabled</strong></td>
-    <td>Generates the public HTML form. Leave this checked.</td>
-  </tr>
-  <tr>
     <td><strong>Publish path</strong></td>
     <td>The folder name for the export (e.g. <code>2026-allergy-waiver</code>). Use lowercase letters, digits, and hyphens only.</td>
   </tr>
   <tr>
-    <td><strong>Spreadsheet &mdash; Enabled</strong></td>
-    <td>Generates an Apps Script to capture submissions in a Google Sheet. Check this if you want responses saved automatically.</td>
-  </tr>
-  <tr>
-    <td><strong>Sheet ID</strong></td>
-    <td>The ID of the Google Sheet where submissions will be saved (see step 7 for how to find it).</td>
+    <td><strong>Notify by email</strong></td>
+    <td>If checked, you'll receive an email each time a parent submits the form (requires server SMTP configuration).</td>
   </tr>
 </table>
-
-<div class="callout">
-  <strong>Sheet ID format:</strong> Open the Google Sheet in your browser. The Sheet ID is the long string of letters and numbers in the URL between <code>/d/</code> and <code>/edit</code>.<br>
-  Example URL: <code>https://docs.google.com/spreadsheets/d/<strong>1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms</strong>/edit</code>
-</div>
 
 <h3><span class="step-num">6</span> Preview the Form</h3>
 
@@ -448,47 +508,24 @@ python app.py</code></pre>
   <tr><td><code>index.html</code></td><td>The web form parents fill out (in your chosen language mode)</td></tr>
   <tr><td><code>form.css</code></td><td>Styling for the web form (do not edit)</td></tr>
   <tr><td><code>form.js</code></td><td>Language switching and submission logic (do not edit)</td></tr>
-  <tr><td><code>config.json</code></td><td>Form metadata; you will paste the submission URL here after step 8</td></tr>
-  <tr><td><code>apps_script.gs</code></td><td>The Google Apps Script to paste into your Sheet</td></tr>
+  <tr><td><code>config.json</code></td><td>Machine-readable config the browser reads to know where to POST the submission. The submission URL is baked in at publish time from your FORMS_CREATOR_PUBLIC_URL setting.</td></tr>
 </table>
 
-<h3><span class="step-num">8</span> Set Up the Apps Script</h3>
+<h3><span class="step-num">8</span> Review Submissions</h3>
 
-<p>The Apps Script is Google's server-side code that catches each form submission, saves a row in your Sheet, and stores a PDF copy in Google Drive.</p>
+<p>Every time a parent submits the form, the submission is saved to the
+forms-creator server. To see submissions, go to the dashboard and click
+<strong>Submissions</strong> next to the form name.</p>
 
-<ol class="steps">
-  <li>Open your Google Sheet in a browser.</li>
-  <li>Click <kbd>Extensions</kbd> &rarr; <kbd>Apps Script</kbd>. A code editor opens in a new tab.</li>
-  <li>Select all the existing placeholder code (Ctrl+A) and delete it.</li>
-  <li>Open <code>apps_script.gs</code> from your export folder in a text editor (Notepad works). Select all, copy.</li>
-  <li>Paste into the Apps Script editor and click the floppy-disk <strong>Save</strong> icon (or press Ctrl+S).</li>
-  <li>Click <kbd>Deploy</kbd> &rarr; <kbd>New deployment</kbd>.</li>
-  <li>Next to "Select type," click the gear icon and choose <strong>Web app</strong>.</li>
-  <li>Set <strong>Execute as</strong> to <em>Me</em> and <strong>Who has access</strong> to <em>Anyone</em>.</li>
-  <li>Click <strong>Deploy</strong>. Google will ask you to authorize the script &mdash; click <strong>Authorize access</strong> and sign in with your district Google account.</li>
-  <li>Copy the <strong>Web app URL</strong> that appears (it looks like <code>https://script.google.com/macros/s/AKfyc.../exec</code>).</li>
-</ol>
+<p>You can search, filter by reviewed status, mark each submission as
+reviewed, add a note, and download the PDF. The <strong>Export CSV</strong>
+button gives you a spreadsheet-friendly export of all submissions.</p>
 
-<div class="callout">
-  <strong>Authorization warning:</strong> Google may show a screen saying "Google hasn't verified this app." Click <strong>Advanced</strong> &rarr; <strong>Go to [your project name] (unsafe)</strong>. This is expected for district-internal scripts and is safe to proceed.
-</div>
+<p>To get an email each time a parent submits, set
+<strong>Notify by email</strong> in the form's editor &rarr; Submissions
+section.</p>
 
-<h3><span class="step-num">9</span> Wire the Submission URL</h3>
-
-<p>After deploying the Apps Script, you need to tell the web form where to send submissions.</p>
-
-<ol class="steps">
-  <li>Open the <code>config.json</code> file from your export folder in a text editor.</li>
-  <li>Find the line <code>"submission_url": ""</code>.</li>
-  <li>Paste the Web app URL between the quotes: <code>"submission_url": "https://script.google.com/macros/s/AKfyc.../exec"</code></li>
-  <li>Save <code>config.json</code>.</li>
-</ol>
-
-<div class="callout callout-info">
-  <strong>Why this is a separate step:</strong> The URL is only known after you deploy the Apps Script in Google, so the initial publish leaves it blank for you to fill in.
-</div>
-
-<h3><span class="step-num">10</span> Host the Form</h3>
+<h3><span class="step-num">9</span> Host the Form</h3>
 
 <p>The export folder is a self-contained static website. You can host it in two ways:</p>
 
@@ -507,7 +544,7 @@ python app.py</code></pre>
   <li>Confirm the URL with your tech coordinator and test it in a browser.</li>
 </ol>
 
-<h3><span class="step-num">11</span> Submit a Test Entry</h3>
+<h3><span class="step-num">10</span> Submit a Test Entry</h3>
 
 <p>Before sending the form link to parents, do a quick test to make sure everything is connected.</p>
 
@@ -515,9 +552,8 @@ python app.py</code></pre>
   <li>Open the live form URL in your browser.</li>
   <li>Fill out all the required fields with test data (e.g., student name "Test Student").</li>
   <li>Click <strong>Submit</strong>. A confirmation message should appear.</li>
-  <li>Open your Google Sheet. A new row should appear at the bottom with the submission time and your test data.</li>
-  <li>Check your Google Drive for a new folder named <code>&lt;form-id&gt; submissions</code>. Inside you should find a PDF and an HTML file for the test submission.</li>
-  <li>Delete the test row from the Sheet before sharing the form link.</li>
+  <li>Go to the Forms Creator dashboard and click <strong>Submissions</strong> next to the form. Your test submission should appear in the list.</li>
+  <li>Review the submission, download the PDF if needed, then delete it before sharing the form link with parents.</li>
 </ol>
 
 <!-- ================================================================== -->
@@ -528,12 +564,11 @@ python app.py</code></pre>
 <ul>
   <li><strong>index.html</strong> &mdash; The form itself. For Bilingual forms, contains all field labels in both languages embedded as data attributes; parents see whichever language they choose. For single-language forms, contains only that language.</li>
   <li><strong>form.css / form.js</strong> &mdash; Shared styling and the language-switching and form-submission logic. Do not edit these files.</li>
-  <li><strong>config.json</strong> &mdash; Machine-readable config the browser reads to know where to POST the submission. You must fill in <code>submission_url</code> before the form can submit.</li>
-  <li><strong>apps_script.gs</strong> &mdash; The Google Apps Script source code. Paste this into your Sheet's Apps Script editor and deploy it as a web app.</li>
+  <li><strong>config.json</strong> &mdash; Machine-readable config the browser reads to know where to POST the submission. It includes the submission URL (pre-populated at publish time).</li>
 </ul>
 
 <div class="callout callout-info">
-  <strong>What happens on submit:</strong> The browser sends the form data as JSON to your Apps Script URL. The script saves a row in the Sheet and creates a PDF + HTML file in a Google Drive folder. The browser shows the parent a confirmation.
+  <strong>What happens on submit:</strong> The browser sends the form data as JSON to the forms-creator server. The server saves the submission and optionally sends an email notification. You review submissions in the dashboard.
 </div>
 
 <!-- ================================================================== -->
@@ -556,7 +591,6 @@ python app.py</code></pre>
         form.css
         form.js
         config.json
-        apps_script.gs
   docs/
     user-guide.html    &lt;-- This guide
 </code></pre>
@@ -585,21 +619,6 @@ python app.py</code></pre>
     <td>Generate Spanish / Translate All buttons are disabled or show an error</td>
     <td><code>GOOGLE_API_KEY</code> is missing or invalid in <code>.env</code></td>
     <td>Copy <code>.env.example</code> to <code>.env</code> and paste a valid Google AI Studio API key into the <code>GOOGLE_API_KEY</code> field. Restart the server.</td>
-  </tr>
-  <tr>
-    <td>Publish succeeds but the form doesn't submit (no Sheet row)</td>
-    <td><code>submission_url</code> in <code>config.json</code> is empty or incorrect</td>
-    <td>Open <code>config.json</code> in your export folder, paste the Apps Script Web app URL into the <code>submission_url</code> field, save, and re-upload the file.</td>
-  </tr>
-  <tr>
-    <td>Apps Script authorization error on submit</td>
-    <td>The Apps Script was not authorized, or the deployment was revoked</td>
-    <td>In Google Sheets, go to <kbd>Extensions</kbd> &rarr; <kbd>Apps Script</kbd>, click <kbd>Deploy</kbd> &rarr; <kbd>Manage deployments</kbd>, and re-deploy. Re-authorize when prompted.</td>
-  </tr>
-  <tr>
-    <td>Sheet row appears but no PDF in Drive</td>
-    <td>Drive storage may be full, or the script lacked Drive permission</td>
-    <td>Check available Drive storage. Re-authorize the Apps Script (it requests Drive access). If the folder already exists with a different owner, rename it in Drive settings.</td>
   </tr>
   <tr>
     <td>Spanish text shows garbled characters</td>
@@ -637,11 +656,10 @@ python app.py</code></pre>
     <li>Open <strong>Outputs</strong>, enable web form and spreadsheet, enter Sheet ID</li>
     <li>Click <strong>Preview</strong> to review the form</li>
     <li>Click <strong>Publish</strong> &mdash; export folder appears in <code>data/exports/</code></li>
-    <li>In Google Sheets: <kbd>Extensions</kbd> &rarr; <kbd>Apps Script</kbd> &rarr; paste <code>apps_script.gs</code> &rarr; Deploy as web app</li>
-    <li>Copy the Web app URL into <code>config.json</code> (<code>submission_url</code> field)</li>
     <li>Upload the export folder to GitHub Pages or the district web server</li>
-    <li>Submit a test entry and verify the Sheet row + Drive files appear</li>
-    <li>Delete the test row, then share the form URL with parents</li>
+    <li>Submit a test entry to verify submission handling in the dashboard</li>
+    <li>Review the submission in the dashboard and mark it as reviewed</li>
+    <li>Delete the test entry, then share the form URL with parents</li>
   </ol>
 </div>
 

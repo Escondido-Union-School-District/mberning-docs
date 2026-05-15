@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EUSD Newsletters — User Guide</title>
+<style>
+  @media print {
+    body { font-size: 11pt; }
+    .no-print { display: none; }
+    h1 { font-size: 18pt; }
+    h2 { font-size: 14pt; }
+    h3 { font-size: 12pt; }
+    a { color: #000; text-decoration: none; }
+  }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 2em auto;
+    padding: 0 1.5em;
+    line-height: 1.6;
+    color: #222;
+  }
+  h1 {
+    border-bottom: 3px solid #1a56db;
+    padding-bottom: 0.3em;
+    color: #1a56db;
+  }
+  h2 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.2em;
+    margin-top: 1.5em;
+    color: #1a56db;
+  }
+  h3 { margin-top: 1.2em; }
+  code {
+    background: #f0f4f8;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  pre {
+    background: #f0f4f8;
+    padding: 1em;
+    border-radius: 6px;
+    overflow-x: auto;
+    border-left: 4px solid #1a56db;
+  }
+  pre code {
+    background: none;
+    padding: 0;
+  }
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 0.5em 0.75em;
+    text-align: left;
+  }
+  th {
+    background: #1a56db;
+    color: white;
+  }
+  .callout {
+    background: #fff8e1;
+    border-left: 4px solid #f9a825;
+    padding: 0.75em 1em;
+    margin: 1em 0;
+    border-radius: 0 6px 6px 0;
+  }
+  .callout-info {
+    background: #e8f0fe;
+    border-left-color: #1a56db;
+  }
+  .step-num {
+    display: inline-block;
+    background: #1a56db;
+    color: white;
+    width: 1.8em;
+    height: 1.8em;
+    line-height: 1.8em;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+  .print-btn {
+    background: #1a56db;
+    color: white;
+    border: none;
+    padding: 0.6em 1.5em;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 1em;
+  }
+  .print-btn:hover { background: #1342a8; }
+  ul, ol { margin: 0.5em 0; }
+  li { margin: 0.3em 0; }
+</style>
+</head>
+<body>
+
+<button class="print-btn no-print" onclick="window.print()">Print This Guide</button>
+
+<h1>EUSD Newsletters</h1>
+<p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
+
+<div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
+  <strong>Last updated:</strong> 2026-05-15 &mdash; Initial guide created<br>
+  <strong>Last project activity:</strong> 2026-05-15 &mdash; Project initialized; design spec and Phase 1 plan written
+</div>
+
+<div class="callout">
+  <strong>In development:</strong> This tool is being built. This guide is a skeleton
+  and will be filled in as features ship. Steps below describe the intended workflow.
+</div>
+
+<!-- ================================================================== -->
+<h2>What This Tool Does</h2>
+
+<p>EUSD Newsletters is a district-hosted replacement for Smore for creating school
+newsletters. Staff build a newsletter from titled sections (text, photos, photo
+galleries, PDF flyers, and links), publish it to a stable web link, and share that
+link with families through their existing email tool. Every published page is built
+to be fully accessible (WCAG 2.1 AA), and each newsletter comes with detailed
+viewership analytics &mdash; how many people opened it, how far they read, and which
+links and flyers they clicked.</p>
+
+<!-- ================================================================== -->
+<h2>Prerequisites</h2>
+
+<h3>One-Time Setup</h3>
+<ol>
+  <li>An <strong>@eusd.org</strong> Google account.</li>
+  <li>Membership in your school's newsletter Google Group (this is what grants you
+    access to your school's newsletters). Ask your site administrator if you are
+    unsure.</li>
+  <li>A current web browser (Chrome, Edge, Firefox, or Safari). No install needed.</li>
+</ol>
+
+<h3>If You Can't Sign In or Don't See Your School</h3>
+<p>You are signed in but no schools appear: you have not been added to a school's
+Google Group yet. Contact your site administrator to be added.</p>
+
+<!-- ================================================================== -->
+<h2>Step-by-Step</h2>
+
+<p>The intended workflow once the tool is live:</p>
+
+<h3><span class="step-num">1</span> Sign in</h3>
+<p>Go to <code>https://newsletters.eusd.org</code> and sign in with your EUSD Google
+account.</p>
+
+<h3><span class="step-num">2</span> Pick your school</h3>
+<p>You'll see the schools you have access to. Choose one.</p>
+
+<h3><span class="step-num">3</span> Start a newsletter</h3>
+<p>Start blank, or duplicate your last issue to reuse the same sections.</p>
+
+<h3><span class="step-num">4</span> Build it from sections</h3>
+<p>Add titled sections. In each section add paragraphs, images (single, wrapped, or a
+2&ndash;4 across gallery), PDF flyers, and links. Use <strong>Generate alt text</strong>
+on images and <strong>Extract flyer text</strong> on PDFs so content is accessible.</p>
+
+<h3><span class="step-num">5</span> Preview, then publish</h3>
+<p>Preview the exact public page. Publishing runs an accessibility check &mdash; fix any
+blocking issues, then publish. Copy the link and share it with families.</p>
+
+<h3><span class="step-num">6</span> Watch the analytics</h3>
+<p>Open a newsletter's analytics for views, reads, and clicks, or the school dashboard
+for trends across all your issues.</p>
+
+<!-- ================================================================== -->
+<h2>Folder Structure</h2>
+<pre><code>~/projects/eusd/eusd-newsletters/
+  app/                  &lt;-- Flask application
+  migrations/           &lt;-- Database migrations
+  tests/                &lt;-- Test suite
+  deploy/               &lt;-- Server deployment files
+  docs/                 &lt;-- This guide + design spec + phase plans
+  requirements.txt      &lt;-- Python dependencies
+</code></pre>
+
+<!-- ================================================================== -->
+<h2>Troubleshooting</h2>
+
+<table>
+  <tr><th>Problem</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td>Signed in but no schools listed</td>
+    <td>Not in any school's Google Group</td>
+    <td>Ask your site administrator to add you to the school group</td>
+  </tr>
+  <tr>
+    <td>Can't publish &mdash; blocked</td>
+    <td>An accessibility check failed (e.g., image with no alt text, inaccessible PDF)</td>
+    <td>Fix the listed items; the publish screen shows exactly where each problem is</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Quick Reference Card</h2>
+<div style="border: 2px solid #1a56db; padding: 1em; border-radius: 8px; background: #f8faff;">
+  <h3 style="margin-top: 0; color: #1a56db;">Publish Workflow</h3>
+  <ol>
+    <li>Sign in at newsletters.eusd.org</li>
+    <li>Pick your school</li>
+    <li>Start blank or duplicate last issue</li>
+    <li>Add sections and content; run the AI alt-text and flyer-extract helpers</li>
+    <li>Preview, pass the accessibility check, publish</li>
+    <li>Share the link; check analytics later</li>
+  </ol>
+</div>
+
+</body>
+</html>

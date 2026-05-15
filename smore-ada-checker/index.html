@@ -109,7 +109,7 @@
 <h1>Smore ADA Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-11 &mdash; Email send log: every staff send is now recorded to <code>reports\email-log.csv</code>
+  <strong>User guide last updated:</strong> 2026-05-15 &mdash; Staff emails now include a &ldquo;Mark ALL Fixes as Complete&rdquo; button; report filenames now include the newsletter title; per-run cost log added
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,22 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-15</td>
+        <td style="padding:8px; background: white;">ux: staff emails now include a prominent green &ldquo;Mark ALL Fixes as Complete&rdquo; card at the top and bottom — when the school clicks it, the completion is logged to the Google Sheet for your records</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-15</td>
+        <td style="padding:8px; background: white;">feat: per-run token and cost log — every audit appends a row to <code>reports\run-cost-log.csv</code> with API call counts, token usage, and estimated USD cost</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-15</td>
+        <td style="padding:8px; background: white;">feat: report filenames now include the newsletter title — e.g., <code>coyote-connection-r1y7x-2026-05-14-claude.pdf</code> instead of <code>smore-report-r1y7x-2026-05-14-claude.pdf</code></td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-15</td>
+        <td style="padding:8px; background: white;">feat: optional Google Sheet mirror for the email send log — set <code>EMAIL_LOG_SHEET_WEBHOOK</code> in <code>.env</code> to also post each staff send to a Google Sheet via Apps Script</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-11</td>
         <td style="padding:8px; background: white;">feat: every "Send to Staff" action is now logged to <code>reports\email-log.csv</code> — timestamp, recipients, issue count, your note, and PDF path. Open in Excel for a paper trail to send to the director.</td>
@@ -145,22 +161,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-21</td>
         <td style="padding:8px; background: white;">feat: review page alt text improvements — current alt text shown prominently in amber box; suggested alt text has green background matching PDF/email report; AI prompt tip added to each alt text card</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-14</td>
-        <td style="padding:8px; background: white;">feat: AI-based link text evaluation — every link now AI-checked for descriptiveness; "fill out..." phrasing flagged as instructional</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-13</td>
-        <td style="padding:8px; background: white;">feat: upgrade Gemini vision provider to 3 Flash preview (reduces hallucinations on flyer date comparisons)</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-13</td>
-        <td style="padding:8px; background: white;">fix: stop double-flagging raw-URL link text in QR code sections</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-13</td>
-        <td style="padding:8px; background: white;">fix: Google Workspace URL detection broken by sign-in redirect — now correctly flags Google Drive/Docs/Sheets links</td>
       </tr>
     </tbody>
   </table>
@@ -250,6 +250,7 @@
   <tr><td><code>SMTP_PASSWORD</code></td><td>Gmail only</td><td>App password (leave empty for EUSD relay)</td></tr>
   <tr><td><code>AUDITOR_EMAIL</code></td><td>For email</td><td>Your email for preview copies</td></tr>
   <tr><td><code>AUDITOR_NAME</code></td><td>For email</td><td>Your display name in emails</td></tr>
+  <tr><td><code>EMAIL_LOG_SHEET_WEBHOOK</code></td><td>No</td><td>Apps Script web app URL — if set, each staff send is also posted to a Google Sheet for easy tracking; completion button clicks also post here</td></tr>
 </table>
 
 <h3>If Setting Up on a New Machine</h3>
@@ -309,8 +310,8 @@ venv\Scripts\activate</code></pre>
 
 <h3><span class="step-num">5</span> Find your report</h3>
 <p>PDF reports are saved to:</p>
-<pre><code>reports\smore-report-{slug}-{date}-{provider}.pdf</code></pre>
-<p>For example: <code>reports\smore-report-jtycf-2026-03-25-claude.pdf</code></p>
+<pre><code>reports\{newsletter-title-slug}-{smore-code}-{date}-{provider}.pdf</code></pre>
+<p>For example: <code>reports\coyote-connection-r1y7x-2026-05-14-claude.pdf</code></p>
 <p>Every time you click <strong>Send to Staff</strong>, a row is automatically appended to <code>reports\email-log.csv</code> with the timestamp, recipients, issue count, your note, and the PDF filename. Open it in Excel for a paper trail — useful if you need to report to the director which principals have received reports and haven't responded.</p>
 
 <!-- ================================================================== -->
@@ -336,6 +337,7 @@ venv\Scripts\activate</code></pre>
   requirements.txt      &lt;-- Python dependencies
   reports\              &lt;-- Generated PDF reports appear here
     email-log.csv       &lt;-- Audit log of all staff sends (auto-created)
+    run-cost-log.csv    &lt;-- Per-run API token and cost log (auto-created)
   docs\                 &lt;-- This guide and other documentation
   smore_checker\        &lt;-- Source code (do not modify)
     core.py             &lt;-- Orchestration: scrape, check, review
@@ -377,6 +379,7 @@ venv\Scripts\activate</code></pre>
   <li>Optional notes-to-staff message (entered during review)</li>
   <li>All included issues with embedded screenshots</li>
   <li>AI prompt tips for alt text and flyer issues (same prompts as the PDF)</li>
+  <li>A prominent green &ldquo;Mark ALL Fixes as Complete&rdquo; card at the top and bottom — when the recipient clicks it, the completion is logged in the Google Sheet (requires <code>EMAIL_LOG_SHEET_WEBHOOK</code> to be configured)</li>
 </ul>
 
 <h3>Vision Cache</h3>

@@ -2,6 +2,16 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## 2026-05-15
+- Smore scanner now runs a 24h/48h follow-up pass: re-fetches every discovered Smore URL whose initial snapshot is ~24h or ~48h old, emails a unified diff if content changed, or an "unreachable" notice if the URL is down
+- Added `--no-followup` CLI flag to skip the follow-up pass and run only the initial discovery scan
+- Lookback window extended from 26h to 168h (7 days) for row-text extraction; popup expansion remains 48h (`POPUP_LOOKBACK_HOURS`)
+- Added `smore_snapshot.py` module for Playwright-based page capture and text normalization (view counters stripped to reduce false-positive diffs)
+- Added `session/smore_snapshots/` directory: plain-text page snapshots keyed by sha1(url), pruned when entries expire from `seen_smore.json`
+- `seen_smore.json` now tracks `snapshot_sha`, `checks_done`, and `follow_up_status` per URL
+- Orphan snapshot files swept each run to keep the snapshot directory in sync with seen_smore.json
+- Fixed smore scanner missing alerts where popup state leaked between schools
+
 ## 2026-05-01
 - Smore scanner rewritten to cover every school the account can see (was: hardcoded 3-school principal allowlist)
 - No sender filter — picks up principals, office managers, and district staff alike

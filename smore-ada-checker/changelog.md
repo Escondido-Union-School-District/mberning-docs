@@ -2,6 +2,13 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## [2026-05-15] Completion buttons, title in filename, cost log, Sheet mirror
+- ux: staff emails now include a prominent green "Mark ALL Fixes as Complete" card at top and bottom — clicking it logs the completion to the Google Sheet (requires EMAIL_LOG_SHEET_WEBHOOK); per-issue buttons were tried and dropped in favour of this single card
+- feat: report filenames now include the newsletter title slug — e.g., `coyote-connection-r1y7x-2026-05-14-claude.pdf` instead of `smore-report-r1y7x-…`
+- feat: every audit appends a row to `reports/run-cost-log.csv` with API call counts, token usage (input/output/cache), and estimated USD cost
+- feat: optional Google Sheet mirror for the email send log — set EMAIL_LOG_SHEET_WEBHOOK in .env to post each staff send to a Sheet via Apps Script; completion button clicks also post here
+- fix: `reports/email-log.csv` write no longer throws a 500 when the file is open in Excel — prints a warning and continues
+
 ## [2026-05-11] Email send audit log
 - Every "Send to Staff" action now appends a row to `reports/email-log.csv`
 - Columns: sent_at, page_title, page_url, to, cc, subject, issue_count, note, pdf_path
