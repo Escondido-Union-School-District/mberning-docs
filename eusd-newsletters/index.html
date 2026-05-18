@@ -110,13 +110,14 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-05-15 &mdash; Initial guide created<br>
-  <strong>Last project activity:</strong> 2026-05-15 &mdash; Project initialized; design spec and Phase 1 plan written
+  <strong>Last updated:</strong> 2026-05-18 &mdash; Phase 1 complete: sign-in, school picker, access control<br>
+  <strong>Last project activity:</strong> 2026-05-15 &mdash; Phase 1 (Foundation &amp; Auth) complete
 </div>
 
 <div class="callout">
-  <strong>In development:</strong> This tool is being built. This guide is a skeleton
-  and will be filled in as features ship. Steps below describe the intended workflow.
+  <strong>In development:</strong> This tool is being built. Phase 1 (sign-in and school access) is
+  complete. Newsletter editing (Phase 2), media and AI assists (Phase 3), publishing and analytics
+  (Phases 4&ndash;5) are not yet built. Steps below describe the intended full workflow.
 </div>
 
 <!-- ================================================================== -->
@@ -199,6 +200,34 @@ for trends across all your issues.</p>
     <td>Can't publish &mdash; blocked</td>
     <td>An accessibility check failed (e.g., image with no alt text, inaccessible PDF)</td>
     <td>Fix the listed items; the publish screen shows exactly where each problem is</td>
+  </tr>
+</table>
+
+<!-- ================================================================== -->
+<h2>Recent Changes</h2>
+<table>
+  <tr><th>Date</th><th>What changed</th></tr>
+  <tr>
+    <td>2026-05-15</td>
+    <td><strong>Sign-in live:</strong> Google SSO is implemented. Staff sign in at
+    <code>newsletters.eusd.org</code> with their @eusd.org account. Non-EUSD accounts
+    are blocked.</td>
+  </tr>
+  <tr>
+    <td>2026-05-15</td>
+    <td><strong>School picker live:</strong> After signing in, you see only the schools
+    your Google Group membership grants you access to.</td>
+  </tr>
+  <tr>
+    <td>2026-05-15</td>
+    <td><strong>Access-denied page:</strong> Attempting to reach a school you don't have
+    access to shows a clear message directing you to ask your site administrator to add
+    you to the school's Google Group.</td>
+  </tr>
+  <tr>
+    <td>2026-05-15</td>
+    <td><strong>Project initialized:</strong> Design spec, Phase 1 plan, and user guide
+    skeleton created.</td>
   </tr>
 </table>
 
