@@ -110,14 +110,16 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-05-18 &mdash; Phase 1 complete: sign-in, school picker, access control<br>
-  <strong>Last project activity:</strong> 2026-05-15 &mdash; Phase 1 (Foundation &amp; Auth) complete
+  <strong>Last updated:</strong> 2026-05-19 &mdash; Phase 2 complete: section-based newsletter editor<br>
+  <strong>Last project activity:</strong> 2026-05-19 &mdash; Phase 2 (Data Model &amp; Editor Core) complete
 </div>
 
 <div class="callout">
-  <strong>In development:</strong> This tool is being built. Phase 1 (sign-in and school access) is
-  complete. Newsletter editing (Phase 2), media and AI assists (Phase 3), publishing and analytics
-  (Phases 4&ndash;5) are not yet built. Steps below describe the intended full workflow.
+  <strong>In development:</strong> This tool is being built. Phase 1 (sign-in and school access) and
+  Phase 2 (the section-based newsletter editor &mdash; create, write text and links, reorder,
+  autosave, draft/publish) are complete. Media and AI assists (Phase 3 &mdash; images, PDF flyers,
+  AI alt text), the accessibility publish gate and public page (Phase 4), and analytics (Phase 5)
+  are not yet built. Steps below describe the intended full workflow; notes mark what is live today.
 </div>
 
 <!-- ================================================================== -->
@@ -163,13 +165,23 @@ account.</p>
 <p>Start blank, or duplicate your last issue to reuse the same sections.</p>
 
 <h3><span class="step-num">4</span> Build it from sections</h3>
-<p>Add titled sections. In each section add paragraphs, images (single, wrapped, or a
-2&ndash;4 across gallery), PDF flyers, and links. Use <strong>Generate alt text</strong>
-on images and <strong>Extract flyer text</strong> on PDFs so content is accessible.</p>
+<p>Add titled sections and drag them into the order you want. In each section add
+content blocks and reorder them by dragging. Your work autosaves as you go.</p>
+<div class="callout callout-info">
+  <strong>Live now (Phase 2):</strong> titled sections, paragraph text blocks, link
+  blocks, drag-to-reorder for sections and blocks, autosave, and a soft
+  &ldquo;someone else is editing this section&rdquo; lock so two people don't
+  overwrite each other. <strong>Coming in Phase 3:</strong> images (single, wrapped,
+  or a 2&ndash;4 across gallery), PDF flyers, and the <strong>Generate alt text</strong>
+  / <strong>Extract flyer text</strong> AI helpers.</div>
 
 <h3><span class="step-num">5</span> Preview, then publish</h3>
-<p>Preview the exact public page. Publishing runs an accessibility check &mdash; fix any
-blocking issues, then publish. Copy the link and share it with families.</p>
+<p>Mark the newsletter published when it's ready and share its link with families;
+mark it back to draft to take it offline.</p>
+<div class="callout">
+  <strong>Phase 4 note:</strong> the full public page and the two-tier accessibility
+  publish gate arrive in Phase 4. Today, publishing is a draft/published status
+  switch &mdash; the polished public reader page is not built yet.</div>
 
 <h3><span class="step-num">6</span> Watch the analytics</h3>
 <p>Open a newsletter's analytics for views, reads, and clicks, or the school dashboard
@@ -197,9 +209,16 @@ for trends across all your issues.</p>
     <td>Ask your site administrator to add you to the school group</td>
   </tr>
   <tr>
+    <td>A section is read-only and shows &ldquo;Another editor is editing this section&rdquo;</td>
+    <td>A colleague has that section open; it is soft-locked to prevent overwrites</td>
+    <td>Edit a different section, or wait &mdash; the lock releases automatically after
+    a period of inactivity, then reload the page</td>
+  </tr>
+  <tr>
     <td>Can't publish &mdash; blocked</td>
     <td>An accessibility check failed (e.g., image with no alt text, inaccessible PDF)</td>
-    <td>Fix the listed items; the publish screen shows exactly where each problem is</td>
+    <td>Fix the listed items; the publish screen shows exactly where each problem is
+    (the publish accessibility gate arrives in Phase 4)</td>
   </tr>
 </table>
 
@@ -207,6 +226,20 @@ for trends across all your issues.</p>
 <h2>Recent Changes</h2>
 <table>
   <tr><th>Date</th><th>What changed</th></tr>
+  <tr>
+    <td>2026-05-19</td>
+    <td><strong>Newsletter editor live (Phase 2):</strong> Create a newsletter blank
+    or by duplicating your last issue. Add titled sections and paragraph/link content
+    blocks, drag to reorder, and edits autosave. Mark a newsletter published or back
+    to draft.</td>
+  </tr>
+  <tr>
+    <td>2026-05-19</td>
+    <td><strong>Section editing locks:</strong> When someone opens a section, others
+    see &ldquo;Another editor is editing this section&rdquo; and that section is
+    read-only for them until the lock expires &mdash; so two people can't silently
+    overwrite each other.</td>
+  </tr>
   <tr>
     <td>2026-05-15</td>
     <td><strong>Sign-in live:</strong> Google SSO is implemented. Staff sign in at

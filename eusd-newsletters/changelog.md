@@ -4,6 +4,15 @@ Permanent log of user-facing changes. Never pruned.
 
 ---
 
+## [2026-05-19] Phase 2 complete — Data Model & Editor Core
+
+- Newsletter list page: see all newsletters for your school, create blank, or duplicate the last issue
+- Section-based editor: add titled sections and paragraph/link content blocks, drag to reorder sections and blocks within a section
+- Autosave: edits are saved automatically as you type; a status indicator confirms saves
+- Draft/publish toggle: mark a newsletter published (visible) or back to draft (hidden); publish is state-gated so only drafts can be published
+- Section soft-lock: when a colleague has a section open, it shows "Another editor is editing this section" and is read-only for others until the lock expires and the page is reloaded
+- Always-on WCAG accessibility: heading hierarchy, ARIA live regions for autosave status, and skip-navigation link applied to all editor and list pages
+
 ## [2026-05-15] Phase 1 complete — Foundation & Auth
 
 - Google SSO sign-in implemented: staff authenticate with their @eusd.org Google account; non-EUSD accounts are blocked at the OAuth callback
