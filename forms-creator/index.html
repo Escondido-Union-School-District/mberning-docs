@@ -128,8 +128,8 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-05-15 &mdash; Per-form branding (logo, school name, colors), 8 web layouts, submissions inbox improvements, dashboard card redesign<br>
-  <strong>Last project activity:</strong> 2026-05-15 &mdash; Branding system, Paper/Friendly/Varsity/Compact/Editorial/Minimal/Cards layouts, cross-form master inbox, student/grade columns
+  <strong>Last updated:</strong> 2026-05-20 &mdash; Google sign-in required, form sharing with colleagues and role groups, admin unassigned-forms view<br>
+  <strong>Last project activity:</strong> 2026-05-20 &mdash; SSO via Google OAuth (@eusd.org), per-school role-checklist sharing panel, branded sign-in/sign-out pages
 </div>
 
 <!-- ================================================================== -->
@@ -137,6 +137,22 @@
 
 <table>
   <tr><th>Date</th><th>Change</th></tr>
+  <tr>
+    <td>2026-05-20</td>
+    <td><strong>Google sign-in required</strong> <span class="badge-new">NEW</span> &mdash; Forms Creator now requires you to sign in with your EUSD Google account (<code>@eusd.org</code>). When you open the app, a branded sign-in page appears. Click <strong>Sign in with Google</strong> and choose your district account. Your email and a <strong>Sign out</strong> link appear in the top-right corner of every page.</td>
+  </tr>
+  <tr>
+    <td>2026-05-20</td>
+    <td><strong>Form sharing — role checklist</strong> <span class="badge-new">NEW</span> &mdash; The edit page now has a <strong>Who can access this form</strong> panel. Form owners can share with specific colleagues by email or by checking boxes next to staff roles at their school (Admin Staff, Principal, Office Manager, Family Liaison, etc.). Checking a role shares the form with everyone in that role at your school; unchecking removes them.</td>
+  </tr>
+  <tr>
+    <td>2026-05-20</td>
+    <td><strong>Admin: unassigned-forms view</strong> <span class="badge-new">NEW</span> &mdash; Administrators see an <strong>Unassigned forms</strong> section on the dashboard listing legacy forms with no owner. Admins can type a staff email and click <strong>Assign</strong> to transfer ownership.</td>
+  </tr>
+  <tr>
+    <td>2026-05-20</td>
+    <td><strong>Dashboard owner label</strong> &mdash; Each form card on the dashboard now shows an owner chip (&ldquo;you&rdquo; if you own it, or the owner&rsquo;s email if the form was shared with you).</td>
+  </tr>
   <tr>
     <td>2026-05-15</td>
     <td><strong>Per-form branding</strong> <span class="badge-new">NEW</span> &mdash; Each form can now display your school&rsquo;s name, logo, and colors on the published web form. Set these in the new <strong>Branding</strong> panel on the edit page (school name text field, logo image upload, primary and accent color pickers).</td>
@@ -272,6 +288,7 @@
 
 <h3>One-Time Setup (already done on your machine)</h3>
 <ol>
+  <li><strong>EUSD Google account</strong> &mdash; You must have an active <code>@eusd.org</code> Google account. Personal Gmail accounts cannot sign in.</li>
   <li><strong>Python 3.10 or later</strong> must be installed</li>
   <li><strong>Project folder:</strong> <code>~/projects/eusd/forms-creator/</code></li>
   <li><strong>Python dependencies</strong> installed via pip (see setup steps below if on a new machine)</li>
@@ -328,6 +345,12 @@ python app.py</code></pre>
  * Debug mode: on</code></pre>
 
 <p>Open your browser and go to <strong>http://localhost:5000</strong>. Leave the terminal open while you work &mdash; closing it stops the server.</p>
+
+<p>If this is your first visit (or your session has expired), you will see the Forms Creator sign-in page. Click <strong>Sign in with Google</strong> and choose your <code>@eusd.org</code> account. After signing in, your email appears in the top-right corner with a <strong>Sign out</strong> link.</p>
+
+<div class="callout callout-info">
+  <strong>Must use your district account:</strong> Only <code>@eusd.org</code> Google accounts can sign in. If you see an &ldquo;Access denied&rdquo; error, make sure you chose your district account (not a personal Gmail) in the Google sign-in popup.
+</div>
 
 <h3><span class="step-num">2</span> Clone a Template</h3>
 
@@ -409,7 +432,21 @@ python app.py</code></pre>
   <strong>Tip:</strong> Use the <strong>Mobile / Desktop</strong> toggle in the preview pane to verify your logo and school name look right on both screen sizes before publishing.
 </div>
 
-<h4>Rename the Form Title or Description</h4>
+<h4>Share the Form with Colleagues (Optional)</h4>
+<p>
+  The <strong>Who can access this form</strong> panel (in the sidebar on the edit page) lets you give
+  other staff members access to view or edit your form. Only the form owner can manage sharing.
+</p>
+<p><strong>Share by role group (recommended):</strong> If you are a member of a school staff group,
+you will see a <strong>Share at [School Name]</strong> checklist. Each row is a staff role at your school:</p>
+<ul>
+  <li>Check the box next to a role (e.g. <strong>Admin Staff</strong>, <strong>Principal</strong>, <strong>Family Liaison</strong>) to share the form with everyone in that role.</li>
+  <li>Uncheck a role to remove that group&rsquo;s access.</li>
+</ul>
+<p><strong>Share by individual email:</strong> Type a colleague&rsquo;s <code>@eusd.org</code> email address in the field below the role list and click <strong>Share</strong>. Their name appears in the access list. Click <strong>Remove</strong> next to a name to revoke access.</p>
+<div class="callout callout-info">
+  <strong>Shared users</strong> can open and edit the form but cannot transfer ownership or change who else has access. If the role checklist does not appear, your account is not a member of any recognized school staff group &mdash; use the individual email field instead.
+</div>
 <p>Click on the title or description text. A label editor dialog opens with an English field and (in Bilingual or Spanish-only mode) a Spanish field. You can also click <strong>Generate</strong> to have AI suggest a translation. Type your text and click <strong>Save</strong>.</p>
 
 <h4>Edit a Section Heading</h4>
@@ -600,6 +637,26 @@ section.</p>
 
 <table>
   <tr><th>Problem</th><th>Cause</th><th>Fix</th></tr>
+  <tr>
+    <td>Browser shows a &ldquo;Sign in with Google&rdquo; page instead of the dashboard</td>
+    <td>Authentication is enabled; your session is new or has expired</td>
+    <td>Click <strong>Sign in with Google</strong> and choose your <code>@eusd.org</code> district account. If Google shows multiple accounts, make sure to pick the district one.</td>
+  </tr>
+  <tr>
+    <td>&ldquo;Access denied&rdquo; or &ldquo;This account is not authorized&rdquo; after signing in</td>
+    <td>You signed in with a personal Gmail instead of your EUSD account</td>
+    <td>Sign out of the personal Gmail in the Google sign-in popup, then sign in again with your <code>@eusd.org</code> account. If the problem persists, contact your tech coordinator to confirm your district account is active.</td>
+  </tr>
+  <tr>
+    <td>The <strong>Who can access this form</strong> sharing panel is not visible</td>
+    <td>You are viewing a form that was shared with you by someone else; only the owner can manage sharing</td>
+    <td>Contact the form owner to have them adjust sharing settings. The panel shows a read-only note explaining this when you are not the owner.</td>
+  </tr>
+  <tr>
+    <td>Role checklist shows &ldquo;Loading roles&hellip;&rdquo; but never loads</td>
+    <td>The server cannot reach the Google Directory API (service account not configured or network issue)</td>
+    <td>Use the individual email field to share by address instead. Ask your tech coordinator to verify the server&rsquo;s Google service account credentials.</td>
+  </tr>
   <tr>
     <td><code>python: command not found</code> or <code>'python' is not recognized</code></td>
     <td>Python is not installed or not on the system PATH</td>
