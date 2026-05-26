@@ -109,7 +109,7 @@
 <h1>Thrillshare Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-15 &mdash; Smore scan now runs 24h/48h follow-up checks on discovered links; lookback extended to 7 days
+  <strong>User guide last updated:</strong> 2026-05-26 &mdash; Newly discovered Smore links are now automatically queued for ADA accessibility review on the smore-ada-checker dashboard
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,10 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-26</td>
+        <td style="padding:8px; background: white;">Smore ADA handoff: newly discovered Smore URLs are automatically queued for background ADA accessibility scan via the local smore-ada-checker project; scan drafts appear on the dashboard at <code>http://localhost:5051/dashboard</code>; no additional emails sent; new <code>SMORE_CHECKER_DIR</code> config (set to empty string in <code>.env</code> to disable)</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-15</td>
         <td style="padding:8px; background: white;">Smore follow-up pass: scanner now re-checks discovered URLs at ~24h and ~48h, emails a diff if content changed or an unreachable notice if the URL went down; lookback extended 26h&rarr;168h (7 days); added <code>--no-followup</code> flag to skip follow-up checks; added <code>smore_snapshot.py</code> and <code>session/smore_snapshots/</code> for snapshot storage</td>
@@ -158,10 +162,6 @@
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-06</td>
         <td style="padding:8px; background: white;">Add --smore-scan flag; daily scheduled Smore scan with 36-hour lookback at 7:00 AM</td>
       </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-03-19</td>
-        <td style="padding:8px; background: white;">Add CMS moderation checks, SMTP relay, date-organized reports</td>
-      </tr>
     </tbody>
   </table>
 </details>
@@ -185,7 +185,7 @@
 </div>
 
 <!-- ================================================================== -->
-<h2>Prerequisites</h2>
+<h2 id="env-vars">Prerequisites</h2>
 
 <h3>One-Time Setup (already done on your machine)</h3>
 <ol>
@@ -265,6 +265,8 @@ Take your time — the script will wait.</code></pre>
   <strong>Deduplication:</strong> Each unique Smore URL is emailed only once on first detection (tracked in <code>session/seen_smore.json</code>). Follow-up emails are sent separately when the page changes or becomes unreachable. Entries auto-expire after 30 days.
 </div>
 
+<p>When a new Smore URL is first detected, the scanner also automatically queues a background <strong>ADA accessibility scan</strong> via the local <a href="http://localhost:5051/dashboard">smore-ada-checker dashboard</a>. The scan runs in the background (~1-2 min) and requires no manual action — check the dashboard when ready to review. No additional email is sent from this path. This behavior requires the smore-ada-checker project to be installed at <code>SMORE_CHECKER_DIR</code> (see <a href="#env-vars">environment variables</a>); if the directory is missing, a warning is printed and the scan is skipped.</p>
+
 <h3><span class="step-num">1</span> Run a Manual Smore Scan</h3>
 <pre><code>cd C:\Users\mberning\projects\eusd\thrillshare-checker
 venv\Scripts\activate
@@ -320,15 +322,16 @@ Messages with Smore links: 2</code></pre>
 <!-- ================================================================== -->
 <h2>Folder Structure</h2>
 <pre><code>thrillshare-checker\
-  checker.py           &lt;-- Main script — runs approval checks or Smore scan
-  smore_scanner.py     &lt;-- Smore link scanning logic (LOOKBACK_HOURS, POPUP_LOOKBACK_HOURS configurable)
-  smore_snapshot.py    &lt;-- Smore page snapshot capture module (used by follow-up checks)
-  config.py            &lt;-- Email, URL, and timeout settings (reads from .env)
+  checker.py               &lt;-- Main script — runs approval checks or Smore scan
+  smore_scanner.py         &lt;-- Smore link scanning logic (LOOKBACK_HOURS, POPUP_LOOKBACK_HOURS configurable)
+  smore_snapshot.py        &lt;-- Smore page snapshot capture module (used by follow-up checks)
+  smore_checker_handoff.py &lt;-- Queues new Smore URLs for ADA scan via smore-ada-checker (runs in background)
+  config.py                &lt;-- Email, URL, timeout, and SMORE_CHECKER_DIR settings (reads from .env)
   run_hidden.bat       &lt;-- Batch wrapper for scheduled approval checks (S4U compatible)
   run_smore_scan.bat   &lt;-- Batch wrapper for scheduled Smore scans (S4U compatible)
   cleanup_stale.ps1    &lt;-- Kills stale processes before each scheduled run
   requirements.txt     &lt;-- Python dependencies (playwright, python-dotenv)
-  .env                 &lt;-- Email/SMTP settings (not committed)
+  .env                 &lt;-- Email/SMTP settings + SMORE_CHECKER_DIR (not committed)
   .env.example         &lt;-- Template for .env
   session\             &lt;-- Saved browser cookies and dedupe cache (not committed)
     cookies.json       &lt;-- Session cookies from last login
@@ -432,7 +435,7 @@ With pending:     2</code></pre>
   </ol>
   <h3 style="margin-top: 0.8em; color: #1a56db;">Key Files</h3>
   <ul>
-    <li><code>.env</code> &mdash; SMTP host, port, sender/recipient email</li>
+    <li><code>.env</code> &mdash; SMTP host, port, sender/recipient email, <code>SMORE_CHECKER_DIR</code> (set to empty string to disable ADA handoff)</li>
     <li><code>session\cookies.json</code> &mdash; saved login session</li>
     <li><code>session\seen_smore.json</code> &mdash; dedupe cache + follow-up state for Smore links</li>
     <li><code>session\smore_snapshots\</code> &mdash; plain-text page snapshots used for follow-up diffs</li>

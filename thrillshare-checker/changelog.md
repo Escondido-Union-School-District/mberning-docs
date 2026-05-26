@@ -2,6 +2,12 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## 2026-05-26
+- When `--smore-scan` discovers a new Smore URL, it now automatically queues a background ADA accessibility scan via the local smore-ada-checker project (`check.py --scan-only <url>`)
+- Scan results appear on the smore-ada-checker dashboard at `http://localhost:5051/dashboard` for review — no additional email is sent
+- New module: `smore_checker_handoff.py` handles subprocess spawning; uses smore-ada-checker's own venv Python
+- New config: `SMORE_CHECKER_DIR` in `.env` points at the smore-ada-checker installation (default: `C:\Users\mberning\projects\eusd\smore-ada-checker`); set to empty string to disable handoff
+
 ## 2026-05-15
 - Smore scanner now runs a 24h/48h follow-up pass: re-fetches every discovered Smore URL whose initial snapshot is ~24h or ~48h old, emails a unified diff if content changed, or an "unreachable" notice if the URL is down
 - Added `--no-followup` CLI flag to skip the follow-up pass and run only the initial discovery scan
