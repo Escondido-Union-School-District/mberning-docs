@@ -109,7 +109,7 @@
 <h1>Smore ADA Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-15 &mdash; Staff emails now include a &ldquo;Mark ALL Fixes as Complete&rdquo; button; report filenames now include the newsletter title; per-run cost log added
+  <strong>User guide last updated:</strong> 2026-05-27 &mdash; Dashboard shows completion status when school clicks &ldquo;Mark ALL Fixes as Complete&rdquo;; auditor note + Copy buttons on every issue card; all issue types editable; &ldquo;Run again&rdquo; on dashboard; warm visual palette across all surfaces
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,46 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
+        <td style="padding:8px; background: white;">feat: dashboard shows a green &ldquo;&#10003; Marked ALL fixes complete by school&rdquo; pill on Sent rows when the school clicks the completion button — requires the Apps Script JSON endpoint to be deployed (see <code>docs/apps-script-completion-additions.md</code>)</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
+        <td style="padding:8px; background: white;">feat: auditor note field on every issue card in the review page — type a note to accompany any issue; it appears as a callout in the staff email and PDF report</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
+        <td style="padding:8px; background: white;">feat: Copy buttons on all suggestion fields in the review page — click the button next to any alt text, link text, or flyer suggestion to copy it to the clipboard instantly</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
+        <td style="padding:8px; background: white;">feat: all issue types are now editable in the review page — emoji, heading, and video issue messages can now be customized before sending, in addition to the existing alt text and link text fields</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
+        <td style="padding:8px; background: white;">feat: &ldquo;Run again&rdquo; action on dashboard &mdash; re-scans slugs that were previously sent or generated, bypassing the dedup guard so you don&rsquo;t need a baseline comparison to re-run</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
+        <td style="padding:8px; background: white;">feat: Generated status pill now shows the issue count &mdash; &ldquo;All clear&rdquo; when zero issues, or &ldquo;Generated &middot; N issues&rdquo; when issues were found</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
+        <td style="padding:8px; background: white;">fix: dashboard search bar and filter chips (All / Drafts / Sent / Generated / Scanned) now work correctly &mdash; previously they had no effect due to a script timing bug</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
+        <td style="padding:8px; background: white;">ux: dashboard action buttons stacked vertically and color-coded &mdash; &ldquo;Rescan&rdquo; renamed &ldquo;Check fixes&rdquo; (orange); new &ldquo;Run again&rdquo; (purple); &ldquo;Resume&rdquo; stays orange; clearer &ldquo;already on dashboard&rdquo; vs &ldquo;already running&rdquo; feedback when scanning a known slug</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
+        <td style="padding:8px; background: white;">ux: warm visual palette applied across the email report, PDF report, and review page &mdash; muted cream background, dusty rose/slate blue/sage accent colors, thicker card borders with colored left bars</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
+        <td style="padding:8px; background: white;">ux: AI prompt tip consolidated to one panel at the top of each surface (review page, email, PDF) instead of repeating on every issue card &mdash; side-by-side columns for alt text and flyer prompts</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-15</td>
         <td style="padding:8px; background: white;">ux: staff emails now include a prominent green &ldquo;Mark ALL Fixes as Complete&rdquo; card at the top and bottom — when the school clicks it, the completion is logged to the Google Sheet for your records</td>
@@ -157,10 +197,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-05</td>
         <td style="padding:8px; background: white;">ux: "Include Coming Soon" banner checkbox on review page now defaults to unchecked</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-21</td>
-        <td style="padding:8px; background: white;">feat: review page alt text improvements — current alt text shown prominently in amber box; suggested alt text has green background matching PDF/email report; AI prompt tip added to each alt text card</td>
       </tr>
     </tbody>
   </table>
@@ -293,8 +329,10 @@ venv\Scripts\activate</code></pre>
 <p>If issues are found, a review page opens automatically at <code>http://localhost:5050</code>. Here you can:</p>
 <ul>
   <li><strong>Toggle issues</strong> &mdash; uncheck any issue to exclude it from the report</li>
-  <li><strong>Edit suggestions</strong> &mdash; modify alt text, link text, or flyer detail suggestions before they go into the report. Image alt text cards show the current alt text in an amber box and the AI suggestion in a green box; a blue "Tip" section provides a copyable AI prompt you can use with ChatGPT, Claude, or Gemini to write your own (upload the image and the prompt together). Flyer cards include a similar tip with a prompt to extract all visible text from the flyer so it can be pasted into the post's text section</li>
+  <li><strong>Edit suggestions</strong> &mdash; all issue types (alt text, link text, flyer details, emoji, heading, and video messages) have an editable field. Image alt text cards show the current alt text in an amber box and the AI suggestion in a green box. A <strong>Copy</strong> button next to each suggestion copies it to the clipboard in one click.</li>
+  <li><strong>Add an auditor note</strong> &mdash; every issue card has an optional note field at the bottom. Notes appear as a cream callout in the staff email and PDF, useful for giving the newsletter author extra context or pointing them to a specific section.</li>
   <li><strong>View screenshots</strong> &mdash; click any screenshot to enlarge it in a lightbox</li>
+  <li><strong>AI prompt tips</strong> &mdash; a single panel at the top of the page provides copyable prompts for writing alt text (upload the image to Claude/ChatGPT/Gemini with the prompt) and extracting flyer content (run the prompt on the flyer image to get text you can paste into the newsletter body)</li>
 </ul>
 
 <h3><span class="step-num">4</span> Generate the report</h3>
@@ -375,11 +413,11 @@ venv\Scripts\activate</code></pre>
 <h3>HTML Email Report</h3>
 <p>The email version contains the same information as the PDF, formatted for Gmail with inline images. It includes:</p>
 <ul>
-  <li>Page title and URL at the top</li>
+  <li>Page title and URL at the top, with a stats card showing issue counts and estimated fix time</li>
   <li>Optional notes-to-staff message (entered during review)</li>
-  <li>All included issues with embedded screenshots</li>
-  <li>AI prompt tips for alt text and flyer issues (same prompts as the PDF)</li>
-  <li>A prominent green &ldquo;Mark ALL Fixes as Complete&rdquo; card at the top and bottom — when the recipient clicks it, the completion is logged in the Google Sheet (requires <code>EMAIL_LOG_SHEET_WEBHOOK</code> to be configured)</li>
+  <li>All included issues with embedded screenshots and any auditor notes you typed during review</li>
+  <li>A single AI prompt tips panel (alt text + flyer prompts side by side) near the top of the report</li>
+  <li>A prominent green &ldquo;Mark ALL Fixes as Complete&rdquo; card at the top and bottom — when the recipient clicks it, the completion is logged in the Google Sheet (requires <code>EMAIL_LOG_SHEET_WEBHOOK</code> to be configured) and a green pill appears on the dashboard&rsquo;s Sent row within 5 minutes</li>
 </ul>
 
 <h3>Vision Cache</h3>
