@@ -128,8 +128,8 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-05-20 &mdash; Google sign-in required, form sharing with colleagues and role groups, admin unassigned-forms view<br>
-  <strong>Last project activity:</strong> 2026-05-20 &mdash; SSO via Google OAuth (@eusd.org), per-school role-checklist sharing panel, branded sign-in/sign-out pages
+  <strong>Last updated:</strong> 2026-05-27 &mdash; Annual confidentiality acknowledgement, per-field PII roles, delete submissions/forms, student-records admin tools, public /privacy page<br>
+  <strong>Last project activity:</strong> 2026-05-27 &mdash; FERPA/NDPA-equivalence controls shipped (Phase 1 + 2)
 </div>
 
 <!-- ================================================================== -->
@@ -137,6 +137,30 @@
 
 <table>
   <tr><th>Date</th><th>Change</th></tr>
+  <tr>
+    <td>2026-05-27</td>
+    <td><strong>Annual confidentiality acknowledgement</strong> <span class="badge-new">NEW</span> &mdash; The first time you sign in each year, a one-page confidentiality notice appears before you can access any forms. Read it and click <strong>I Acknowledge</strong> to continue. This is required annually for all staff with access to the app.</td>
+  </tr>
+  <tr>
+    <td>2026-05-27</td>
+    <td><strong>Per-field PII role tag</strong> <span class="badge-new">NEW</span> &mdash; When adding or editing a field, a <strong>PII Role</strong> dropdown lets you tag what type of personal information the field collects (Student Name, Parent Name, Parent Contact, etc.). Tagging fields enables automatic redaction of sensitive values in email notifications and powers the student-records tools below.</td>
+  </tr>
+  <tr>
+    <td>2026-05-27</td>
+    <td><strong>Delete submissions and forms</strong> <span class="badge-new">NEW</span> &mdash; Form owners and administrators can now permanently delete individual submissions (from the submission detail page) or an entire form with all its submissions (from the edit page). Deletion is permanent; a confirmation prompt appears before any data is removed.</td>
+  </tr>
+  <tr>
+    <td>2026-05-27</td>
+    <td><strong>Admin: student-records tools</strong> <span class="badge-new">NEW</span> &mdash; Administrators can search for all submissions by student name at <strong>/admin/student-records</strong>. From there you can export a parent-inspection bundle (ZIP of matching PDFs + manifest) or permanently delete all submissions for a named student across all forms. Requires fields to be tagged with the <em>Student Name</em> PII role.</td>
+  </tr>
+  <tr>
+    <td>2026-05-27</td>
+    <td><strong>Admin: confidentiality acknowledgements viewer</strong> <span class="badge-new">NEW</span> &mdash; Administrators can see who has completed the annual confidentiality acknowledgement at <strong>/admin/confidentiality</strong>.</td>
+  </tr>
+  <tr>
+    <td>2026-05-27</td>
+    <td><strong>Public privacy page</strong> &mdash; A plain-language data-privacy commitments page is available at <strong>/privacy</strong> without signing in. It describes what data is collected, how it is protected, and how to request deletion or inspection.</td>
+  </tr>
   <tr>
     <td>2026-05-20</td>
     <td><strong>Google sign-in required</strong> <span class="badge-new">NEW</span> &mdash; Forms Creator now requires you to sign in with your EUSD Google account (<code>@eusd.org</code>). When you open the app, a branded sign-in page appears. Click <strong>Sign in with Google</strong> and choose your district account. Your email and a <strong>Sign out</strong> link appear in the top-right corner of every page.</td>
@@ -352,6 +376,10 @@ python app.py</code></pre>
   <strong>Must use your district account:</strong> Only <code>@eusd.org</code> Google accounts can sign in. If you see an &ldquo;Access denied&rdquo; error, make sure you chose your district account (not a personal Gmail) in the Google sign-in popup.
 </div>
 
+<div class="callout callout-new">
+  <strong>Annual confidentiality acknowledgement:</strong> Once per year, after signing in you will see a one-page notice reminding you of your obligation to keep student data confidential under FERPA and district policy. Click <strong>I Acknowledge</strong> to continue. You will not see it again for 12 months.
+</div>
+
 <h3><span class="step-num">2</span> Clone a Template</h3>
 
 <p>The dashboard shows two panels: <strong>My Forms</strong> (forms you have already created) and <strong>Templates</strong> (the pre-approved starting points). Templates display as cards with a name and short description.</p>
@@ -472,8 +500,22 @@ you will see a <strong>Share at [School Name]</strong> checklist. Each row is a 
   <li>Enter the <strong>English label</strong>. The field ID is derived automatically.</li>
   <li>For Bilingual or Spanish-only forms, enter the <strong>Spanish label</strong> (or click <strong>Generate Spanish</strong>).</li>
   <li>For radio or dropdown fields, add at least one option in the <strong>Options</strong> section: enter the English option text and (if Bilingual) the Spanish equivalent.</li>
+  <li><em>(Optional)</em> Set a <strong>PII Role</strong> if the field collects personal information about a student or parent (see table below). This enables automatic redaction in email notifications and powers the student-records search tools.</li>
   <li>Click <strong>Add Field</strong>.</li>
 </ol>
+
+<table>
+  <tr><th>PII Role</th><th>When to Use</th></tr>
+  <tr><td><strong>Student Name</strong></td><td>A field that collects the student's first or last name. Used by the student-records search and deletion tools.</td></tr>
+  <tr><td><strong>Student ID</strong></td><td>A district or state student ID number.</td></tr>
+  <tr><td><strong>Parent Name</strong></td><td>A field that collects a parent or guardian's name.</td></tr>
+  <tr><td><strong>Parent Contact</strong></td><td>Parent email, phone number, or address.</td></tr>
+  <tr><td><strong>Demographic</strong></td><td>Date of birth, gender, ethnicity, language spoken at home, or similar.</td></tr>
+  <tr><td><strong>Medical</strong></td><td>Health data, allergies, medications, IEP/504 status, or similar sensitive health information.</td></tr>
+</table>
+<div class="callout callout-info">
+  <strong>PII tagging affects email notifications:</strong> If a form has <strong>Notify by email</strong> enabled, values in PII-tagged fields are automatically redacted from the email body. The full submission is still stored on the server and available in the inbox.
+</div>
 
 <h4>Edit Radio or Dropdown Options</h4>
 <p>For existing radio or dropdown fields, click the <strong>Edit Options</strong> button that appears below the field. A dialog opens where you can add, remove, or reorder the EN/ES option pairs.</p>
@@ -557,6 +599,8 @@ forms-creator server. To see submissions, go to the dashboard and click
 <p>You can search, filter by reviewed status, mark each submission as
 reviewed, add a note, and download the PDF. The <strong>Export CSV</strong>
 button gives you a spreadsheet-friendly export of all submissions.</p>
+
+<p>To permanently delete a single submission, open the submission detail page and click <strong>Delete submission</strong>. To delete the entire form and all its submissions, use the <strong>Delete form</strong> action on the edit page. Both actions are permanent &mdash; a confirmation prompt appears before any data is removed. Only the form owner and administrators can delete.</p>
 
 <p>To get an email each time a parent submits, set
 <strong>Notify by email</strong> in the form's editor &rarr; Submissions
@@ -710,7 +754,7 @@ section.</p>
     <li>Choose the <strong>language mode</strong>: English-only, Spanish-only, or Bilingual</li>
     <li>Click field labels and section headings to edit text; use <strong>Generate</strong> for AI translations</li>
     <li>For Bilingual forms with missing translations, use <strong>Translate All</strong> to fill them in bulk</li>
-    <li>Open <strong>Outputs</strong>, enable web form and spreadsheet, enter Sheet ID</li>
+    <li>Open <strong>Outputs</strong>, confirm web form is enabled, optionally set a notify email</li>
     <li>Click <strong>Preview</strong> to review the form</li>
     <li>Click <strong>Publish</strong> &mdash; export folder appears in <code>data/exports/</code></li>
     <li>Upload the export folder to GitHub Pages or the district web server</li>
