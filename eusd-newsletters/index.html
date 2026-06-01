@@ -110,16 +110,19 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-05-19 &mdash; Phase 2 complete: section-based newsletter editor<br>
-  <strong>Last project activity:</strong> 2026-05-19 &mdash; Phase 2 (Data Model &amp; Editor Core) complete
+  <strong>Last updated:</strong> 2026-06-01 &mdash; Phase 3b complete: the content accessibility engine (Check &amp; fix, auto-fixes, flag panel)<br>
+  <strong>Last project activity:</strong> 2026-06-01 &mdash; Phase 3b (Content Accessibility Engine) complete
 </div>
 
 <div class="callout">
-  <strong>In development:</strong> This tool is being built. Phase 1 (sign-in and school access) and
+  <strong>In development:</strong> This tool is being built. Phase 1 (sign-in and school access),
   Phase 2 (the section-based newsletter editor &mdash; create, write text and links, reorder,
-  autosave, draft/publish) are complete. Media and AI assists (Phase 3 &mdash; images, PDF flyers,
-  AI alt text), the accessibility publish gate and public page (Phase 4), and analytics (Phase 5)
-  are not yet built. Steps below describe the intended full workflow; notes mark what is live today.
+  autosave, draft/publish), Phase 3a (images, PDF flyers, AI alt text, and flyer text/QR
+  extraction), and Phase 3b (the content accessibility engine &mdash; automatic fixes, the
+  &ldquo;Check &amp; fix&rdquo; button, and the accessibility flag panel) are complete. The
+  accessibility publish gate and public page (Phase 4) and analytics (Phase 5) are not yet built.
+  The engine already records what must be fixed; the gate that <em>blocks</em> publishing on it
+  arrives in Phase 4. Steps below describe the intended full workflow; notes mark what is live today.
 </div>
 
 <!-- ================================================================== -->
@@ -166,16 +169,38 @@ account.</p>
 
 <h3><span class="step-num">4</span> Build it from sections</h3>
 <p>Add titled sections and drag them into the order you want. In each section add
-content blocks and reorder them by dragging. Your work autosaves as you go.</p>
+content blocks &mdash; paragraphs, links, images, photo galleries, and PDF flyers &mdash;
+and reorder them by dragging. Your work autosaves as you go.</p>
 <div class="callout callout-info">
-  <strong>Live now (Phase 2):</strong> titled sections, paragraph text blocks, link
-  blocks, drag-to-reorder for sections and blocks, autosave, and a soft
-  &ldquo;someone else is editing this section&rdquo; lock so two people don't
-  overwrite each other. <strong>Coming in Phase 3:</strong> images (single, wrapped,
-  or a 2&ndash;4 across gallery), PDF flyers, and the <strong>Generate alt text</strong>
-  / <strong>Extract flyer text</strong> AI helpers.</div>
+  <strong>Live now:</strong> titled sections; paragraph, link, image, image-gallery, and
+  flyer (PDF) blocks; drag-to-reorder for sections and blocks; autosave; and a soft
+  &ldquo;someone else is editing this section&rdquo; lock so two people don't overwrite
+  each other (now enforced on the server, not just hidden in the screen).
+  <strong>Coming in Phase 3b:</strong> the content accessibility engine that checks and
+  auto-fixes content as you write.</div>
 
-<h3><span class="step-num">5</span> Preview, then publish</h3>
+<h3><span class="step-num">5</span> Add photos and flyers</h3>
+<p>Add an <strong>image</strong> block (single photo, or wrapped left/right), an
+<strong>image gallery</strong> (2&ndash;4 photos across), or a <strong>flyer</strong>
+(PDF) block, then use its <strong>Upload</strong> button to attach a file. Photos are
+processed automatically &mdash; location/camera data is stripped and fast web-sized
+versions are generated for you.</p>
+<ul>
+  <li><strong>Alt text is required on every image.</strong> Type a short description of
+    what the photo shows. Click <strong>Generate alt text</strong> to get an AI-drafted
+    suggestion &mdash; you must read it and accept or edit it; it is never saved
+    automatically.</li>
+  <li><strong>Flyers get an accessibility check.</strong> Each PDF flyer shows a status of
+    <em>unchecked</em>, <em>pass</em>, or <em>fail</em>. Run the check on the flyer block;
+    a flyer that fails (or is left unchecked) will block publishing in Phase 4.</li>
+  <li><strong>Extract text from a flyer.</strong> Use <strong>Extract text from this flyer</strong>
+    to pull the PDF's words &mdash; and any QR-code links &mdash; into the section as
+    editable paragraph and link blocks, so the flyer's information is also readable as real
+    text. Review and tidy the extracted blocks (and give each pulled-in link a clear
+    description) before publishing.</li>
+</ul>
+
+<h3><span class="step-num">6</span> Preview, then publish</h3>
 <p>Mark the newsletter published when it's ready and share its link with families;
 mark it back to draft to take it offline.</p>
 <div class="callout">
@@ -183,7 +208,7 @@ mark it back to draft to take it offline.</p>
   publish gate arrive in Phase 4. Today, publishing is a draft/published status
   switch &mdash; the polished public reader page is not built yet.</div>
 
-<h3><span class="step-num">6</span> Watch the analytics</h3>
+<h3><span class="step-num">7</span> Watch the analytics</h3>
 <p>Open a newsletter's analytics for views, reads, and clicks, or the school dashboard
 for trends across all your issues.</p>
 
@@ -220,12 +245,75 @@ for trends across all your issues.</p>
     <td>Fix the listed items; the publish screen shows exactly where each problem is
     (the publish accessibility gate arrives in Phase 4)</td>
   </tr>
+  <tr>
+    <td>Can't save an image block</td>
+    <td>The alt-text field is empty</td>
+    <td>Type a short description of the photo (or use <strong>Generate alt text</strong>
+    and accept/edit the suggestion) &mdash; alt text is required on every image</td>
+  </tr>
+  <tr>
+    <td><strong>Generate alt text</strong> says to write it manually</td>
+    <td>The AI service is unavailable or the image file is missing</td>
+    <td>Type the alt text yourself describing what the photo shows; try the button again
+    later if you prefer a suggestion</td>
+  </tr>
+  <tr>
+    <td>A flyer still shows &ldquo;unchecked&rdquo;</td>
+    <td>The accessibility check hasn't been run on that flyer yet</td>
+    <td>Run the check on the flyer block; if it fails, replace the PDF with a tagged,
+    accessible version (an unchecked or failing flyer blocks publishing)</td>
+  </tr>
+  <tr>
+    <td>The Upload button does nothing</td>
+    <td>JavaScript is turned off in your browser</td>
+    <td>Turn JavaScript on (uploading needs it), or ask a colleague with it enabled to
+    attach the file</td>
+  </tr>
 </table>
 
 <!-- ================================================================== -->
 <h2>Recent Changes</h2>
 <table>
   <tr><th>Date</th><th>What changed</th></tr>
+  <tr>
+    <td>2026-06-01</td>
+    <td><strong>Content accessibility engine (Phase 3b):</strong> As you edit, the app
+    quietly fixes common problems &mdash; removes decorative emoji from text lines, turns
+    SHOUTING into normal case (keeping acronyms like EUSD/PTA), and trims repeated
+    punctuation &mdash; and lists each change in a new <strong>Accessibility</strong> panel
+    for you to review and <strong>Acknowledge</strong>. The <strong>Check &amp; fix</strong>
+    button runs the full set, including AI help that drafts missing alt text and rewrites
+    vague link text like &ldquo;click here.&rdquo; Items marked <strong>Must fix</strong>
+    (a missing title, a low-contrast section color, a link to a downloadable file, or a
+    flyer that fails its accessibility check) will block publishing once the Phase 4 gate is
+    live. AI never runs while you type, and AI edits are always shown for your review.</td>
+  </tr>
+  <tr>
+    <td>2026-06-01</td>
+    <td><strong>Photos, galleries, and flyers (Phase 3a):</strong> Add image, image-gallery
+    (2&ndash;4 across), and PDF flyer blocks. Uploading a photo automatically strips its
+    location/camera data and makes fast web-sized versions. Alt text is required on every
+    image.</td>
+  </tr>
+  <tr>
+    <td>2026-06-01</td>
+    <td><strong>AI assists:</strong> <strong>Generate alt text</strong> drafts a photo
+    description for you to review and accept (never saved automatically), and
+    <strong>Extract text from this flyer</strong> pulls a PDF's words and QR-code links
+    into the post as editable text and link blocks.</td>
+  </tr>
+  <tr>
+    <td>2026-06-01</td>
+    <td><strong>Flyer accessibility check:</strong> Each PDF flyer shows pass / fail /
+    unchecked; a failing or unchecked flyer will block publishing once the Phase 4 gate
+    is live.</td>
+  </tr>
+  <tr>
+    <td>2026-06-01</td>
+    <td><strong>Section locks now enforced:</strong> When a colleague is editing a section,
+    the server blocks edits to it (not just the on-screen controls), so changes can't slip
+    through and overwrite theirs.</td>
+  </tr>
   <tr>
     <td>2026-05-19</td>
     <td><strong>Newsletter editor live (Phase 2):</strong> Create a newsletter blank

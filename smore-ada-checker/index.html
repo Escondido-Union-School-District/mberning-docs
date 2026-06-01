@@ -109,7 +109,7 @@
 <h1>Smore ADA Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-27 &mdash; Dashboard shows completion status when school clicks &ldquo;Mark ALL Fixes as Complete&rdquo;; auditor note + Copy buttons on every issue card; all issue types editable; &ldquo;Run again&rdquo; on dashboard; warm visual palette across all surfaces
+  <strong>User guide last updated:</strong> 2026-06-01 &mdash; Favicon on dashboard/review tabs; flyer false-positive fixes (verbatim-text guard + OCR-misread prompt hardening); stale-page and cross-report screenshot fix; scanning a Smore preview link no longer creates a duplicate dashboard row
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,26 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-01</td>
+        <td style="padding:8px; background: white;">feat: favicon added to the dashboard and review page browser tabs — a dark-blue checkmark badge so you can identify the right tab at a glance in Chrome</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-01</td>
+        <td style="padding:8px; background: white;">fix: flyer &ldquo;Flyer Info Not in Text&rdquo; false positives reduced &mdash; info already written verbatim in the section text next to the flyer is now detected and dropped before flagging; also tightened the AI prompt so OCR misreads of addresses and URLs (e.g. wrong street name) no longer generate incorrect &ldquo;missing info&rdquo; warnings when the correct info is in the post</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-01</td>
+        <td style="padding:8px; background: white;">fix: resuming a report in the dashboard no longer shows a stale page or screenshots from a different report &mdash; all review and dashboard responses now send no-cache headers, and screenshot image URLs are unique per report so the browser cannot serve a cached image from a previous session</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-01</td>
+        <td style="padding:8px; background: white;">fix: scanning a Smore editor preview link (ending in <code>/preview</code>) no longer creates a duplicate dashboard row &mdash; it now maps to the same slug as the published link and deduplicates correctly</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-01</td>
+        <td style="padding:8px; background: white;">ux: AI prompt tips panel (alt text + flyer text Gemini prompts) now always shows both columns on the review page, email, and PDF &mdash; no longer conditional on whether those issue types are present in the report</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-27</td>
         <td style="padding:8px; background: white;">feat: dashboard shows a green &ldquo;&#10003; Marked ALL fixes complete by school&rdquo; pill on Sent rows when the school clicks the completion button — requires the Apps Script JSON endpoint to be deployed (see <code>docs/apps-script-completion-additions.md</code>)</td>

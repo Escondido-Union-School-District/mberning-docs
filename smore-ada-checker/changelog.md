@@ -2,6 +2,25 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## [2026-06-01] Favicon, flyer false-positive fixes, stale-page fix, preview-link dedup
+- feat: favicon added to dashboard (port 5051) and review page (port 5050) tabs — inline SVG checkmark-badge served from /favicon.svg so the tab is identifiable in Chrome without a file on disk
+- fix: flyer "Flyer Info Not in Text" false positives reduced two ways: (1) deterministic guard in checks.py drops any "missing" detail whose normalized value is already a verbatim substring of the section text (≥2 tokens); (2) flyer comparison prompt hardened with "POST TEXT IS THE SOURCE OF TRUTH" rule so OCR misreads of addresses/URLs (e.g. "925 Colman Ave" for "925 Lehner Ave") no longer generate wrong fix suggestions when the correct info is present in the post
+- fix: resuming a report from the dashboard no longer shows a stale page or screenshots from a previous report — all Flask responses now send Cache-Control: no-store; screenshot image URLs include a per-report ?v=<slug> token so browser cache collisions across sessions are impossible
+- fix: scanning a Smore editor preview link (https://app.smore.com/n/<code>/preview) no longer creates a duplicate dashboard row — slug derivation centralized in urls.smore_code() which reads the segment after /n/, not the last path segment; preview and published links now map to the same slug
+- ux: AI prompt tips panel (alt text + flyer text Gemini prompts) always shows both columns on the review page, email, and PDF — previously conditional on whether those issue types appeared in the report
+
+## [2026-05-27] Dashboard completion pill, auditor notes, copy buttons, run again, warm palette
+- feat: dashboard shows green "✓ Marked ALL fixes complete by school" pill on Sent rows when the school clicks the completion button (requires Apps Script JSON endpoint — see docs/apps-script-completion-additions.md)
+- feat: auditor note field on every issue card — type a custom note to accompany any issue; appears as a callout in the staff email and PDF
+- feat: Copy buttons on all suggestion fields (alt text, link text, flyer, QR) in the review page
+- feat: all issue types now editable in the review page (emoji, heading, video messages can now be customized)
+- feat: "Run again" dashboard action re-scans slugs that were previously sent or generated, bypassing the dedup guard
+- feat: Generated status pill now shows issue count ("All clear" or "Generated · N issues")
+- fix: dashboard search bar and filter chips now work correctly (previously broken by script timing bug)
+- ux: dashboard action buttons stacked vertically and color-coded; "Rescan" renamed "Check fixes"
+- ux: warm visual palette across email, PDF, and review page (cream background, dusty rose/slate/sage accents, thicker card borders with colored left bars)
+- ux: AI prompt tip consolidated to one panel at top of each surface instead of repeating per issue card
+
 ## [2026-05-15] Completion buttons, title in filename, cost log, Sheet mirror
 - ux: staff emails now include a prominent green "Mark ALL Fixes as Complete" card at top and bottom — clicking it logs the completion to the Google Sheet (requires EMAIL_LOG_SHEET_WEBHOOK); per-issue buttons were tried and dropped in favour of this single card
 - feat: report filenames now include the newsletter title slug — e.g., `coyote-connection-r1y7x-2026-05-14-claude.pdf` instead of `smore-report-r1y7x-…`
