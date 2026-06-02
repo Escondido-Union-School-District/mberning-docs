@@ -110,19 +110,16 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>Last updated:</strong> 2026-06-01 &mdash; Phase 3b complete: the content accessibility engine (Check &amp; fix, auto-fixes, flag panel)<br>
-  <strong>Last project activity:</strong> 2026-06-01 &mdash; Phase 3b (Content Accessibility Engine) complete
+  User guide last updated: June 2, 2026 &mdash; Redesigned Newsletters Home (Phase 6b), new content elements, branding settings (Phase 6a).
 </div>
 
 <div class="callout">
-  <strong>In development:</strong> This tool is being built. Phase 1 (sign-in and school access),
-  Phase 2 (the section-based newsletter editor &mdash; create, write text and links, reorder,
-  autosave, draft/publish), Phase 3a (images, PDF flyers, AI alt text, and flyer text/QR
-  extraction), and Phase 3b (the content accessibility engine &mdash; automatic fixes, the
-  &ldquo;Check &amp; fix&rdquo; button, and the accessibility flag panel) are complete. The
-  accessibility publish gate and public page (Phase 4) and analytics (Phase 5) are not yet built.
-  The engine already records what must be fixed; the gate that <em>blocks</em> publishing on it
-  arrives in Phase 4. Steps below describe the intended full workflow; notes mark what is live today.
+  <strong>In development:</strong> This tool is being actively built. Completed phases:
+  Phase 1 (sign-in), Phase 2 (editor), Phase 3a (media &amp; AI), Phase 3b (accessibility engine),
+  Phase 4a (public page &amp; publish gate), Phase 4b (review &amp; approval), Phase 5 (analytics),
+  Phase 6a (new element types &amp; school branding), and Phase 6b (redesigned Newsletters Home).
+  Steps below describe the workflow; notes mark what is live today. The live-preview builder
+  is coming next (Phase 6c).
 </div>
 
 <!-- ================================================================== -->
@@ -164,20 +161,54 @@ account.</p>
 <h3><span class="step-num">2</span> Pick your school</h3>
 <p>You'll see the schools you have access to. Choose one.</p>
 
-<h3><span class="step-num">3</span> Start a newsletter</h3>
-<p>Start blank, or duplicate your last issue to reuse the same sections.</p>
+<h3><span class="step-num">3</span> Browse your newsletters and start a new one</h3>
+<p>After signing in and choosing a school, you land on the <strong>Newsletters Home</strong> &mdash;
+a visual card grid showing all of the school's newsletters with their status badges and
+last-edited times. From here:</p>
+<ul>
+  <li><strong>Start a new newsletter</strong> &mdash; opens a modal where you choose
+    <em>Blank</em> (give it a title and go), <em>Template</em> (a pre-built layout like
+    &ldquo;Weekly Update&rdquo; or &ldquo;Event Announcement&rdquo;), or
+    <em>Duplicate</em> (pick any past issue to copy its structure).</li>
+  <li><strong>Duplicate last issue</strong> &mdash; one click to reuse your most recently
+    edited newsletter's section structure as a fresh draft.</li>
+  <li><strong>School analytics</strong> &mdash; jump to the combined analytics dashboard
+    for all of the school's newsletters.</li>
+</ul>
+<p>You can also <strong>search</strong> newsletters by title, filter by status
+(<em>Draft / In review / Changes requested / Approved / Published</em> &mdash; each pill
+shows a live count), and sort by last edited, issue date, or title.</p>
+<p>Each card has quick actions at the bottom: <strong>Edit</strong>, <strong>Duplicate</strong>,
+and <strong>Analytics</strong>. The <strong>&hellip;</strong> (more) menu on each card adds
+<strong>Rename</strong>, <strong>View public page</strong> (published newsletters only), and
+<strong>Delete</strong>. Deleting shows a 5-second <strong>Undo</strong> button &mdash; the
+newsletter is not permanently removed until that window closes.</p>
+<div class="callout callout-info">
+  <strong>Note:</strong> The authoring app (the newsletter list, editor, and dashboards) requires
+  JavaScript in your browser. The public newsletter pages that families read work without it.</div>
 
 <h3><span class="step-num">4</span> Build it from sections</h3>
 <p>Add titled sections and drag them into the order you want. In each section add
-content blocks &mdash; paragraphs, links, images, photo galleries, and PDF flyers &mdash;
-and reorder them by dragging. Your work autosaves as you go.</p>
+content blocks and reorder them by dragging. Your work autosaves as you go.</p>
+<p>Available content block types:</p>
+<ul>
+  <li><strong>Paragraph</strong> &mdash; formatted text (bold, italic, links).</li>
+  <li><strong>Title</strong> &mdash; a heading in large, medium, or small size.</li>
+  <li><strong>Text</strong> &mdash; rich text with bold, italic, bullet lists, and links
+    (the primary text block for most content).</li>
+  <li><strong>Link</strong> &mdash; a standalone call-to-action link or button.</li>
+  <li><strong>Image</strong> &mdash; a single photo, optionally floated left or right.</li>
+  <li><strong>Image gallery</strong> &mdash; 2&ndash;4 photos side by side.</li>
+  <li><strong>Flyer</strong> &mdash; a PDF flyer with an accessibility check.</li>
+  <li><strong>Event</strong> &mdash; title, date, time, and location displayed as a
+    structured card.</li>
+  <li><strong>Quote</strong> &mdash; a highlighted pull-quote with optional attribution.</li>
+  <li><strong>Divider</strong> &mdash; a visual separator between content areas.</li>
+</ul>
 <div class="callout callout-info">
-  <strong>Live now:</strong> titled sections; paragraph, link, image, image-gallery, and
-  flyer (PDF) blocks; drag-to-reorder for sections and blocks; autosave; and a soft
-  &ldquo;someone else is editing this section&rdquo; lock so two people don't overwrite
-  each other (now enforced on the server, not just hidden in the screen).
-  <strong>Coming in Phase 3b:</strong> the content accessibility engine that checks and
-  auto-fixes content as you write.</div>
+  <strong>Live now:</strong> all block types above; drag-to-reorder for sections and blocks;
+  autosave; and a soft &ldquo;someone else is editing this section&rdquo; lock enforced on
+  the server so two people can't overwrite each other.</div>
 
 <h3><span class="step-num">5</span> Add photos and flyers</h3>
 <p>Add an <strong>image</strong> block (single photo, or wrapped left/right), an
@@ -200,24 +231,204 @@ versions are generated for you.</p>
     description) before publishing.</li>
 </ul>
 
-<h3><span class="step-num">6</span> Preview, then publish</h3>
-<p>Mark the newsletter published when it's ready and share its link with families;
-mark it back to draft to take it offline.</p>
-<div class="callout">
-  <strong>Phase 4 note:</strong> the full public page and the two-tier accessibility
-  publish gate arrive in Phase 4. Today, publishing is a draft/published status
-  switch &mdash; the polished public reader page is not built yet.</div>
+<h3><span class="step-num">6</span> Preview, then submit for review</h3>
+<p>Before sending your newsletter on, use the <strong>Preview</strong> button in the editor to
+see exactly what the public page will look like. When you're ready, click
+<strong>Submit for review</strong>. The app runs a full accessibility check first &mdash;
+re-verifying every flyer PDF and reviewing every content flag. Submitting is blocked until all
+<strong>Must fix</strong> items are resolved and every machine-suggested edit is acknowledged
+(if the button is greyed out, it explains why). Once submitted, the newsletter goes to your
+school's approver for sign-off.</p>
 
-<h3><span class="step-num">7</span> Watch the analytics</h3>
-<p>Open a newsletter's analytics for views, reads, and clicks, or the school dashboard
-for trends across all your issues.</p>
+<h3><span class="step-num">7</span> Approval, then publish</h3>
+<p>An approver reviews the newsletter and either <strong>Approves</strong> it or
+<strong>Requests changes</strong> with a note back to you. If changes are requested, make the
+edits and submit it again. Once it is <strong>approved</strong>, the <strong>Publish</strong>
+button becomes available &mdash; only an approved newsletter can be published. After publishing,
+share the newsletter's stable public link with families through ParentSquare, email, or your
+usual communication tool. To take it offline, mark it back to draft.</p>
+<div class="callout callout-info">
+  <strong>Live now:</strong> editor Preview, the full review &amp; approval workflow (submit
+  &rarr; approve/request changes &rarr; publish), the accessibility gate, and the public reader
+  page. See <strong>Review &amp; Approval</strong> below for the full picture.</div>
+
+<h3><span class="step-num">8</span> Watch the analytics</h3>
+<p>Click <strong>View analytics for this newsletter</strong> in the editor to see views,
+reading depth, devices, and which links and flyers families clicked &mdash; or
+<strong>View analytics for &lt;school&gt;</strong> on the newsletter list for the combined
+picture across all your issues. See <strong>Analytics</strong> below for the full picture.</p>
+<div class="callout callout-info">
+  <strong>Live now:</strong> both the per-newsletter and per-school analytics dashboards.</div>
+
+<!-- ================================================================== -->
+<h2>School Branding</h2>
+
+<p>Each school can have its own banner color and accent color. A platform administrator sets these
+on the <strong>Branding settings</strong> page (<code>/app/&lt;school&gt;/settings/branding</code>).</p>
+<ul>
+  <li><strong>Banner color</strong> &mdash; used behind the newsletter's header. Title text stays
+    white on a dark scrim over the color, so any color is readable regardless of what you pick.</li>
+  <li><strong>Accent color</strong> &mdash; used for buttons and links. The page checks contrast
+    automatically: the color <strong>cannot be saved</strong> unless it meets the WCAG AA 4.5:1
+    contrast threshold against white. If it falls short, the page shows the actual ratio and
+    suggests a darker version that will pass.</li>
+</ul>
+
+<!-- ================================================================== -->
+<h2>Review &amp; Approval</h2>
+
+<p>Before a newsletter reaches families, it goes through a short review so a second person
+signs off on the exact content that will be published. A newsletter moves through these stages:</p>
+<ul>
+  <li><strong>Draft</strong> &mdash; you're still working on it.</li>
+  <li><strong>In review</strong> &mdash; you've submitted it and it's waiting for an approver.</li>
+  <li><strong>Changes requested</strong> &mdash; the approver sent it back with a note; make the
+    edits and submit again.</li>
+  <li><strong>Approved</strong> &mdash; an approver signed off; it's ready to publish.</li>
+  <li><strong>Published</strong> &mdash; it's live at its public web address.</li>
+</ul>
+
+<h3>For authors: submitting</h3>
+<p>When your draft is ready, click <strong>Submit for review</strong>. The app runs the full
+accessibility check first. <strong>Submit (and later Publish) is blocked</strong> if there are
+any unresolved <strong>Must fix</strong> items or any machine-suggested edits you haven't
+acknowledged in the <strong>Accessibility</strong> panel. When that happens the button is
+disabled and tells you why &mdash; open the Accessibility panel and clear the listed items, then
+submit. If the approver requests changes, you'll see their note; make the fixes and submit again.</p>
+
+<div class="callout">
+  <strong>Editing sends it back to draft.</strong> If you edit a newsletter that has already
+  been approved (or published), it automatically returns to <strong>draft</strong> and must go
+  through review again. This is on purpose &mdash; an approval applies to the exact content that
+  was reviewed, so any later change has to be re-approved.</div>
+
+<h3>For approvers: the reviewer screen</h3>
+<p>You can approve a newsletter if you are a member of your school's <strong>approver group</strong>,
+or a district platform administrator. <strong>You cannot approve your own newsletter</strong>
+(no self-approval) &mdash; someone else has to sign off on it.</p>
+<p>The reviewer screen shows two things side by side:</p>
+<ul>
+  <li>A <strong>read-only preview</strong> of the page exactly as families will see it.</li>
+  <li>An <strong>audit list</strong> of every accessibility change made to the newsletter and who
+    acknowledged each one, so you can see what the machine fixed and who reviewed it.</li>
+</ul>
+<p>From there you choose one of two actions:</p>
+<ul>
+  <li><strong>Approve</strong> &mdash; clears it for publishing.</li>
+  <li><strong>Request changes</strong> &mdash; sends it back to the author. A note explaining what
+    needs to change is <strong>required</strong>, so the author knows what to fix.</li>
+</ul>
+
+<!-- ================================================================== -->
+<h2>The Public Newsletter Page</h2>
+
+<p>Every published newsletter has a stable web address &mdash; one URL families can
+open on any phone, tablet, or computer without signing in. Drafts are private: anyone
+who tries the address of an unpublished newsletter sees "not found."</p>
+
+<h3>Getting and sharing the link</h3>
+<ul>
+  <li><strong>Preview before publishing:</strong> In the editor, click <strong>Preview</strong>
+    to open a view of the public page for your draft. Nothing is visible to families yet &mdash;
+    this is for your review only.</li>
+  <li><strong>After publishing:</strong> The editor shows a <strong>View published page</strong>
+    link. Copy that address and paste it into ParentSquare, your school email, or any other
+    communication tool you use to reach families.</li>
+  <li><strong>Taking it offline:</strong> Mark the newsletter back to <em>draft</em> at any time;
+    the public address returns "not found" until you publish again.</li>
+</ul>
+
+<h3>What families see</h3>
+<p>The published page uses a Smore-style layout: a bold colored banner at the top, colored
+section headers, and a photo-forward reading experience. It adapts automatically to any
+screen size &mdash; photos and galleries reflow on phones.</p>
+
+<p>Every published page includes a <strong>reader-controls toolbar</strong> with:</p>
+<ul>
+  <li><strong>Table of contents</strong> &mdash; jump to any section; works even with
+    JavaScript turned off.</li>
+  <li><strong>Text size</strong> &mdash; small, medium, or large; the choice is saved on
+    the reader's device (nothing is sent to a server).</li>
+  <li><strong>High-contrast mode</strong> &mdash; switches to a high-contrast color scheme
+    for readers who need it; also saved on their device.</li>
+  <li><strong>Translate</strong> &mdash; on-demand translation for families whose first
+    language is not English.</li>
+  <li><strong>Share</strong> &mdash; copies or shares the newsletter link.</li>
+</ul>
+<p>All toolbar controls are fully keyboard accessible.</p>
+
+<h3>Image lightbox</h3>
+<p>Families can click (or press <strong>Enter</strong>) on any photo to see it at full
+size. Arrow keys move between images in a gallery; <strong>Esc</strong> closes the
+lightbox. The lightbox respects reduced-motion preferences for readers who find
+animation uncomfortable.</p>
+
+<h3>Flyer download cards</h3>
+<p>PDF flyers appear as clear download cards that show the file type and open in a new
+tab. Screen readers are told the link opens in a new tab. Link text is always
+descriptive &mdash; never "click here."</p>
+
+<!-- ================================================================== -->
+<h2>Analytics</h2>
+
+<p>Analytics are the reason most schools use a tool like this: they show how families
+are actually reading your newsletters. There are two dashboards.</p>
+
+<ul>
+  <li><strong>View analytics for this newsletter</strong> &mdash; a button in the editor.
+    Shows how one specific issue is being read.</li>
+  <li><strong>View analytics for &lt;school&gt;</strong> &mdash; a button on the newsletter
+    list. Shows the combined picture across all of that school's newsletters.</li>
+</ul>
+
+<h3>What the per-newsletter dashboard shows</h3>
+<ul>
+  <li><strong>Total views</strong> &mdash; how many times the page was opened.</li>
+  <li><strong>Unique daily visitors</strong> &mdash; how many separate people opened it
+    (counted once per day &mdash; see <strong>Privacy</strong> below).</li>
+  <li><strong>Reading depth</strong> &mdash; how many readers scrolled to 25%, 50%, 75%,
+    and 100% of the page, so you can see whether people read to the end.</li>
+  <li><strong>Average time on page</strong> &mdash; roughly how long readers spent.</li>
+  <li><strong>Device</strong> &mdash; the split between mobile, tablet, and desktop readers.</li>
+  <li><strong>Where readers came from</strong> &mdash; whether they arrived from email, a
+    website, social media, or a direct link.</li>
+  <li><strong>Approximate location</strong> &mdash; the city or region readers opened it
+    from (see the note below).</li>
+  <li><strong>Most-clicked links &amp; flyers</strong> &mdash; which links and PDF flyers got
+    the most clicks, so you can see what families found most useful.</li>
+</ul>
+
+<h3>What the per-school dashboard shows</h3>
+<p>The school dashboard combines the totals across every newsletter for that school and
+adds a <strong>most-viewed leaderboard</strong> so you can see which issues drew the most
+readers over time.</p>
+
+<h3>Today vs. earlier days</h3>
+<p>Today's numbers are <strong>live</strong> &mdash; they update as families read. Earlier
+days are <strong>finalized once nightly</strong>, so anything before today is a settled,
+stable number that won't keep changing.</p>
+
+<div class="callout callout-info">
+  <strong>Privacy by design.</strong> Analytics use <strong>no cookies</strong> and do
+  <strong>no cross-day or cross-site tracking</strong> &mdash; a reader is never followed from
+  one day or one site to another. A visitor is counted using a one-way daily code, so
+  &ldquo;unique visitors&rdquo; means unique <em>per day</em>. The visitor's IP address and
+  browser details are used for a split second to work out the device type and approximate
+  city, then <strong>immediately discarded &mdash; never stored</strong>. No student personal
+  data is ever collected.</div>
+
+<div class="callout">
+  <strong>Note on location:</strong> The approximate-location figures only appear if the
+  server has the optional location database installed. If it isn't installed, that one table
+  simply stays blank &mdash; every other analytics number is unaffected.</div>
 
 <!-- ================================================================== -->
 <h2>Folder Structure</h2>
 <pre><code>~/projects/eusd/eusd-newsletters/
-  app/                  &lt;-- Flask application
+  app/                  &lt;-- Flask application (server, APIs, engine, public pages)
+  frontend/             &lt;-- React/TypeScript SPA (authoring app; build with npm run build)
   migrations/           &lt;-- Database migrations
-  tests/                &lt;-- Test suite
+  tests/                &lt;-- Server test suite (pytest)
   deploy/               &lt;-- Server deployment files
   docs/                 &lt;-- This guide + design spec + phase plans
   requirements.txt      &lt;-- Python dependencies
@@ -240,10 +451,30 @@ for trends across all your issues.</p>
     a period of inactivity, then reload the page</td>
   </tr>
   <tr>
-    <td>Can't publish &mdash; blocked</td>
-    <td>An accessibility check failed (e.g., image with no alt text, inaccessible PDF)</td>
-    <td>Fix the listed items; the publish screen shows exactly where each problem is
-    (the publish accessibility gate arrives in Phase 4)</td>
+    <td><strong>Submit for review</strong> or <strong>Publish</strong> is greyed out</td>
+    <td>The accessibility gate found unresolved must-fix items or unacknowledged machine edits
+    (the disabled button explains which)</td>
+    <td>Open the <strong>Accessibility</strong> panel; fix or acknowledge every flagged item.
+    Common blockers: image with no alt text, a flyer that fails its accessibility check, a
+    section color with low contrast, or an AI-suggested edit not yet reviewed</td>
+  </tr>
+  <tr>
+    <td><strong>Publish</strong> isn't available even though everything passes</td>
+    <td>The newsletter hasn't been approved yet &mdash; only an approved newsletter can be
+    published</td>
+    <td>Submit it for review and have an approver approve it first</td>
+  </tr>
+  <tr>
+    <td>You can't approve a newsletter</td>
+    <td>You're not in the school's approver group / platform-admin role, or it's your own
+    newsletter (no self-approval)</td>
+    <td>Ask another approver, or your site administrator about joining the approver group</td>
+  </tr>
+  <tr>
+    <td>An approved (or published) newsletter went back to draft</td>
+    <td>It was edited &mdash; editing reverts an approved/published newsletter to draft so the
+    change is re-reviewed</td>
+    <td>This is expected; submit it for review again to have the new content approved</td>
   </tr>
   <tr>
     <td>Can't save an image block</td>
@@ -269,12 +500,85 @@ for trends across all your issues.</p>
     <td>Turn JavaScript on (uploading needs it), or ask a colleague with it enabled to
     attach the file</td>
   </tr>
+  <tr>
+    <td>The newsletter list or editor won't load &mdash; blank page or spinner</td>
+    <td>The authoring app is a JavaScript application; JavaScript may be blocked or the
+    app bundle hasn't been built yet (new install)</td>
+    <td>Make sure JavaScript is enabled. If you're an administrator doing a fresh setup,
+    run <code>cd frontend &amp;&amp; npm install &amp;&amp; npm run build</code> to build the
+    app bundle</td>
+  </tr>
+  <tr>
+    <td>Accent color won't save on the Branding settings page</td>
+    <td>The chosen color doesn't meet the minimum WCAG AA contrast requirement (4.5:1 against
+    white)</td>
+    <td>The page shows the actual ratio and a darker suggested value &mdash; try that suggestion
+    or choose a darker shade of the color you want</td>
+  </tr>
 </table>
 
 <!-- ================================================================== -->
 <h2>Recent Changes</h2>
 <table>
   <tr><th>Date</th><th>What changed</th></tr>
+  <tr>
+    <td>2026-06-02</td>
+    <td><strong>Redesigned Newsletters Home (Phase 6b):</strong> The newsletter list is now a
+    visual card grid where each card shows a colored header cover, status badge, and last-edited
+    time. A start row puts <strong>Start a new newsletter</strong> (Blank, Template, or Duplicate
+    in a modal), <strong>Duplicate last issue</strong>, and <strong>School analytics</strong> in
+    one place. Instant search by title, status filter pills with live counts, and sort by last
+    edited / issue date / title &mdash; all without page reloads. Per-card actions: Edit,
+    Duplicate, Analytics, plus a <strong>&hellip; menu</strong> for Rename, View public page
+    (published only), and Delete with a 5-second Undo. The authoring app now requires JavaScript
+    (the public newsletter pages read by families do not).</td>
+  </tr>
+  <tr>
+    <td>2026-06-02</td>
+    <td><strong>New content elements + school branding (Phase 6a):</strong> Five new block types
+    are now available in the editor and appear on the public newsletter page: <strong>Title</strong>
+    (heading sized large/medium/small), <strong>Text</strong> (rich text with bold, italic, bullet
+    lists, and links), <strong>Event</strong> (title, date, time, location as a structured card),
+    <strong>Quote</strong> (highlighted pull-quote with attribution), and <strong>Divider</strong>.
+    A new <strong>School Branding</strong> settings page lets administrators set a banner color and
+    accent color &mdash; with a live contrast check that blocks saving if the accent doesn't meet
+    WCAG AA (the failing ratio and a darker suggestion are shown).</td>
+  </tr>
+  <tr>
+    <td>2026-06-02</td>
+    <td><strong>Viewership analytics (Phase 5):</strong> Two new dashboards &mdash;
+    <strong>View analytics for this newsletter</strong> (in the editor) and <strong>View
+    analytics for &lt;school&gt;</strong> (on the newsletter list). The per-newsletter view shows
+    total views, unique daily visitors, reading depth (25/50/75/100%), average time on page,
+    device split, where readers came from, approximate location, and most-clicked links and
+    flyers. The school dashboard combines all issues and adds a most-viewed leaderboard. Today's
+    numbers are live; earlier days finalize nightly. Privacy-first: no cookies, no cross-day or
+    cross-site tracking, unique visitors counted with a one-way daily code, and IP/browser used
+    for a split second to derive device and approximate city then immediately discarded. No
+    student personal data is collected.</td>
+  </tr>
+  <tr>
+    <td>2026-06-02</td>
+    <td><strong>Review &amp; approval workflow (Phase 4b):</strong> Newsletters now move through
+    draft &rarr; in review &rarr; approved (or changes requested) &rarr; published. Authors click
+    <strong>Submit for review</strong> once the accessibility check passes; an approver then
+    <strong>Approves</strong> or <strong>Requests changes</strong> with a required note back to the
+    author. Only an approved newsletter can be published. Approvers must be in the school's approver
+    group (or a district platform admin) and can't approve their own newsletter. The reviewer screen
+    shows a read-only preview plus an audit list of every accessibility change and who acknowledged
+    it. Editing an approved or published newsletter sends it back to draft so it's re-reviewed.</td>
+  </tr>
+  <tr>
+    <td>2026-06-02</td>
+    <td><strong>Public newsletter page, reader controls &amp; publish gate (Phase 4a):</strong>
+    Every published newsletter now has a stable public web address families can open without
+    signing in (drafts stay private). A reader-controls toolbar lets families jump to any section,
+    change text size, switch to high-contrast, translate, and share &mdash; all keyboard accessible,
+    with choices saved on their device. Photos open in a full-size lightbox (keyboard and
+    reduced-motion friendly). Flyers appear as accessible download cards. Publishing now runs a
+    final accessibility check &mdash; re-verifying every flyer PDF &mdash; and is blocked until all
+    must-fix items are resolved. Editors can preview the public page before publishing.</td>
+  </tr>
   <tr>
     <td>2026-06-01</td>
     <td><strong>Content accessibility engine (Phase 3b):</strong> As you edit, the app
@@ -361,8 +665,12 @@ for trends across all your issues.</p>
     <li>Pick your school</li>
     <li>Start blank or duplicate last issue</li>
     <li>Add sections and content; run the AI alt-text and flyer-extract helpers</li>
-    <li>Preview, pass the accessibility check, publish</li>
-    <li>Share the link; check analytics later</li>
+    <li>Run <strong>Check &amp; fix</strong>; acknowledge flags and resolve must-fix items</li>
+    <li>Click <strong>Preview</strong> to review the public page</li>
+    <li><strong>Submit for review</strong> (gate confirms all items are resolved)</li>
+    <li>An approver <strong>Approves</strong> (or <strong>Requests changes</strong> with a note)</li>
+    <li>Once approved, click <strong>Publish</strong></li>
+    <li>Copy the public link; share via ParentSquare or email; check analytics later</li>
   </ol>
 </div>
 
