@@ -109,7 +109,7 @@
 <h1>PDF Accessibility Remediation Tool &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-13
+  <strong>User guide last updated:</strong> 2026-06-03 &mdash; remediate.py now sets tab order (<code>/Tabs /S</code>); added <code>autotag.py</code> and the <code>--images</code> option
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,18 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-03</td>
+        <td style="padding:8px; background: white;">Add <code>autotag.py</code> — new tool for untagged PDFs that have a text layer (graphically-designed flyers from Canva, InDesign, etc.). Uses Claude vision to detect reading order, assign heading/paragraph roles, and transcribe correct text from the rendered image (fixing garbled source text layers). Builds a full tag tree via the invisible-overlay technique; keeps the original look pixel-perfect. Use when <code>remediate.py</code> reports "PDF is not tagged." Flags: <code>--lang</code>, <code>--title</code>, <code>--yes</code></td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-03</td>
+        <td style="padding:8px; background: white;">Add <code>--images classify|alt|decorative</code> flag to <code>remediate.py</code> — replaces the old always-alt-text behavior. Default (<code>classify</code>): Gemini AI judges each image as decorative or content, prints a table, and lets you flip verdicts before applying. Decorative images are artifacted (screen readers skip them); content images get alt text. Use <code>--images decorative</code> for all-decorative flyers to skip the AI entirely</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-03</td>
+        <td style="padding:8px; background: white;">Add tab order step to <code>remediate.py</code> — sets <code>/Tabs /S</code> (structure-based tab order) on every page unconditionally. Word exports don't always include it; Acrobat's "Tab order" accessibility check fails without it. Also set by <code>autotag.py</code> on every page it tags</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-08</td>
         <td style="padding:8px; background: white;">Add <code>--vision-fix</code> flag — opt-in pass that uses Claude vision to fix two ADA failures the rule-based steps can't reach: table cells with mismatched column/row spans (Tables &gt; Regularity) and headings on text that shouldn't be a heading at all (Appropriate Nesting). Runs as Step 6 and Step 7 after the existing 5 steps; requires <code>ANTHROPIC_API_KEY</code> in <code>.env</code>. Writes a sidecar audit log (<code>output/&lt;name&gt;_remediated.fixes.json</code>) recording every change with Claude's reasoning. Without the flag the tool's behavior is unchanged</td>
@@ -151,36 +163,8 @@
         <td style="padding:8px; background: white;">Add rebuild/ workflow for PDFs too broken to patch with remediate.py — produces a clean Word document that exports to a properly tagged PDF</td>
       </tr>
       <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
-        <td style="padding:8px; background: white;">Fix changelog table cell background color</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
-        <td style="padding:8px; background: white;">Automated guide update</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Remove print link</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Update guide styling — title, label, and changelog formatting</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Backfill changelog — last 30 days of commits</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Replace print button with simple link</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Remove 'Last project activity' line — replaced by automated changelog</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Update user guide — add changelog section and permanent changelog for batch mode and Windows file lock fixes</td>
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-14</td>
+        <td style="padding:8px; background: white;">Add rebuild/ workflow for PDFs too broken to patch with remediate.py — produces a clean Word document that exports to a properly tagged PDF</td>
       </tr>
     </tbody>
   </table>
@@ -188,15 +172,16 @@
 <p style="font-size:0.85em; color:#666; margin-top:4px;">Showing last 30 days. <a href="changelog.md">View full changelog</a>.</p>
 
 <h2>What This Tool Does</h2>
-<p>This tool automatically fixes five common PDF accessibility issues required for ADA/Section 508 compliance, plus two additional fixes available via the optional <code>--vision-fix</code> flag:</p>
+<p>This tool automatically fixes six common PDF accessibility issues required for ADA/Section 508 compliance, plus two additional fixes available via the optional <code>--vision-fix</code> flag:</p>
 
 <table>
   <tr><th>#</th><th>Fix</th><th>What It Does</th></tr>
-  <tr><td>1</td><td>Figure Alt Text</td><td>Uses Google Gemini AI to generate descriptive alt text for all images</td></tr>
+  <tr><td>1</td><td>Figure Images</td><td>Uses Google Gemini AI to classify each image as <strong>decorative</strong> or <strong>content</strong>, shows you the findings, and lets you correct any before applying. Content images get descriptive alt text; decorative images are artifacted so screen readers skip them. Controlled by <code>--images</code> (see below).</td></tr>
   <tr><td>2</td><td>Document Language</td><td>Sets the document language (default <code>en-US</code>; pass <code>--lang es-ES</code> for Spanish or any other BCP-47 tag)</td></tr>
-  <tr><td>3</td><td>Document Title</td><td>Extracts the first &lt;H1&gt; heading and sets it as the document title</td></tr>
-  <tr><td>4</td><td>Table Headers</td><td>Marks table header cells so screen readers can navigate tables</td></tr>
-  <tr><td>5</td><td>Underscore Fill-in Lines</td><td>Wraps runs of 3 or more underscore characters in PDF artifact blocks so screen readers skip them. The visible line stays on the page for sighted users to write on.</td></tr>
+  <tr><td>3</td><td>Tab Order</td><td>Sets structure-based tab order (<code>/Tabs /S</code>) on every page so keyboard/screen-reader tab navigation follows the reading order (Acrobat Pro: Tab Order)</td></tr>
+  <tr><td>4</td><td>Document Title</td><td>Extracts the first &lt;H1&gt; heading and sets it as the document title</td></tr>
+  <tr><td>5</td><td>Table Headers</td><td>Marks table header cells so screen readers can navigate tables</td></tr>
+  <tr><td>6</td><td>Underscore Fill-in Lines</td><td>Wraps runs of 3 or more underscore characters in PDF artifact blocks so screen readers skip them. The visible line stays on the page for sighted users to write on.</td></tr>
   <tr><td>6</td><td>Table Regularity <em>(opt-in: <code>--vision-fix</code>)</em></td><td>Uses Claude vision to detect rows where the cell count doesn't match the table's actual visual width and writes the correct <code>ColSpan</code>/<code>RowSpan</code> (Acrobat Pro: Tables &gt; Regularity)</td></tr>
   <tr><td>7</td><td>Heading Hierarchy <em>(opt-in: <code>--vision-fix</code>)</em></td><td>Uses Claude vision to demote headings that aren't really headings (e.g., a closing courtesy phrase Word stamped as <code>&lt;H3&gt;</code>) so the heading outline matches the document's actual structure (Acrobat Pro: Appropriate Nesting)</td></tr>
 </table>
@@ -281,6 +266,10 @@ source venv/Scripts/activate</code></pre>
 <p><strong>Spanish (or other non-English) PDFs:</strong></p>
 <pre><code>python remediate.py "input/YourFile_Spanish.pdf" --lang es-ES</code></pre>
 
+<p><strong>When you already know every image is decorative (skip the AI):</strong></p>
+<pre><code>python remediate.py "input/YourFlyer.pdf" --images decorative</code></pre>
+<p>Artifacts every image with no API calls. See the <a href="#images">Image Handling</a> section below.</p>
+
 <p><strong>With Claude vision fixes (optional, opt-in):</strong></p>
 <pre><code>python remediate.py input/ --vision-fix</code></pre>
 <p>Adds Step 6 (table regularity) and Step 7 (heading hierarchy). See the <a href="#vision-fix">Claude Vision Fixes</a> section below for details.</p>
@@ -294,6 +283,29 @@ source venv/Scripts/activate</code></pre>
 
 <div class="callout callout-info">
   <strong>Batch mode:</strong> When you pass a folder instead of a file, the tool processes every <code>.pdf</code> in that folder and prints a summary at the end showing how many succeeded or failed.
+</div>
+
+<h2 id="images">The <code>--images</code> Option</h2>
+<p>This controls how the tool treats the images (&lt;Figure&gt; tags) in a PDF. Not every image needs a description &mdash; purely decorative graphics (background shapes, borders, color blocks, dividers) should be <em>artifacted</em> so screen readers skip them entirely. Giving a decorative image alt text clutters the reading order and gets flagged by accessibility checkers like PAC.</p>
+
+<table>
+  <tr><th>Option</th><th>What It Does</th></tr>
+  <tr>
+    <td><code>--images classify</code><br><em>(default)</em></td>
+    <td>The AI looks at each image and decides <strong>DECORATIVE</strong> or <strong>CONTENT</strong>. It prints a numbered list of its findings, then &mdash; when you're at a terminal &mdash; asks you to confirm. Press <strong>Enter</strong> to accept all, or type the figure numbers you want to flip (for example <code>2 5 6</code>) and follow the prompts. Content images get alt text; decorative images are artifacted.</td>
+  </tr>
+  <tr>
+    <td><code>--images decorative</code></td>
+    <td>Treats <em>every</em> image as decorative and artifacts them all. No AI calls, no prompts. Use this for flyers and posters whose images are all background art.</td>
+  </tr>
+  <tr>
+    <td><code>--images alt</code></td>
+    <td>The original behavior: generate alt text for every image, no classification. Use only if you know every image is meaningful.</td>
+  </tr>
+</table>
+
+<div class="callout callout-info">
+  <strong>Reviewing the AI's guesses:</strong> The classifier can mistake a decorative shape for content when text sits on top of it. That's what the confirm step is for &mdash; glance at the list and flip anything wrong before it's applied. If you flip a decorative image to content, you'll be asked to type its alt text.
 </div>
 
 <h2>The <code>--headers</code> Option</h2>
@@ -388,10 +400,48 @@ source venv/Scripts/activate</code></pre>
   <li>Internet access (calls the Anthropic API for each candidate during the queue pass)</li>
 </ul>
 
+<h2>Auto-Tagging Untagged PDFs (<code>autotag.py</code>)</h2>
+<p><code>remediate.py</code> only <em>fixes</em> tags that already exist &mdash; it refuses a PDF that has no tag structure at all. Graphically-designed flyers (from Canva, InDesign, etc.) often arrive <strong>untagged</strong>: they have selectable text and decorative images but no structure tree, and Acrobat's "Autotag" does a poor job on them. <code>autotag.py</code> builds the tags from scratch.</p>
+
+<p>For each page it renders the page, then asks Claude (vision) to <strong>look at the flyer</strong> and return the correct reading order, a role for each piece of text (Title, Heading, Body), and the <em>correctly transcribed</em> text &mdash; reading the words off the image, so it fixes garbled accents/punctuation that a broken text layer would otherwise carry into the tags. It then shows you the detected outline to confirm before writing.</p>
+
+<div class="callout callout-info">
+  <strong>How it keeps the look identical:</strong> the original page is preserved as a background "artifact" (so the flyer renders exactly as before and its decorative images are skipped by screen readers), and an <em>invisible</em> tagged text layer carries the reading order. Screen-reader text comes from the Unicode the vision model read, so Spanish accents (&ntilde;, &aacute;, &iexcl;, &iquest;) are exact.</p>
+</div>
+
+<h3><span class="step-num">1</span> Run it on an untagged flyer</h3>
+<pre><code># English
+python autotag.py "input/YourFlyer.pdf"
+
+# Spanish (or other language)
+python autotag.py "input/YourFlyer_Spanish.pdf" --lang es-ES</code></pre>
+
+<h3><span class="step-num">2</span> Confirm the detected outline</h3>
+<p>The tool prints the reading order with a role per line, then prompts:</p>
+<table>
+  <tr><th>Key</th><th>Action</th></tr>
+  <tr><td><strong>Enter</strong></td><td><strong>Accept</strong> &mdash; build the tagged PDF as shown</td></tr>
+  <tr><td><code>e</code></td><td><strong>Edit an item</strong> &mdash; change a line's role (H1/H2/H3/P) or <code>drop</code> it</td></tr>
+  <tr><td><code>t</code></td><td><strong>Set title</strong> &mdash; type a different document title</td></tr>
+  <tr><td><code>q</code></td><td><strong>Abort</strong> &mdash; write nothing, leave the file in <code>input/</code></td></tr>
+</table>
+<p>The result is saved as <code>output/&lt;basename&gt;_tagged.pdf</code>; the original is moved to <code>processed/</code>.</p>
+
+<table>
+  <tr><th>Flag</th><th>Default</th><th>Description</th></tr>
+  <tr><td><code>--lang</code></td><td><code>en-US</code></td><td>Document language (BCP-47); use <code>es-ES</code> for Spanish</td></tr>
+  <tr><td><code>--title</code></td><td>(vision-chosen)</td><td>Override the document title instead of using the one the model composes</td></tr>
+  <tr><td><code>--yes</code></td><td>off</td><td>Skip the confirm prompt and apply the detected structure as-is</td></tr>
+</table>
+
+<div class="callout">
+  <strong>Requirements:</strong> <code>autotag.py</code> needs <code>ANTHROPIC_API_KEY</code> in <code>.env</code> (paid; budget a few cents per page) and a PDF that has a real text layer. It is <em>only</em> for untagged PDFs &mdash; if a PDF is already tagged, use <code>remediate.py</code> instead.
+</div>
+
 <h2>Processing Multiple Files</h2>
 <p>The easiest way to process all PDFs at once is to pass the folder path:</p>
 <pre><code>python remediate.py input/</code></pre>
-<p>This processes every <code>.pdf</code> file in the folder and prints a batch summary when finished.</p>
+<p>This processes every <code>.pdf</code> file in the folder and prints a batch summary when finished. (<code>autotag.py</code> accepts a folder the same way.)</p>
 
 <h2>Folder Structure</h2>
 <pre><code>pdf-ada-fixes\
@@ -447,7 +497,7 @@ Output:             output\filename_remediated.pdf</code></pre>
   <tr>
     <td><code>PDF is not tagged</code></td>
     <td>The PDF has no structure tree, or has a structure tree but is missing the <code>MarkInfo</code> metadata flag (common with older Acrobat PDFMaker exports)</td>
-    <td>Re-export from Word with accessibility tags enabled. If the PDF came from an old Acrobat PDFMaker workflow and re-exporting isn't possible, use the <code>rebuild\</code> workflow to reconstruct it as a clean Word document</td>
+    <td>Re-export from Word with accessibility tags enabled. If it's a graphically-designed flyer with a text layer (e.g. from Canva) that has no tags at all, run <code>autotag.py</code> on it first (see "Auto-Tagging Untagged PDFs"). For old Acrobat PDFMaker workflows that can't be re-exported, use the <code>rebuild\</code> workflow to reconstruct it as a clean Word document</td>
   </tr>
   <tr>
     <td><code>file not found</code></td>

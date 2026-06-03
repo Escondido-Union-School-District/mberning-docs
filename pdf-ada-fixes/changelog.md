@@ -1,5 +1,13 @@
 # Changelog
 
+## [2026-06-03]
+- Add `autotag.py` — new standalone tool for untagged PDFs that have a real text layer (graphically-designed flyers from Canva, InDesign, etc. that Acrobat Autotag handles poorly). Uses Claude vision per page to read text off the rendered image (corrects garbled source text layers), derive reading order, and assign heading/paragraph roles. Builds the tag tree via the invisible-overlay technique: artifacts the original content, adds an invisible tagged text layer with `/ActualText` (full Unicode), sets `/MarkInfo`, `/Lang`, `/Title`, `/Tabs /S`. Interactive confirm step lets you review and adjust the detected structure before writing. Flags: `--lang` (default `en-US`), `--title` (override), `--yes` (skip confirm). Batch mode via folder path.
+- Add `--images classify|alt|decorative` flag to `remediate.py` — replaces the old always-alt-text figure behavior. `classify` (default): Gemini AI classifies each `<Figure>` as DECORATIVE or CONTENT, prints a table, and at a TTY lets you flip verdicts before applying. Decorative images are artifacted (struct element removed, MCID retagged to `/Artifact`, ParentTree slot nulled). Content images get `/Alt`. `decorative`: artifact all figures, no AI. `alt`: legacy always-alt-text.
+- Add tab order step (Step 2b) to `remediate.py` — sets `/Tabs /S` on every page unconditionally. Word exports don't always set it; Acrobat's "Tab order" accessibility check fails without it. Both `remediate.py` and `autotag.py` now guarantee this is present.
+- Fix `autotag.py` heading normalization: headings before the first H1 (flyer kickers) demoted to P; level skips clamped; first heading promoted to H1 if none exists — passes Acrobat "Appropriate nesting."
+- Fix `autotag.py` character encoding: invisible-layer Helvetica now carries a generated WinAnsi→Unicode `/ToUnicode` CMap; text passed to the glyph layer has newlines/tabs collapsed to spaces (byte 0x0A was unmapped and failed Acrobat "character encoding").
+- New module `figure_classify.py` — decorative vs. content classification logic extracted from the figure step; reusable and tested independently.
+
 ## [2026-05-08]
 ### Added — 2026-05-08 (later)
 - `--review-tables` flag: detects matrix-style tables Word emitted with empty

@@ -110,16 +110,19 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  User guide last updated: June 2, 2026 &mdash; Redesigned Newsletters Home (Phase 6b), new content elements, branding settings (Phase 6a).
+  User guide last updated: June 3, 2026 &mdash; Added 6e&#8321;&ndash;6e&#8323; to the Recent Changes table: analytics, branding/logo, and reviewer screen now all part of the in-app experience.
 </div>
 
 <div class="callout">
   <strong>In development:</strong> This tool is being actively built. Completed phases:
   Phase 1 (sign-in), Phase 2 (editor), Phase 3a (media &amp; AI), Phase 3b (accessibility engine),
   Phase 4a (public page &amp; publish gate), Phase 4b (review &amp; approval), Phase 5 (analytics),
-  Phase 6a (new element types &amp; school branding), and Phase 6b (redesigned Newsletters Home).
-  Steps below describe the workflow; notes mark what is live today. The live-preview builder
-  is coming next (Phase 6c).
+  Phase 6a (new element types &amp; school branding), Phase 6b (redesigned Newsletters Home),
+  Phase 6c (the two-pane live-preview builder), Phase 6d (photo upload &amp; 7 flyer styles),
+  Phase 6d&#8322; (flyer upload auto-layout), Phase 6e&#8321; (analytics dashboards inside the
+  app), Phase 6e&#8322; (school branding &amp; logo upload inside the app), and Phase 6e&#8323;
+  (the reviewer screen inside the app). Steps below describe the workflow; notes mark what is live
+  today.
 </div>
 
 <!-- ================================================================== -->
@@ -199,7 +202,9 @@ content blocks and reorder them by dragging. Your work autosaves as you go.</p>
   <li><strong>Link</strong> &mdash; a standalone call-to-action link or button.</li>
   <li><strong>Image</strong> &mdash; a single photo, optionally floated left or right.</li>
   <li><strong>Image gallery</strong> &mdash; 2&ndash;4 photos side by side.</li>
-  <li><strong>Flyer</strong> &mdash; a PDF flyer with an accessibility check.</li>
+  <li><strong>Flyer</strong> &mdash; an event flyer, added one of two ways: a typed
+    <em>styled callout</em> (pick one of 7 looks) or by <em>uploading an image of a flyer</em>
+    that the app turns into accessible text beside the picture (see step 5).</li>
   <li><strong>Event</strong> &mdash; title, date, time, and location displayed as a
     structured card.</li>
   <li><strong>Quote</strong> &mdash; a highlighted pull-quote with optional attribution.</li>
@@ -211,31 +216,55 @@ content blocks and reorder them by dragging. Your work autosaves as you go.</p>
   the server so two people can't overwrite each other.</div>
 
 <h3><span class="step-num">5</span> Add photos and flyers</h3>
-<p>Add an <strong>image</strong> block (single photo, or wrapped left/right), an
-<strong>image gallery</strong> (2&ndash;4 photos across), or a <strong>flyer</strong>
-(PDF) block, then use its <strong>Upload</strong> button to attach a file. Photos are
-processed automatically &mdash; location/camera data is stripped and fast web-sized
-versions are generated for you.</p>
+<p>Add an <strong>image</strong> block (single photo, or wrapped left/right) or an
+<strong>image gallery</strong> (2&ndash;4 photos across), then use its <strong>Upload</strong>
+button to attach an image file (JPG, PNG, GIF, or WebP). Photos are processed automatically
+&mdash; location/camera data is stripped and fast web-sized versions are generated for you.</p>
 <ul>
   <li><strong>Alt text is required on every image.</strong> Type a short description of
     what the photo shows. Click <strong>Generate alt text</strong> to get an AI-drafted
     suggestion &mdash; you must read it and accept or edit it; it is never saved
     automatically.</li>
-  <li><strong>Flyers get an accessibility check.</strong> Each PDF flyer shows a status of
-    <em>unchecked</em>, <em>pass</em>, or <em>fail</em>. Run the check on the flyer block;
-    a flyer that fails (or is left unchecked) will block publishing in Phase 4.</li>
-  <li><strong>Extract text from a flyer.</strong> Use <strong>Extract text from this flyer</strong>
-    to pull the PDF's words &mdash; and any QR-code links &mdash; into the section as
-    editable paragraph and link blocks, so the flyer's information is also readable as real
-    text. Review and tidy the extracted blocks (and give each pulled-in link a clear
-    description) before publishing.</li>
+  <li><strong>Photo slots are for photos, not text flyers.</strong> If you try to upload an
+    image that is really a text-heavy flyer into an image, gallery, or photo-style flyer slot,
+    the app recognizes it and directs you to <strong>Flyer &rarr; Upload a flyer</strong>
+    instead &mdash; so the flyer's words become real, screen-reader-friendly text rather than an
+    unreadable picture.</li>
 </ul>
+
+<h4>Two ways to add a flyer</h4>
+<p>The <strong>Flyer</strong> block can be added two ways:</p>
+<ul>
+  <li><strong>Styled callout</strong> &mdash; type the event details (title, date, time, location,
+    and an optional button) and pick one of <strong>7 looks</strong> (Classic, Calendar, Spotlight,
+    Ticket, Poster, Polaroid, or Ribbon). Every style is built to meet WCAG AA contrast; the
+    photo styles place text over a dark scrim so it stays readable over any image.</li>
+  <li><strong>Upload a flyer</strong> &mdash; choose <strong>Flyer &rarr; Upload a flyer</strong>
+    and upload an <strong>image</strong> of a flyer. The app reads it automatically (text and
+    layout) and builds a <strong>two-column block</strong>: the flyer image on one side (click to
+    enlarge) and the extracted words on the other, rendered as real <strong>headings, lists,
+    and links</strong>. Any <strong>QR codes</strong> are turned into real, descriptive links
+    rather than bare web addresses.</li>
+</ul>
+<p>After an upload, <strong>review and edit everything before publishing</strong>: the flyer
+<strong>title</strong>, the <strong>image description</strong> (required), and the extracted
+<strong>text</strong>. Choose the <strong>layout</strong> &mdash; image on the
+<strong>left</strong>, on the <strong>right</strong>, or on <strong>top</strong> of the text.
+If the flyer comes in two languages, add the <strong>Spanish version</strong> as an optional
+second image: both flyers are shown side by side (each click-to-enlarge, the Spanish one labeled),
+and the reader's translate button handles the words &mdash; so you only add the picture, not a
+second block of text.</p>
+<div class="callout callout-info">
+  <strong>Why upload-a-flyer matters:</strong> a raw flyer picture is invisible to screen readers.
+  Turning it into structured text beside the image means the page families actually read is fully
+  accessible. An <strong>image description is required</strong> before you can publish an uploaded
+  flyer.</div>
 
 <h3><span class="step-num">6</span> Preview, then submit for review</h3>
 <p>Before sending your newsletter on, use the <strong>Preview</strong> button in the editor to
 see exactly what the public page will look like. When you're ready, click
 <strong>Submit for review</strong>. The app runs a full accessibility check first &mdash;
-re-verifying every flyer PDF and reviewing every content flag. Submitting is blocked until all
+re-checking every flyer and reviewing every content flag. Submitting is blocked until all
 <strong>Must fix</strong> items are resolved and every machine-suggested edit is acknowledged
 (if the button is greyed out, it explains why). Once submitted, the newsletter goes to your
 school's approver for sign-off.</p>
@@ -263,15 +292,21 @@ picture across all your issues. See <strong>Analytics</strong> below for the ful
 <!-- ================================================================== -->
 <h2>School Branding</h2>
 
-<p>Each school can have its own banner color and accent color. A platform administrator sets these
-on the <strong>Branding settings</strong> page (<code>/app/&lt;school&gt;/settings/branding</code>).</p>
+<p>Each school can have its own banner color, accent color, and logo. Set these on the
+<strong>School branding</strong> screen, reached from the Newsletters Home (it's part of the
+in-app experience, so it needs JavaScript). A <strong>live header preview</strong> shows how your
+choices will look as you make them.</p>
 <ul>
   <li><strong>Banner color</strong> &mdash; used behind the newsletter's header. Title text stays
     white on a dark scrim over the color, so any color is readable regardless of what you pick.</li>
-  <li><strong>Accent color</strong> &mdash; used for buttons and links. The page checks contrast
-    automatically: the color <strong>cannot be saved</strong> unless it meets the WCAG AA 4.5:1
-    contrast threshold against white. If it falls short, the page shows the actual ratio and
-    suggests a darker version that will pass.</li>
+  <li><strong>Accent color</strong> &mdash; used for buttons and links. As you type, the screen shows
+    the color's contrast against white in real time, and the color <strong>cannot be saved</strong>
+    unless it meets the WCAG AA 4.5:1 threshold. If it falls short, one click applies a suggested
+    darker shade that passes. (The same check runs on the server, so a failing color can never slip
+    through.)</li>
+  <li><strong>Logo</strong> &mdash; upload a school logo (an image &mdash; PNG, JPG, or WebP). It
+    appears immediately in the header preview beside your colors, and you can remove or replace it
+    any time.</li>
 </ul>
 
 <!-- ================================================================== -->
@@ -306,11 +341,14 @@ submit. If the approver requests changes, you'll see their note; make the fixes 
 <p>You can approve a newsletter if you are a member of your school's <strong>approver group</strong>,
 or a district platform administrator. <strong>You cannot approve your own newsletter</strong>
 (no self-approval) &mdash; someone else has to sign off on it.</p>
-<p>The reviewer screen shows two things side by side:</p>
+<p>Open the reviewer screen from a newsletter's <strong>Review</strong> action (it's part of the
+in-app experience). It gathers everything you need in one place:</p>
 <ul>
-  <li>A <strong>read-only preview</strong> of the page exactly as families will see it.</li>
-  <li>An <strong>audit list</strong> of every accessibility change made to the newsletter and who
-    acknowledged each one, so you can see what the machine fixed and who reviewed it.</li>
+  <li>A link to the <strong>read-only preview</strong> of the page exactly as families will see it.</li>
+  <li>The <strong>previous reviewer note</strong>, if the newsletter has been sent back before.</li>
+  <li>An <strong>accessibility audit list</strong> of every finding &mdash; its rule and location, the
+    <strong>before/after</strong> of any automatic fix, and <strong>who acknowledged it and when</strong>
+    &mdash; so you can see exactly what the machine changed and who reviewed it.</li>
 </ul>
 <p>From there you choose one of two actions:</p>
 <ul>
@@ -363,23 +401,30 @@ size. Arrow keys move between images in a gallery; <strong>Esc</strong> closes t
 lightbox. The lightbox respects reduced-motion preferences for readers who find
 animation uncomfortable.</p>
 
-<h3>Flyer download cards</h3>
-<p>PDF flyers appear as clear download cards that show the file type and open in a new
-tab. Screen readers are told the link opens in a new tab. Link text is always
-descriptive &mdash; never "click here."</p>
+<h3>Flyers on the page</h3>
+<p>Styled-callout flyers render as accessible event cards with a real heading, the date,
+time, and location as text, and a call-to-action link. Uploaded flyers render as a
+two-column block &mdash; the flyer image (click to enlarge) beside the extracted text as real
+headings, lists, and links. Any link that opens in a new tab tells screen-reader users so, and
+link text is always descriptive &mdash; never "click here."</p>
 
 <!-- ================================================================== -->
 <h2>Analytics</h2>
 
 <p>Analytics are the reason most schools use a tool like this: they show how families
-are actually reading your newsletters. There are two dashboards.</p>
+are actually reading your newsletters. The dashboards are part of the in-app experience, so
+they load instantly and update as you change the time range &mdash; no page reloads. There are
+two dashboards.</p>
 
 <ul>
-  <li><strong>View analytics for this newsletter</strong> &mdash; a button in the editor.
-    Shows how one specific issue is being read.</li>
-  <li><strong>View analytics for &lt;school&gt;</strong> &mdash; a button on the newsletter
-    list. Shows the combined picture across all of that school's newsletters.</li>
+  <li><strong>View analytics for this newsletter</strong> &mdash; from the builder or the
+    newsletter card. Shows how one specific issue is being read.</li>
+  <li><strong>School analytics</strong> &mdash; from the Newsletters Home. Shows the combined
+    picture across all of that school's newsletters.</li>
 </ul>
+<p>A single toggle switches the whole dashboard between the last <strong>7, 30, or 90
+days</strong>. Each headline figure also shows a <strong>&ldquo;vs previous period&rdquo;
+trend</strong> so you can tell at a glance whether a number is climbing or slipping.</p>
 
 <h3>What the per-newsletter dashboard shows</h3>
 <ul>
@@ -394,14 +439,22 @@ are actually reading your newsletters. There are two dashboards.</p>
     website, social media, or a direct link.</li>
   <li><strong>Approximate location</strong> &mdash; the city or region readers opened it
     from (see the note below).</li>
-  <li><strong>Most-clicked links &amp; flyers</strong> &mdash; which links and PDF flyers got
+  <li><strong>Read to the end</strong> &mdash; the share of readers who reached the bottom of
+    the newsletter (this is the fourth headline figure on the dashboard).</li>
+  <li><strong>Most-clicked links &amp; flyers</strong> &mdash; which links and flyers got
     the most clicks, so you can see what families found most useful.</li>
 </ul>
 
 <h3>What the per-school dashboard shows</h3>
 <p>The school dashboard combines the totals across every newsletter for that school and
-adds a <strong>most-viewed leaderboard</strong> so you can see which issues drew the most
-readers over time.</p>
+adds a <strong>most-viewed leaderboard</strong> (each newsletter links straight to its own
+dashboard) so you can see which issues drew the most readers over time.</p>
+
+<div class="callout callout-info">
+  <strong>Accessible charts.</strong> Every chart carries the same numbers as real text &mdash;
+  a screen-reader data table or a labelled legend &mdash; so nothing depends on seeing color, and
+  each chart has a spoken summary. The time-range toggle, the up/down trend arrows, and all links
+  work by keyboard and read correctly to assistive technology.</div>
 
 <h3>Today vs. earlier days</h3>
 <p>Today's numbers are <strong>live</strong> &mdash; they update as families read. Earlier
@@ -489,10 +542,16 @@ stable number that won't keep changing.</p>
     later if you prefer a suggestion</td>
   </tr>
   <tr>
-    <td>A flyer still shows &ldquo;unchecked&rdquo;</td>
-    <td>The accessibility check hasn't been run on that flyer yet</td>
-    <td>Run the check on the flyer block; if it fails, replace the PDF with a tagged,
-    accessible version (an unchecked or failing flyer blocks publishing)</td>
+    <td>Can't publish an uploaded flyer</td>
+    <td>The flyer image (or its Spanish companion) has no image description</td>
+    <td>Fill in the <strong>Image description</strong> field on the flyer block &mdash; an
+    uploaded flyer can't be published until its image is described</td>
+  </tr>
+  <tr>
+    <td>The app says my photo is really a flyer</td>
+    <td>You uploaded a text-heavy flyer image into a photo, gallery, or photo-style flyer slot</td>
+    <td>Use <strong>Flyer &rarr; Upload a flyer</strong> instead &mdash; it turns the flyer's
+    words into accessible text beside the image</td>
   </tr>
   <tr>
     <td>The Upload button does nothing</td>
@@ -509,11 +568,11 @@ stable number that won't keep changing.</p>
     app bundle</td>
   </tr>
   <tr>
-    <td>Accent color won't save on the Branding settings page</td>
+    <td>Accent color won't save on the School branding screen</td>
     <td>The chosen color doesn't meet the minimum WCAG AA contrast requirement (4.5:1 against
     white)</td>
-    <td>The page shows the actual ratio and a darker suggested value &mdash; try that suggestion
-    or choose a darker shade of the color you want</td>
+    <td>The screen shows the actual ratio and a darker suggested value &mdash; click to apply that
+    suggestion, or choose a darker shade of the color you want</td>
   </tr>
 </table>
 
@@ -521,6 +580,62 @@ stable number that won't keep changing.</p>
 <h2>Recent Changes</h2>
 <table>
   <tr><th>Date</th><th>What changed</th></tr>
+  <tr>
+    <td>2026-06-03</td>
+    <td><strong>Reviewer screen in the app (Phase 6e&#8323;):</strong> The reviewer screen
+    is now part of the in-app experience &mdash; open it from a newsletter's
+    <strong>Review</strong> action. It shows the read-only public preview link, the previous
+    reviewer note, and the full <strong>accessibility audit</strong> (every finding with its
+    before/after and who acknowledged it). Approvers get <strong>Approve</strong> and
+    <strong>Request changes</strong> (which opens a dialog addressed to the author by name)
+    right there. This was the last server-rendered authoring screen &mdash; the entire
+    authoring app is now a single in-app experience.</td>
+  </tr>
+  <tr>
+    <td>2026-06-03</td>
+    <td><strong>School branding &amp; logo upload in the app (Phase 6e&#8322;):</strong>
+    The School branding screen is now part of the in-app experience. Set a banner color and
+    accent color with <strong>live contrast feedback</strong> &mdash; the accent can't be
+    saved until it meets WCAG AA (4.5:1), and one click applies a suggested darker shade.
+    <strong>Upload a school logo</strong> (image only), shown immediately in a live header
+    preview alongside your colors.</td>
+  </tr>
+  <tr>
+    <td>2026-06-03</td>
+    <td><strong>Analytics dashboards in the app (Phase 6e&#8321;):</strong> Both the
+    per-school and per-newsletter analytics dashboards moved into the in-app experience.
+    A 7/30/90-day toggle updates all figures instantly. Four headline KPIs each show a
+    <strong>vs previous period</strong> trend: Total views, Unique visitors, Avg time on
+    page, and <strong>Read to the end</strong> (share of readers who reached the bottom).
+    Every chart is accessible &mdash; all data is also present as real text.</td>
+  </tr>
+  <tr>
+    <td>2026-06-03</td>
+    <td><strong>Flyer upload auto-layout (Phase 6d&#8322;):</strong> Choose
+    <strong>Flyer &rarr; Upload a flyer</strong> and upload an image of a flyer; the app reads it
+    automatically and builds a two-column block &mdash; the flyer image (click to enlarge) beside
+    the extracted words as real <strong>headings, lists, and links</strong>, with any
+    <strong>QR codes turned into descriptive links</strong>. You review and edit the title, image
+    description, and text, pick the layout (image <strong>left</strong>, <strong>right</strong>, or
+    <strong>top</strong>), and can add an optional <strong>Spanish companion image</strong> shown
+    alongside (the reader's translate button handles the words). An image description is required
+    before publishing.</td>
+  </tr>
+  <tr>
+    <td>2026-06-03</td>
+    <td><strong>Photo upload &amp; 7 flyer styles (Phase 6d):</strong> Image and gallery blocks now
+    upload image files directly in the new builder, with required alt text and AI-drafted
+    suggestions. Styled-callout flyers gained <strong>7 looks</strong> (Classic, Calendar, Spotlight,
+    Ticket, Poster, Polaroid, Ribbon), each built to meet WCAG AA contrast. Uploading a text-heavy
+    flyer image into a photo slot is detected and redirected to the Flyer upload feature.</td>
+  </tr>
+  <tr>
+    <td>2026-06-03</td>
+    <td><strong>Live-preview builder (Phase 6c):</strong> The editor is now a two-pane builder
+    &mdash; edit content on the left and see the public page update live on the right. Sections and
+    blocks reorder by drag <em>or</em> by keyboard (Move up / Move down buttons), and
+    <strong>Submit for review</strong> runs from an accessible modal.</td>
+  </tr>
   <tr>
     <td>2026-06-02</td>
     <td><strong>Redesigned Newsletters Home (Phase 6b):</strong> The newsletter list is now a

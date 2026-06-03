@@ -4,6 +4,70 @@ Permanent log of user-facing changes. Never pruned.
 
 ---
 
+## [2026-06-03] Phase 6e₃ — The reviewer screen, now in the app
+
+- **The reviewer screen moved into the app** (the same React app as the builder and dashboards). Open it from a newsletter's **Review** action.
+- It shows everything an approver needs in one place: a link to the **read-only public preview** (the page exactly as families will see it), the **previous reviewer note**, and the full **accessibility audit** — every finding with its rule, location, the **before/after** of any automatic fix, and **who acknowledged it and when**.
+- Approvers get **Approve** and **Request changes** right there (Request changes opens an accessible dialog for the required note, addressed to the author by name). The same safety rules apply as everywhere else — no self-approval, approver-group enforced on the server.
+- This was the **last server-rendered authoring screen** — the entire authoring app (Home, builder, analytics, branding, review) is now a single accessible React app. The public newsletter pages families read stay server-rendered and canonical by design.
+- 511 server + 153 frontend tests passing. No new dependencies. (Run `cd frontend && npm install && npm run build` to build the app bundle.)
+
+## [2026-06-03] Phase 6e₂ — School branding & logo, now in the app
+
+- **Set your school's branding inside the app** (the same React app as the builder), no separate page reload. Choose a **banner color** (used behind the newsletter header) and an **accent color** (buttons and links).
+- **Live accessibility check.** As you type an accent color, the screen shows its contrast against white in real time. The accent **can't be saved until it meets WCAG AA (4.5:1)** — and if it falls short, one click applies a suggested darker shade that passes. (The check is enforced on the server too, so it can't be bypassed.)
+- **Upload a school logo** (image only) — shown right away in a **live header preview** alongside your chosen colors, so you can see how the newsletter banner will look. Remove or replace it any time.
+- Fully accessible: every field is labelled, the contrast result and save confirmation are announced to screen readers, the failing-contrast warning is conveyed by text (not color), and the logo uploader and "use a darker shade" suggestion are keyboard-operable.
+- 507 server + 146 frontend tests passing. No new dependencies. (Run `cd frontend && npm install && npm run build` to build the app bundle.)
+
+## [2026-06-03] Phase 6e₁ — Analytics, now inside the app
+
+- **The analytics dashboards are now part of the in-app experience** (the same React app as the builder), so they load instantly and update as you change the time range — no page reloads. Both the per-school dashboard ("How {school}'s newsletters are doing") and the per-newsletter dashboard moved into the app.
+- **Pick your time range** — **7, 30, or 90 days** — with a single toggle; today's figures update live.
+- **Four headline figures**, each with a "vs previous period" trend: **Total views**, **Unique visitors (daily)**, **Avg. time on page**, and **Read to the end** (the share of readers who reached the bottom of the newsletter). *(The mockup's "Subscribed families" card was replaced with "Read to the end" — this platform doesn't send email or track subscribers, so we show a real engagement number instead of one we can't measure.)*
+- **Daily views** bar chart (today highlighted), a **By device** breakdown (mobile / desktop / tablet with counts and shares), the **Newsletters by views** leaderboard (school view), and **Most-clicked links & flyers** (newsletter view).
+- **Fully accessible charts:** every chart carries the same numbers as real text — a screen-reader data table or a labelled legend — so nothing depends on seeing color, and each chart has a spoken summary. The time-range toggle, trend arrows, and links all work by keyboard and read correctly to assistive technology.
+- 500 server + 132 frontend tests passing. No new dependencies. (Run `cd frontend && npm install && npm run build` to build the app bundle.)
+
+## [2026-06-03] Phase 6d₂ — Upload a flyer, get accessible text automatically
+
+- **Upload a finished flyer and the app lays it out for you.** Choose **Flyer → Upload a flyer** and upload an **image** of a flyer (no PDFs). The app reads it — text *and* layout — and builds a **two-column block**: the flyer image on one side (click to enlarge) and the flyer's words on the other, rendered as **real headings, lists, links, and paragraphs**. A raw flyer picture is invisible to screen readers; this turns it into structured, screen-reader-friendly text beside the image — the accessible page families actually read.
+- **QR codes become real, descriptive links** — never a bare web address — so the flyer's "scan me" actions work for everyone.
+- **You review and edit before publishing.** The extracted title, image description, and text are drafts you can adjust; pick the **layout** — image on the **left**, **right**, or **top**. (AI assists; you confirm.)
+- **Bilingual flyers.** If a flyer comes in English and Spanish, add the **Spanish version** as an optional second image. Both flyers are shown side by side (each click-to-enlarge, the Spanish one labeled), and the reader's translate button handles the words — so you add only the picture, not a second block of text.
+- **Accessibility gate.** An uploaded flyer can't be published until its image (and any Spanish companion image) has a description. Decorative chrome is hidden from screen readers, the image opens in a focus-trapped lightbox (keyboard + arrow-key navigation between the two flyers), and every text/background pair meets WCAG AA contrast.
+- 483 server tests + 118 frontend tests passing. No new dependencies. (Run `cd frontend && npm install && npm run build` to build the app bundle.)
+
+## [2026-06-03] Phase 6d — Photo uploads + seven accessible flyer styles
+
+- **Upload photos right in the builder.** Pick an image for an Image element, an Image grid, or a photo flyer; the file is validated, EXIF-stripped, and stored as web-optimized variants. Image upload is **for photos only** — if you try to upload a text-heavy *flyer* image, the builder recognizes it and points you to the **Flyer** element instead (the dedicated, accessible way to publish event flyers).
+- **Seven flyer styles.** A flyer is no longer a flat PDF link — choose from seven designed "callout" layouts: **Classic, Calendar tear-off, Spotlight split, Ticket stub, Poster hero, Polaroid pinboard,** and **Save-the-date ribbon.** A style picker shows each option in the live preview as you build.
+- **Flyers now render as real, accessible HTML** on the public page (not an image of a flyer): the title is a proper heading, the date/time/location are real selectable text, decorative chrome (rings, perforations, tape) is hidden from screen readers, and every text/background pair meets WCAG AA contrast (verified per style; photo styles force a dark legibility scrim so text stays readable over any image).
+- **Publish gate for photo flyers.** A photo-style flyer with a photo but **no alt text** is blocked from publishing until you describe the image — the same accessibility gate that protects every other element.
+- **Coming next (6d₂):** upload a finished flyer image and have it auto-laid-out (text extracted and reflowed into an accessible two-column design).
+- 445 server tests + 89 frontend tests passing. No new dependencies. (Run `cd frontend && npm install && npm run build` to build the app bundle.)
+
+## [2026-06-03] Phase 6c — The live newsletter builder is here
+
+- **The live newsletter builder is here.** Clicking **Edit** (or creating a newsletter) now opens a brand-new two-pane builder: you compose sections and elements on the left and watch a **live preview** of the finished newsletter update on the right as you type — no "save and reload" round-trip.
+- **Build with sections and elements.** Each newsletter is organized into sections; add a Title, Text (with **bold/italic/links/bullets**), Button/Link, Event, Quote, or Divider to any section. Edit the **banner** (header text, eyebrow, date, and a background look) right at the top.
+- **Reorder however you like** — drag an element or section with the mouse, **or** use the keyboard-accessible **Move up / Move down** buttons (no mouse required). Duplicate or delete any element/section, with a 5-second **Undo** toast after a delete.
+- **Autosave.** Your work saves automatically in the background; a status pill reads "Saving…" then "All changes saved." There's no Save button to remember.
+- **Submit for review** straight from the builder: an accessible dialog with an optional note for your reviewer. The same safety gate applies — submitting re-runs the **full accessibility check** and is blocked (with a clear message) until the newsletter passes.
+- Accessibility: exactly one page heading (the preview banner), proper header/main landmarks, every field labeled, the size/style/device pickers are real radio/toggle groups, the save status is announced politely, and links in the preview warn that they open in a new tab. Reduced-motion is honored.
+- The old form-based editor has been **retired** — the React builder fully replaces it. (The public newsletter pages stay server-rendered and remain the canonical, accessibility-gated output.)
+- **Coming next (6d):** uploading photos, image grids, and flyer PDFs from inside the builder, plus the rich flyer styles. 343 server tests + 73 frontend tests passing. No new dependencies. (Run `cd frontend && npm install && npm run build` to build the app bundle.)
+
+## [2026-06-03] Phase 6b₂ — Approver home & review workflow on the landing page
+
+- The **Newsletters Home is now role-aware**. Approvers (a school's approver group, or a platform admin) get a **Staff / Admin** toggle in the header; everyone else just sees the staff view. Switching to **Admin** retitles the page "Newsletters to review" and surfaces a **"N newsletters waiting for your approval"** banner that jumps straight to the review queue.
+- Each card now shows the **author** (name + initials chip), and search matches **title or author**.
+- A per-card **workflow strip** shows where each newsletter stands and offers the right next step: a draft can be **Submitted for approval**; an in-review newsletter shows "Awaiting approval" and (for an approver) **Approve** / **Request changes**; a newsletter with changes requested shows the **reviewer's note** and a **Resubmit** button; an **approved** newsletter offers **Publish**; a published one shows who approved it. (Scheduling a send is coming in a later phase — for now "approved" goes straight to Publish.)
+- **Request changes** opens an accessible dialog with a "What needs changing?" note field; the note is required and travels back to the author.
+- The same safety gates apply as everywhere else: submitting and publishing re-run the **full accessibility check** and are blocked (with a clear toast) until the newsletter passes; approving enforces **no self-approval** and approver-group membership on the server — the UI only hides buttons as a courtesy.
+- Accessibility: status is conveyed by **text, not color**; the toggle and banner are real labeled buttons; the dialog traps focus and has a labeled field; the tinted workflow strips and the coral "Send back" button meet WCAG AA contrast.
+- 417 server tests + 19 frontend tests passing. No new dependencies.
+
 ## [2026-06-02] Phase 6b — React app foundation + new Newsletters Home
 
 - The authoring app is becoming a modern single-page app. The first screen is a redesigned **Newsletters Home**: a visual card grid (each card shows a colored header "cover" with the issue's eyebrow + title), a status badge, and "Issue {date} · Edited {when}".
