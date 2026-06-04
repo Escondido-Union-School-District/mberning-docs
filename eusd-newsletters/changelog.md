@@ -4,6 +4,20 @@ Permanent log of user-facing changes. Never pruned.
 
 ---
 
+## [2026-06-04] Per-school branding on the published newsletter page
+
+- The public newsletter page now renders the school's identity in the hero header.
+- **School logo** appears in the banner when one has been uploaded under School Branding.
+- **Banner color** uses the school's saved brand primary color (falls back to EUSD blue `#1031A3` if none is set). The author's per-newsletter hero color override still wins when set.
+- **Accent color** (the school's saved brand accent) paints body content links on the published page. The accent is only accepted at save time if it passes WCAG AA (4.5:1 on white), so links are always readable.
+- A dark scrim overlay is applied unconditionally so the white newsletter title clears WCAG AA contrast over any banner color.
+- No action needed from authors; the public page reflects School Branding settings automatically on every published newsletter.
+
+## [2026-06-04] School-agnostic empty-state icon
+
+- The empty newsletter list (no newsletters yet, or no search results) and the empty builder preview previously showed a 🦦 otter emoji — a leftover from the Oak Hill Otters test school used during development.
+- Both are now replaced with a neutral document icon styled in the app's brand color.
+
 ## [2026-06-03] Phase 6e₃ — The reviewer screen, now in the app
 
 - **The reviewer screen moved into the app** (the same React app as the builder and dashboards). Open it from a newsletter's **Review** action.
