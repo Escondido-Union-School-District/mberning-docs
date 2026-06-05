@@ -110,7 +110,7 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  User guide last updated: June 4, 2026 &mdash; Added per-school branding on the public newsletter page and school-agnostic empty-state icon to Recent Changes.
+  User guide last updated: June 5, 2026 &mdash; Banner image upload, brand-color art variants, secondary page-background color, per-newsletter logo size, and home card header-text display.
 </div>
 
 <div class="callout">
@@ -190,8 +190,25 @@ newsletter is not permanently removed until that window closes.</p>
   <strong>Note:</strong> The authoring app (the newsletter list, editor, and dashboards) requires
   JavaScript in your browser. The public newsletter pages that families read work without it.</div>
 
-<h3><span class="step-num">4</span> Build it from sections</h3>
-<p>Add titled sections and drag them into the order you want. In each section add
+<h3><span class="step-num">4</span> Customize the banner and build your sections</h3>
+<p>At the top of the builder, open the <strong>Header</strong> editor to customize the newsletter
+banner that families see first:</p>
+<ul>
+  <li><strong>Banner art</strong> &mdash; pick one of 6 illustrated presets (Waves, Nature, Floral,
+    Fireworks, Confetti, Sunrise). Each preset is also available in a <strong>school-color variant</strong>
+    (shown as a second swatch beside each preset when your school has a primary color set): the same
+    texture tinted in your school's brand color instead of the preset's default gradient. Choose
+    <strong>School color</strong> for a clean solid-color banner with no art. Or upload your own
+    <strong>photo</strong> for a custom full-width banner background &mdash; it takes precedence over
+    any preset.</li>
+  <li><strong>School logo</strong> &mdash; turn the logo on or off per newsletter. When on, choose
+    <strong>Small</strong>, <strong>Medium</strong>, or <strong>Large</strong> for the logo size in the
+    header. (The logo itself is set school-wide under School Branding.)</li>
+  <li><strong>Header text and eyebrow</strong> &mdash; the headline that families see in the banner.
+    When you create a new newsletter, the header text is pre-filled from the title you entered; edit
+    it any time.</li>
+</ul>
+<p>Then add titled sections and drag them into the order you want. In each section add
 content blocks and reorder them by dragging. Your work autosaves as you go.</p>
 <p>Available content block types:</p>
 <ul>
@@ -292,18 +309,23 @@ picture across all your issues. See <strong>Analytics</strong> below for the ful
 <!-- ================================================================== -->
 <h2>School Branding</h2>
 
-<p>Each school can have its own banner color, accent color, and logo. Set these on the
+<p>Each school can have its own colors and logo. Set these on the
 <strong>School branding</strong> screen, reached from the Newsletters Home (it's part of the
 in-app experience, so it needs JavaScript). A <strong>live header preview</strong> shows how your
 choices will look as you make them.</p>
 <ul>
-  <li><strong>Banner color</strong> &mdash; used behind the newsletter's header. Title text stays
-    white on a dark scrim over the color, so any color is readable regardless of what you pick.</li>
-  <li><strong>Accent color</strong> &mdash; used for buttons and links. As you type, the screen shows
-    the color's contrast against white in real time, and the color <strong>cannot be saved</strong>
-    unless it meets the WCAG AA 4.5:1 threshold. If it falls short, one click applies a suggested
-    darker shade that passes. (The same check runs on the server, so a failing color can never slip
-    through.)</li>
+  <li><strong>Primary color (banner)</strong> &mdash; used behind the newsletter's header. Title
+    text stays white on a dark scrim over the color, so any color is readable regardless of what
+    you pick.</li>
+  <li><strong>Secondary color (page background)</strong> &mdash; an optional tint for the page
+    background area behind the newsletter content cards. Leave it blank for a plain white
+    background. This color is not contrast-checked because it sits behind white cards, not behind
+    text.</li>
+  <li><strong>Accent color (links)</strong> &mdash; used for buttons and links. As you type, the
+    screen shows the color's contrast against white in real time, and the color
+    <strong>cannot be saved</strong> unless it meets the WCAG AA 4.5:1 threshold. If it falls
+    short, one click applies a suggested darker shade that passes. (The same check runs on the
+    server, so a failing color can never slip through.)</li>
   <li><strong>Logo</strong> &mdash; upload a school logo (an image &mdash; PNG, JPG, or WebP). It
     appears immediately in the header preview beside your colors, and you can remove or replace it
     any time.</li>
@@ -580,6 +602,63 @@ stable number that won't keep changing.</p>
 <h2>Recent Changes</h2>
 <table>
   <tr><th>Date</th><th>What changed</th></tr>
+  <tr>
+    <td>2026-06-05</td>
+    <td><strong>Secondary color for the page background:</strong> The School Branding screen
+    now has a third color field, <em>Secondary color (page background)</em>. Set it to an
+    optional tint for the area behind the newsletter content cards (leave it blank for plain
+    white). Because it sits behind white cards rather than behind text, it is not checked
+    against the WCAG AA contrast minimum.</td>
+  </tr>
+  <tr>
+    <td>2026-06-05</td>
+    <td><strong>Banner photo upload and school-color art variants:</strong> In the newsletter
+    builder you can now upload a <strong>photo as the banner background</strong> &mdash; it
+    fills the full-width header and shows on the published page just as families will see it.
+    The 6 illustrated banner presets (Waves, Nature, Floral, Fireworks, Confetti, Sunrise) each
+    now offer a <strong>school-color variant</strong>: the same overlay texture tinted in your
+    school's primary brand color. School-color variants only appear in the picker when your
+    school has a primary color set under School Branding.</td>
+  </tr>
+  <tr>
+    <td>2026-06-05</td>
+    <td><strong>Per-newsletter logo size:</strong> When the school logo is turned on in the
+    banner, a size control now lets you choose <strong>Small</strong>, <strong>Medium</strong>,
+    or <strong>Large</strong> for each individual newsletter. The size you choose is reflected
+    in the live preview and on the published page.</td>
+  </tr>
+  <tr>
+    <td>2026-06-05</td>
+    <td><strong>Newsletter cards on the Home screen reflect your actual banner text:</strong>
+    Each newsletter card on the Newsletters Home previously showed the internal template name
+    (such as "Weekly Update") in the banner thumbnail and the card title. Cards now show the
+    actual <strong>header text</strong> from the newsletter's banner &mdash; what families will
+    see as the headline when they open it.</td>
+  </tr>
+  <tr>
+    <td>2026-06-05</td>
+    <td><strong>Undo and Redo in the builder:</strong> The newsletter builder now has Undo and Redo
+    buttons (and the usual Ctrl+Z / Ctrl+Y keyboard shortcuts) so you can take back a change while you
+    are working. A whole edit undoes as one step, not one letter at a time. History is per editing
+    session and clears when you reload the page.</td>
+  </tr>
+  <tr>
+    <td>2026-06-05</td>
+    <td><strong>Heads-up when you edit a newsletter that was in review:</strong> If you edit a
+    newsletter that is waiting for approval, it moves back to Draft (so the approver always reviews the
+    exact version that gets published). The builder now shows a one-time notice the moment that happens,
+    reminding you it will need to be resubmitted for approval when you are finished.</td>
+  </tr>
+  <tr>
+    <td>2026-06-04</td>
+    <td><strong>The editor preview now matches the published banner:</strong> When you pick a banner
+    look (Waves, Nature, Floral, and so on) in the builder, that art now also appears on the published
+    page that families see. If you do not pick a banner look, the banner uses your school's brand color
+    instead. The new "School color" option in the banner picker makes that choice explicit. Body links
+    in the preview now use your school's accent color too, so what you see while editing matches what
+    readers get. (Previously the builder showed the banner art but the published page always used a flat
+    school color, so the two did not agree.)</td>
+  </tr>
   <tr>
     <td>2026-06-04</td>
     <td><strong>Per-school branding on the published newsletter page:</strong> Families reading a

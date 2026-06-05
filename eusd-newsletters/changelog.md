@@ -4,6 +4,17 @@ Permanent log of user-facing changes. Never pruned.
 
 ---
 
+## [2026-06-05] Secondary page-background color, banner image upload, school-color art variants, per-newsletter logo size, home card header text
+
+- **Secondary color (page background):** New optional branding field on the School Branding screen. Sets a tint for the page background behind newsletter content cards. Left blank = plain white. Not contrast-gated (it sits behind white cards, not text). Any valid hex color is accepted.
+- **Banner image upload:** Authors can now upload a photo as the newsletter banner background directly in the Header editor. The uploaded image takes precedence over art presets and shows on both the live preview and the published page. Reuses the existing photo-upload pipeline (strips EXIF; text-heavy flyer images are rejected).
+- **School-color art preset variants:** Each of the 6 illustrated banner presets (Waves, Nature, Floral, Fireworks, Confetti, Sunrise) now has a school-color variant (`<key>-brand`) that applies the preset's overlay texture over a gradient built from the school's `brand_primary`. Variants appear in the picker only when the school has a primary color set.
+- **Per-newsletter logo size:** When the school logo is enabled in the banner, a Small / Medium / Large size control is now available per newsletter. The chosen size is reflected in the live preview and the published page.
+- **Home cards show actual header text:** Newsletter cards on the Newsletters Home now display the author's actual banner header text instead of the internal template name (e.g., "Weekly Update"). Both the decorative cover title and the body editor link reflect the real banner headline.
+- **Builder polish:** New newsletters now pre-fill the Header editor's "Header text" field from the title chosen at creation time. Editing a published newsletter shows a dismissable inline status banner rather than a modal popup.
+
+---
+
 ## [2026-06-04] Per-school branding on the published newsletter page
 
 - The public newsletter page now renders the school's identity in the hero header.
