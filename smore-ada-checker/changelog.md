@@ -148,3 +148,8 @@ All changes to this project, logged automatically by the Daily User Guide Check.
 - feat: all links not already flagged by pattern checks are now evaluated by AI in a batched call for WCAG 2.4.4 compliance — catches action-based phrasing that describes what the user will DO rather than where the link goes (e.g. "Fill out the survey", "Sign up today", "Register now")
 - feat: added "fill out" to instructional link text patterns as an explicit pattern catch
 - Results are individually cached per link text + context, so repeat runs are fast
+
+## [2026-06-08] QR-code link text detection + flyer missing-info reliability
+- fix: "QR code", "scan here", "scan the QR code", "scan this code", and Spanish equivalents (e.g. "código QR", "escanee aquí") added to GENERIC_LINK_TEXT in checks.py — these name the scan mechanism, not the destination, and were previously missed by both pattern checks and the AI link evaluator
+- fix: AI link-eval prompt updated with a NOT-DESCRIPTIVE example for QR/scan phrasing as defense-in-depth for contextual variants the pattern list doesn't cover; cache namespace bumped (eval_link_v2)
+- fix: flyer "Flyer Info Not in Text" comparison now uses self-consistency sampling (FLYER_COMPARE_SAMPLES=3) with majority voting via _vote_flyer_samples() — a detail must appear in a majority of independent samples to be flagged, reducing the ~12% per-call false-negative rate to near zero while suppressing spurious one-off false positives; applies to both the text-comparison and image-comparison fallback paths; cache keys bumped (compare_flyer_v9, compare_flyer_img_v4)

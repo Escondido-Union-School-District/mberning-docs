@@ -109,7 +109,7 @@
 <h1>Smore ADA Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-06-01 &mdash; Favicon on dashboard/review tabs; flyer false-positive fixes (verbatim-text guard + OCR-misread prompt hardening); stale-page and cross-report screenshot fix; scanning a Smore preview link no longer creates a duplicate dashboard row
+  <strong>User guide last updated:</strong> 2026-06-08 &mdash; &ldquo;QR code&rdquo; and scan-phrasing link text now flagged as generic; flyer missing-info check hardened with self-consistency sampling to reduce false negatives
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,14 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-08</td>
+        <td style="padding:8px; background: white;">fix: &ldquo;QR code&rdquo; and scan-phrasing link text (e.g. &ldquo;Scan the QR code&rdquo;, &ldquo;scan here&rdquo;, Spanish equivalents) is now flagged as generic link text &mdash; these name the scan mechanism, not the destination, and were previously missed by both pattern checks and the AI evaluator</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-08</td>
+        <td style="padding:8px; background: white;">fix: flyer &ldquo;Flyer Info Not in Text&rdquo; check is now more reliable &mdash; the AI comparison now runs 3 independent samples and majority-votes the missing details, reducing the rate of false negatives where a flyer&rsquo;s content is entirely absent from the post body but the scan only surfaced a pre-excluded &ldquo;Flyer Verification&rdquo; card</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-06-01</td>
         <td style="padding:8px; background: white;">feat: favicon added to the dashboard and review page browser tabs — a dark-blue checkmark badge so you can identify the right tab at a glance in Chrome</td>
@@ -209,14 +217,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-08</td>
         <td style="padding:8px; background: white;">feat: vision cache is now provider-scoped — switching between Claude and Gemini no longer serves cached results from the other provider</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-05</td>
-        <td style="padding:8px; background: white;">feat: AI prompt tips now appear in the final PDF and staff email for alt text and flyer issues — same copyable prompts as on the review page</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-05</td>
-        <td style="padding:8px; background: white;">ux: "Include Coming Soon" banner checkbox on review page now defaults to unchecked</td>
       </tr>
     </tbody>
   </table>

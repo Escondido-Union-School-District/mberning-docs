@@ -109,7 +109,7 @@
 <h1>Thrillshare Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-26 &mdash; Newly discovered Smore links are now automatically queued for ADA accessibility review on the smore-ada-checker dashboard
+  <strong>User guide last updated:</strong> 2026-05-28 &mdash; Approval checker is now more resilient to slow Thrillshare OAuth handshakes on load (fixes intermittent "No schools discovered" false negatives)
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,10 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-28</td>
+        <td style="padding:8px; background: white;">Approval checker now tolerates the Thrillshare media SPA's OAuth handshake on load (can take 15&ndash;20s): dropdown wait raised to 30s; CMS pages navigation retries once on timeout. Eliminates intermittent "No schools discovered" false negatives during scheduled runs.</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-26</td>
         <td style="padding:8px; background: white;">Smore ADA handoff: newly discovered Smore URLs are automatically queued for background ADA accessibility scan via the local smore-ada-checker project; scan drafts appear on the dashboard at <code>http://localhost:5051/dashboard</code>; no additional emails sent; new <code>SMORE_CHECKER_DIR</code> config (set to empty string in <code>.env</code> to disable)</td>
@@ -157,10 +161,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
         <td style="padding:8px; background: white;">Update guide styling; add changelog section; backfill last 30 days of commits</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-06</td>
-        <td style="padding:8px; background: white;">Add --smore-scan flag; daily scheduled Smore scan with 36-hour lookback at 7:00 AM</td>
       </tr>
     </tbody>
   </table>
@@ -390,8 +390,8 @@ With pending:     2</code></pre>
   </tr>
   <tr>
     <td><code>No schools discovered.</code></td>
-    <td>The organization dropdown wasn't found on the page, or the page didn't load correctly</td>
-    <td>Run with <code>--login</code> to see the browser. Verify you can see the school switcher dropdown. If the Thrillshare UI changed, selectors in <code>checker.py</code> may need updating.</td>
+    <td>The organization dropdown wasn't found within 30s. Usually a session or network issue; the checker already waits up to 30s for the SPA OAuth handshake.</td>
+    <td>Run with <code>--login</code> to see the browser. Verify you can see the school switcher dropdown. Check that your session cookies are valid (<code>python checker.py --login</code> to re-authenticate). If the Thrillshare UI changed, selectors in <code>checker.py</code> may need updating.</td>
   </tr>
   <tr>
     <td><code>Could not find MEDIA nav link!</code></td>

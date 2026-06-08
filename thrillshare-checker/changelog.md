@@ -2,6 +2,12 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## 2026-05-28
+- Approval checker now tolerates the Thrillshare media SPA's OAuth handshake delay on load (15-20s observed)
+- Raised the three `.dropdown-trigger` waits to a shared 30s `DROPDOWN_TIMEOUT` (was a few seconds each); happy path is unaffected since wait returns as soon as the element appears
+- Added one retry for the initial CMS pages `goto` on timeout; the OAuth handshake on first navigation can exceed the nav timeout, after which the session is warm
+- Fixes intermittent "No schools discovered" false negatives that were appearing in hourly scheduled runs
+
 ## 2026-05-26
 - When `--smore-scan` discovers a new Smore URL, it now automatically queues a background ADA accessibility scan via the local smore-ada-checker project (`check.py --scan-only <url>`)
 - Scan results appear on the smore-ada-checker dashboard at `http://localhost:5051/dashboard` for review — no additional email is sent
