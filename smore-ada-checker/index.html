@@ -109,7 +109,7 @@
 <h1>Smore ADA Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-06-08 &mdash; &ldquo;QR code&rdquo; and scan-phrasing link text now flagged as generic; flyer missing-info check hardened with self-consistency sampling to reduce false negatives
+  <strong>User guide last updated:</strong> 2026-06-09 &mdash; section names are now editable on the review page; Gemini vision provider disabled (Claude only)
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,14 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-09</td>
+        <td style="padding:8px; background: white;">feat: section names are now editable on the review page &mdash; an &ldquo;In Section&rdquo; label field appears under each section heading, pre-filled with the auto-detected name. Editing it renames the section for all issues in that group and flows into the email, PDF, and saved draft</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-09</td>
+        <td style="padding:8px; background: white;">chore: Gemini vision provider disabled &mdash; Claude is now the only supported provider. <code>VISION_PROVIDER=gemini</code> raises a hard error; <code>GOOGLE_API_KEY</code> is no longer needed</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-06-08</td>
         <td style="padding:8px; background: white;">fix: &ldquo;QR code&rdquo; and scan-phrasing link text (e.g. &ldquo;Scan the QR code&rdquo;, &ldquo;scan here&rdquo;, Spanish equivalents) is now flagged as generic link text &mdash; these name the scan mechanism, not the destination, and were previously missed by both pattern checks and the AI evaluator</td>
@@ -210,14 +218,6 @@
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-11</td>
         <td style="padding:8px; background: white;">feat: every "Send to Staff" action is now logged to <code>reports\email-log.csv</code> — timestamp, recipients, issue count, your note, and PDF path. Open in Excel for a paper trail to send to the director.</td>
       </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-08</td>
-        <td style="padding:8px; background: white;">fix: screenshot bug — report cards now show the correct image for each issue (previously all images in the same section showed the first image)</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-08</td>
-        <td style="padding:8px; background: white;">feat: vision cache is now provider-scoped — switching between Claude and Gemini no longer serves cached results from the other provider</td>
-      </tr>
     </tbody>
   </table>
 </details>
@@ -297,9 +297,9 @@
 <p>Copy <code>.env.example</code> to <code>.env</code> and fill in:</p>
 <table>
   <tr><th>Variable</th><th>Required</th><th>Description</th></tr>
-  <tr><td><code>VISION_PROVIDER</code></td><td>No</td><td><code>claude</code> (default) or <code>gemini</code></td></tr>
-  <tr><td><code>ANTHROPIC_API_KEY</code></td><td>If using Claude</td><td>Anthropic API key for vision analysis</td></tr>
-  <tr><td><code>GOOGLE_API_KEY</code></td><td>If using Gemini</td><td>Google API key for vision analysis</td></tr>
+  <tr><td><code>VISION_PROVIDER</code></td><td>No</td><td><code>claude</code> (default, only supported option &mdash; <code>gemini</code> raises an error)</td></tr>
+  <tr><td><code>ANTHROPIC_API_KEY</code></td><td>Yes</td><td>Anthropic API key for vision analysis</td></tr>
+  <tr><td><code>GOOGLE_API_KEY</code></td><td>No</td><td>Not required &mdash; Gemini vision is currently disabled</td></tr>
   <tr><td><code>SMTP_HOST</code></td><td>For email</td><td>Mail server (e.g., <code>mail.eusd.org</code>)</td></tr>
   <tr><td><code>SMTP_PORT</code></td><td>For email</td><td><code>25</code> for EUSD relay, <code>587</code> for Gmail</td></tr>
   <tr><td><code>SENDER_EMAIL</code></td><td>For email</td><td>From address for reports</td></tr>
@@ -350,6 +350,7 @@ venv\Scripts\activate</code></pre>
 <ul>
   <li><strong>Toggle issues</strong> &mdash; uncheck any issue to exclude it from the report</li>
   <li><strong>Edit suggestions</strong> &mdash; all issue types (alt text, link text, flyer details, emoji, heading, and video messages) have an editable field. Image alt text cards show the current alt text in an amber box and the AI suggestion in a green box. A <strong>Copy</strong> button next to each suggestion copies it to the clipboard in one click.</li>
+  <li><strong>Edit section names</strong> &mdash; a &ldquo;Section name&rdquo; field appears under each section heading, pre-filled with the auto-detected name. If it is wrong (e.g., it picked up a heading from inside a flyer instead of the section title), correct it here. The change renames that section for all its issues and flows into the email&rsquo;s &ldquo;In Section:&rdquo; label, the PDF heading, and the saved draft.</li>
   <li><strong>Add an auditor note</strong> &mdash; every issue card has an optional note field at the bottom. Notes appear as a cream callout in the staff email and PDF, useful for giving the newsletter author extra context or pointing them to a specific section.</li>
   <li><strong>View screenshots</strong> &mdash; click any screenshot to enlarge it in a lightbox</li>
   <li><strong>AI prompt tips</strong> &mdash; a single panel at the top of the page provides copyable prompts for writing alt text (upload the image to Claude/ChatGPT/Gemini with the prompt) and extracting flyer content (run the prompt on the flyer image to get text you can paste into the newsletter body)</li>
@@ -407,7 +408,7 @@ venv\Scripts\activate</code></pre>
     email_report.py     &lt;-- HTML email report builder
     vision_router.py    &lt;-- Vision API dispatcher and cache
     vision_claude.py    &lt;-- Claude vision provider
-    vision_gemini.py    &lt;-- Gemini vision provider
+    vision_gemini.py    &lt;-- Gemini vision provider (retained but disabled)
     vision_cache.json   &lt;-- Cached API results (auto-generated)
 </code></pre>
 
@@ -471,7 +472,7 @@ venv\Scripts\activate</code></pre>
   <tr>
     <td>Rate limit errors (429)</td>
     <td>Too many API calls in a short time</td>
-    <td>Wait a minute and retry. Gemini free tier has stricter limits; the tool adds automatic delays</td>
+    <td>Wait a minute and retry. Claude rate limits are generous; if you hit this, wait 30&ndash;60 seconds before re-running</td>
   </tr>
   <tr>
     <td>Review page won't load</td>

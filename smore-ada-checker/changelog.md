@@ -149,6 +149,10 @@ All changes to this project, logged automatically by the Daily User Guide Check.
 - feat: added "fill out" to instructional link text patterns as an explicit pattern catch
 - Results are individually cached per link text + context, so repeat runs are fast
 
+## [2026-06-09] Editable section names + Gemini vision disabled
+- feat: review page now shows an editable "Section name" field under each section heading, pre-filled with the auto-detected name — editing it renames the section for all issues in that group and flows into the email's "In Section:" label, the PDF section heading, the saved draft, and the re-grouped review page; implemented in _apply_section_renames() in review_server.py, called from both Save Draft and Send/Generate paths; live JS keeps the visible h2 in sync as you type
+- chore: Gemini vision provider disabled — VISION_PROVIDER=gemini now raises a hard error in vision_router.py rather than routing to Gemini; vision_gemini.py is retained on disk but never selected; ANTHROPIC_API_KEY is now the only required API key
+
 ## [2026-06-08] QR-code link text detection + flyer missing-info reliability
 - fix: "QR code", "scan here", "scan the QR code", "scan this code", and Spanish equivalents (e.g. "código QR", "escanee aquí") added to GENERIC_LINK_TEXT in checks.py — these name the scan mechanism, not the destination, and were previously missed by both pattern checks and the AI link evaluator
 - fix: AI link-eval prompt updated with a NOT-DESCRIPTIVE example for QR/scan phrasing as defense-in-depth for contextual variants the pattern list doesn't cover; cache namespace bumped (eval_link_v2)

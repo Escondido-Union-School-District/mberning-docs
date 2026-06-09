@@ -110,7 +110,7 @@
 <p><strong>User Guide</strong> &mdash; Escondido Union School District</p>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  User guide last updated: June 5, 2026 &mdash; Banner image upload, brand-color art variants, secondary page-background color, per-newsletter logo size, and home card header-text display.
+  User guide last updated: June 9, 2026 &mdash; Collapse all, image-wrapped paragraphs, 5 section divider styles, iPhone mobile preview, auto AI alt-text on upload, Flyer / Event rename.
 </div>
 
 <div class="callout">
@@ -208,24 +208,32 @@ banner that families see first:</p>
     When you create a new newsletter, the header text is pre-filled from the title you entered; edit
     it any time.</li>
 </ul>
-<p>Then add titled sections and drag them into the order you want. In each section add
+<p>The builder is a two-pane layout: the editing column is on the left and a live preview is on
+the right. Switch the preview between <strong>Desktop</strong> and <strong>Mobile</strong> (an
+iPhone-sized frame that scrolls inside the phone mockup). Click <strong>Jump to</strong> on any
+section to scroll the preview to that section. Use <strong>Collapse all</strong> in the top bar to
+fold every section and the header card at once &mdash; handy when a newsletter has many sections
+and you want to see the structure at a glance; <strong>Expand all</strong> restores them.</p>
+<p>Add titled sections and drag them into the order you want. In each section add
 content blocks and reorder them by dragging. Your work autosaves as you go.</p>
 <p>Available content block types:</p>
 <ul>
   <li><strong>Paragraph</strong> &mdash; formatted text (bold, italic, links).</li>
-  <li><strong>Title</strong> &mdash; a heading in large, medium, or small size.</li>
-  <li><strong>Text</strong> &mdash; rich text with bold, italic, bullet lists, and links
-    (the primary text block for most content).</li>
+  <li><strong>Title</strong> &mdash; a subheading label (displayed as an H3).</li>
+  <li><strong>Text</strong> &mdash; rich text with bold, italic, bullet lists, and links.
+    Optionally float a photo to the left or right so the text wraps around it (see step 5).
+    Body text always uses the default readable font regardless of the decorative title font chosen.</li>
   <li><strong>Link</strong> &mdash; a standalone call-to-action link or button.</li>
   <li><strong>Image</strong> &mdash; a single photo, optionally floated left or right.</li>
   <li><strong>Image gallery</strong> &mdash; 2&ndash;4 photos side by side.</li>
-  <li><strong>Flyer</strong> &mdash; an event flyer, added one of two ways: a typed
-    <em>styled callout</em> (pick one of 7 looks) or by <em>uploading an image of a flyer</em>
-    that the app turns into accessible text beside the picture (see step 5).</li>
-  <li><strong>Event</strong> &mdash; title, date, time, and location displayed as a
-    structured card.</li>
+  <li><strong>Flyer / Event</strong> &mdash; an event flyer or announcement, added one of two ways:
+    a typed <em>styled callout</em> (pick one of 7 looks) or by <em>uploading an image of a flyer</em>
+    that the app turns into accessible text beside the picture (see step 5). The callout approach
+    also works well for simple event announcements with no flyer image at all.</li>
   <li><strong>Quote</strong> &mdash; a highlighted pull-quote with optional attribution.</li>
-  <li><strong>Divider</strong> &mdash; a visual separator between content areas.</li>
+  <li><strong>Divider</strong> &mdash; a decorative visual separator. Choose from 5 styles:
+    <em>Flourish</em>, <em>Diamond</em>, <em>Dots</em>, <em>Thin line</em>, or <em>Thick line</em>.
+    Line and dot styles use the school&rsquo;s brand color automatically.</li>
 </ul>
 <div class="callout callout-info">
   <strong>Live now:</strong> all block types above; drag-to-reorder for sections and blocks;
@@ -233,30 +241,34 @@ content blocks and reorder them by dragging. Your work autosaves as you go.</p>
   the server so two people can't overwrite each other.</div>
 
 <h3><span class="step-num">5</span> Add photos and flyers</h3>
-<p>Add an <strong>image</strong> block (single photo, or wrapped left/right) or an
-<strong>image gallery</strong> (2&ndash;4 photos across), then use its <strong>Upload</strong>
-button to attach an image file (JPG, PNG, GIF, or WebP). Photos are processed automatically
-&mdash; location/camera data is stripped and fast web-sized versions are generated for you.</p>
+<p>Add an <strong>Image</strong> block (single photo), an <strong>Image gallery</strong>
+(2&ndash;4 photos across), or enable the <strong>Wrap an image</strong> option inside a
+<strong>Text</strong> block to float a photo left or right so the paragraph text flows around it.
+Use the block's <strong>Upload</strong> button to attach an image file (JPG, PNG, GIF, or WebP).
+Photos are processed automatically &mdash; location/camera data is stripped and fast web-sized
+versions are generated for you.</p>
 <ul>
-  <li><strong>Alt text is required on every image.</strong> Type a short description of
-    what the photo shows. Click <strong>Generate alt text</strong> to get an AI-drafted
-    suggestion &mdash; you must read it and accept or edit it; it is never saved
-    automatically.</li>
+  <li><strong>Alt text is required on every image.</strong> When you upload a photo, the app
+    immediately suggests AI-generated alt text and pre-fills the description field &mdash; read
+    it and edit as needed, or type your own. Alt text is never saved automatically without your
+    review.</li>
   <li><strong>Photo slots are for photos, not text flyers.</strong> If you try to upload an
     image that is really a text-heavy flyer into an image, gallery, or photo-style flyer slot,
-    the app recognizes it and directs you to <strong>Flyer &rarr; Upload a flyer</strong>
+    the app recognizes it and directs you to <strong>Flyer / Event &rarr; Upload a flyer</strong>
     instead &mdash; so the flyer's words become real, screen-reader-friendly text rather than an
-    unreadable picture.</li>
+    unreadable picture. Logos, icons, illustrations, and photos with incidental text pass through
+    normally.</li>
 </ul>
 
 <h4>Two ways to add a flyer</h4>
-<p>The <strong>Flyer</strong> block can be added two ways:</p>
+<p>The <strong>Flyer / Event</strong> block can be added two ways:</p>
 <ul>
   <li><strong>Styled callout</strong> &mdash; type the event details (title, date, time, location,
     and an optional button) and pick one of <strong>7 looks</strong> (Classic, Calendar, Spotlight,
     Ticket, Poster, Polaroid, or Ribbon). Every style is built to meet WCAG AA contrast; the
-    photo styles place text over a dark scrim so it stays readable over any image.</li>
-  <li><strong>Upload a flyer</strong> &mdash; choose <strong>Flyer &rarr; Upload a flyer</strong>
+    photo styles place text over a dark scrim so it stays readable over any image. This works
+    equally well for events that have no printed flyer.</li>
+  <li><strong>Upload a flyer</strong> &mdash; choose <strong>Flyer / Event &rarr; Upload a flyer</strong>
     and upload an <strong>image</strong> of a flyer. The app reads it automatically (text and
     layout) and builds a <strong>two-column block</strong>: the flyer image on one side (click to
     enlarge) and the extracted words on the other, rendered as real <strong>headings, lists,
