@@ -109,7 +109,7 @@
 <h1>PDF Accessibility Remediation Tool &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-06-03 &mdash; remediate.py now sets tab order (<code>/Tabs /S</code>); added <code>autotag.py</code> and the <code>--images</code> option
+  <strong>User guide last updated:</strong> 2026-06-10 &mdash; underscore artifacting now works for Google Docs PDF exports (CID/Identity-H fonts), not just Word
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,10 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-10</td>
+        <td style="padding:8px; background: white;">Extend underscore fill-in line artifacting to PDFs exported from Google Docs. Google Docs uses 2-byte CID/Identity-H fonts where underscores are encoded as font-specific glyph codes (not the ASCII 0x5F byte). The new CID pass decodes each font's ToUnicode map to find the underscore glyph code, then artifacts matching runs. Empty <code>&lt;P&gt;</code> tags containing only a CID whitespace glyph (also invisible in raw bytes) are now correctly removed too. No CLI change needed; both improvements apply automatically</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-06-03</td>
         <td style="padding:8px; background: white;">Add <code>autotag.py</code> — new tool for untagged PDFs that have a text layer (graphically-designed flyers from Canva, InDesign, etc.). Uses Claude vision to detect reading order, assign heading/paragraph roles, and transcribe correct text from the rendered image (fixing garbled source text layers). Builds a full tag tree via the invisible-overlay technique; keeps the original look pixel-perfect. Use when <code>remediate.py</code> reports "PDF is not tagged." Flags: <code>--lang</code>, <code>--title</code>, <code>--yes</code></td>
@@ -157,14 +161,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-27</td>
         <td style="padding:8px; background: white;">Add Step 5 — artifact-wraps runs of underscore characters (e.g., from Word tab-leader signature lines) so screen readers skip them while the visual line remains for sighted users</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-14</td>
-        <td style="padding:8px; background: white;">Add rebuild/ workflow for PDFs too broken to patch with remediate.py — produces a clean Word document that exports to a properly tagged PDF</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-14</td>
-        <td style="padding:8px; background: white;">Add rebuild/ workflow for PDFs too broken to patch with remediate.py — produces a clean Word document that exports to a properly tagged PDF</td>
       </tr>
     </tbody>
   </table>
