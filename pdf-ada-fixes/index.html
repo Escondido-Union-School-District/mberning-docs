@@ -109,7 +109,7 @@
 <h1>PDF Accessibility Remediation Tool &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-06-10 &mdash; underscore artifacting now works for Google Docs PDF exports (CID/Identity-H fonts), not just Word
+  <strong>User guide last updated:</strong> 2026-06-18 -- Word rebuild scripts now force all text (headings and captions) to black; LCAP annual surgical fix template added
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,14 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-18</td>
+        <td style="padding:8px; background: white;">Word rebuild scripts now force all text to black. Word's built-in Heading 1-6, Title, Subtitle, and Caption styles are theme-tinted blue by default; every rebuilt document now overrides them all to black after <code>Document()</code> creation. No manual step required -- future rebuilds produce consistent black text automatically. Also add Triennial Assessment scorecard rebuild (<code>tmp_rebuild_scorecard.py</code>): 4 data tables with proper TH/TD structure, repeat-header rows, table captions and alt text, H1/H2/H3 hierarchy, 7 pages</td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-18</td>
+        <td style="padding:8px; background: white;">Add LCAP annual surgical fix template (<code>tmp_lcap_fix.py</code>) for the two Acrobat accessibility failures specific to the CA DOE LCAP document from doc-tracking.com: (1) page-3 layout table demoted from Table/TR/TD to Div elements (it has no header row so a fake TH would mislead screen readers); (2) page-6 sliver Link annotation enclosed in the existing Link struct element via an OBJR reference rather than creating a duplicate. Reusable for the 2027 LCAP</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-06-10</td>
         <td style="padding:8px; background: white;">Extend underscore fill-in line artifacting to PDFs exported from Google Docs. Google Docs uses 2-byte CID/Identity-H fonts where underscores are encoded as font-specific glyph codes (not the ASCII 0x5F byte). The new CID pass decodes each font's ToUnicode map to find the underscore glyph code, then artifacts matching runs. Empty <code>&lt;P&gt;</code> tags containing only a CID whitespace glyph (also invisible in raw bytes) are now correctly removed too. No CLI change needed; both improvements apply automatically</td>

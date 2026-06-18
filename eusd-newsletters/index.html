@@ -462,21 +462,18 @@ trend</strong> so you can tell at a glance whether a number is climbing or slipp
 
 <h3>What the per-newsletter dashboard shows</h3>
 <ul>
-  <li><strong>Total views</strong> &mdash; how many times the page was opened.</li>
-  <li><strong>Unique daily visitors</strong> &mdash; how many separate people opened it
-    (counted once per day &mdash; see <strong>Privacy</strong> below).</li>
-  <li><strong>Reading depth</strong> &mdash; how many readers scrolled to 25%, 50%, 75%,
-    and 100% of the page, so you can see whether people read to the end.</li>
+  <li><strong>Unique visitors</strong> &mdash; the headline metric: how many separate people
+    opened this newsletter (counted once per day &mdash; see <strong>Privacy</strong> below).
+    Total page loads and the average views per visitor appear as a context line beneath it.</li>
   <li><strong>Average time on page</strong> &mdash; roughly how long readers spent.</li>
-  <li><strong>Device</strong> &mdash; the split between mobile, tablet, and desktop readers.</li>
-  <li><strong>Where readers came from</strong> &mdash; whether they arrived from email, a
-    website, social media, or a direct link.</li>
-  <li><strong>Approximate location</strong> &mdash; the city or region readers opened it
-    from (see the note below).</li>
-  <li><strong>Read to the end</strong> &mdash; the share of readers who reached the bottom of
-    the newsletter (this is the fourth headline figure on the dashboard).</li>
-  <li><strong>Most-clicked links &amp; flyers</strong> &mdash; which links and flyers got
-    the most clicks, so you can see what families found most useful.</li>
+  <li><strong>Read to the end</strong> &mdash; the share of unique visitors who scrolled all
+    the way to the bottom (not the share of total page loads, so one reader who finished on
+    their fourth visit counts as 100%, not 25%).</li>
+  <li><strong>Device, network, location, and referral</strong> &mdash; breakdowns of unique
+    visitors by device (mobile/tablet/desktop), whether they were on the EUSD network,
+    approximate city or region, and how they arrived (email, direct link, website, social).</li>
+  <li><strong>Most-clicked links</strong> &mdash; which links, flyers, and inline body links
+    got the most clicks. Includes links auto-extracted from flyer images via OCR or QR codes.</li>
 </ul>
 
 <h3>What the per-school dashboard shows</h3>
@@ -614,6 +611,52 @@ stable number that won't keep changing.</p>
 <h2>Recent Changes</h2>
 <table>
   <tr><th>Date</th><th>What changed</th></tr>
+  <tr>
+    <td>2026-06-18</td>
+    <td><strong>Unique visitors is now the headline analytics metric:</strong> The analytics
+    dashboards (per-newsletter and per-school) now lead with <strong>unique visitors</strong>
+    as the main number in a highlighted card. Total views moves to a smaller context line
+    beneath it, showing the total count and the average views per visitor (for example,
+    &ldquo;16 total views &middot; 2.7 per visitor&rdquo;). The device, network, location,
+    and referral breakdowns now count <strong>unique visitors per bucket</strong> rather than
+    total page loads, so the splits tell you about the people, not repeat loads by the same
+    person.</td>
+  </tr>
+  <tr>
+    <td>2026-06-18</td>
+    <td><strong>&ldquo;Read to the end&rdquo; percentage corrected:</strong> The
+    <em>Read to the end</em> KPI now shows the share of <strong>unique visitors</strong>
+    who scrolled to the bottom, not the share of total page loads. Previously, a single
+    reader who finished the newsletter across four page loads was counted as 25% (1 scroll
+    event out of 4 loads); now they correctly count as 100% (1 of 1 unique visitor read
+    to the end).</td>
+  </tr>
+  <tr>
+    <td>2026-06-18</td>
+    <td><strong>Inline body links now appear in &ldquo;most-clicked links&rdquo;:</strong>
+    The analytics click table previously only counted dedicated Link and Flyer elements.
+    It now also tracks <strong>inline links inside newsletter body text</strong>, including
+    URLs auto-extracted from flyer images via OCR or QR codes. These appear in the ranked
+    table alongside link and flyer blocks, labeled by their destination.</td>
+  </tr>
+  <tr>
+    <td>2026-06-18</td>
+    <td><strong>Mobile: status filter is now a dropdown, and Duplicate shows the issue
+    name:</strong> On mobile, the newsletter status filters on the Newsletters Home are now
+    a compact <strong>dropdown</strong> instead of a row of crowded buttons. The
+    <strong>Duplicate last issue</strong> button in the start row now names the newsletter
+    it will copy (for example, &ldquo;Duplicate: Monthly Roundup&rdquo;) so you know exactly
+    what you are duplicating. A tip reminds you that you can also use the <strong>&hellip;
+    menu</strong> on any card to duplicate a specific issue.</td>
+  </tr>
+  <tr>
+    <td>2026-06-18</td>
+    <td><strong>Login now shows the Google account chooser:</strong> Signing in with Google
+    now always opens the account chooser, even if a personal Google account is already active
+    on your device. This means you can pick your EUSD work account directly without having to
+    sign out of the personal account first. The chooser is scoped to <em>@eusd.org</em>
+    accounts.</td>
+  </tr>
   <tr>
     <td>2026-06-05</td>
     <td><strong>Secondary color for the page background:</strong> The School Branding screen

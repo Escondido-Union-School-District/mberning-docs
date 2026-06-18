@@ -4,6 +4,17 @@ Permanent log of user-facing changes. Never pruned.
 
 ---
 
+## [2026-06-18] Analytics redesign, read-to-end fix, inline link tracking, mobile filters, login chooser
+
+- **Unique visitors as the hero metric:** Analytics dashboards (per-newsletter and per-school) now lead with unique visitors in a highlighted card. Total views moves to a muted context line beneath it ("N total views · X per visitor"). The device, network, location, and referral breakdowns now count unique visitors per bucket rather than total page loads.
+- **Read-to-end % fixed:** The "Read to the end" KPI now divides by unique visitors rather than total views. One visitor who finished the newsletter across 4 page loads now shows 100%, not 25%.
+- **Inline link click tracking:** The "most-clicked links" table now includes inline links inside newsletter body text (including URLs extracted from flyer images via OCR or QR codes), not just dedicated Link and Flyer elements.
+- **Mobile status filter dropdown:** Status filters on the Newsletters Home are now a compact dropdown on mobile instead of a row of crowded buttons.
+- **Duplicate last issue names the newsletter:** The "Duplicate last issue" button now shows the title of the newsletter it will copy, with a tip to use the ... menu to duplicate any specific issue.
+- **Login account chooser:** Google sign-in now always shows the account chooser scoped to @eusd.org, so users can select their EUSD work account even when a personal account is already active on the device.
+
+---
+
 ## [2026-06-05] Secondary page-background color, banner image upload, school-color art variants, per-newsletter logo size, home card header text
 
 - **Secondary color (page background):** New optional branding field on the School Branding screen. Sets a tint for the page background behind newsletter content cards. Left blank = plain white. Not contrast-gated (it sits behind white cards, not text). Any valid hex color is accepted.
