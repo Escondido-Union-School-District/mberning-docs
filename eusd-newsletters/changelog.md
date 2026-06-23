@@ -4,6 +4,15 @@ Permanent log of user-facing changes. Never pruned.
 
 ---
 
+## [2026-06-23] Visitors by language, Spanish preview + overrides, reader toolbar reorganized
+
+- **Visitors by language analytics card:** Both the per-newsletter and per-school analytics dashboards now include a "Visitors by language" donut chart counting unique visitors per language (English vs. Spanish). Shown automatically when Spanish-language readership exists; hidden for English-only newsletters.
+- **Generate and review Spanish version before publishing:** Authors can now produce the Spanish translation on demand from the preview screen (before publishing), review it at `?lang=es`, and have the reviewed version reused at publish time. Previously the translation only happened at publish time. Generation is blocked on published newsletters (the live Spanish page stays stable); available only on drafts.
+- **Per-string Spanish overrides:** From the preview, an "Edit translations" link opens a side-by-side editor where authors can correct individual Spanish strings. Overrides are stored as `es_content.overrides`, take precedence over the AI map, and survive regeneration (pruned to strings whose English source still exists).
+- **Reader toolbar reorganized:** The public newsletter toolbar now shows only the English / Español language switch at the top level (when a Spanish version is published). Everything else (Contents on mobile, Text size, Translate to another language, Share) is grouped in a single "Tools" hamburger menu. Prevents the Google Translate button from being mistaken for the per-page Spanish switch. Uses a native `<details>` element: no JavaScript required to open, keyboard-accessible.
+
+---
+
 ## [2026-06-18] Analytics redesign, read-to-end fix, inline link tracking, mobile filters, login chooser
 
 - **Unique visitors as the hero metric:** Analytics dashboards (per-newsletter and per-school) now lead with unique visitors in a highlighted card. Total views moves to a muted context line beneath it ("N total views · X per visitor"). The device, network, location, and referral breakdowns now count unique visitors per bucket rather than total page loads.

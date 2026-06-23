@@ -635,6 +635,43 @@ stable number that won't keep changing.</p>
 <table>
   <tr><th>Date</th><th>What changed</th></tr>
   <tr>
+    <td>2026-06-23</td>
+    <td><strong>Visitors by language analytics card:</strong> Both the per-newsletter and
+    per-school analytics dashboards now include a <strong>Visitors by language</strong>
+    donut chart showing how many unique visitors read the English version versus the Spanish
+    version. The card appears automatically whenever there has been Spanish-language
+    readership; newsletters that have only ever been read in English show no card.</td>
+  </tr>
+  <tr>
+    <td>2026-06-23</td>
+    <td><strong>Generate and review the Spanish version before publishing:</strong> Authors
+    can now produce and read the Spanish translation of their newsletter <em>before</em> it
+    goes live, instead of only seeing it after publishing. In the preview, the author bar
+    shows a <strong>Generate Spanish version</strong> button. After generating, click
+    <strong>View in Spanish</strong> to read it, and <strong>Regenerate</strong> if the
+    newsletter text changes. The reviewed translation is reused at publish time (no second
+    translation if text is unchanged).</td>
+  </tr>
+  <tr>
+    <td>2026-06-23</td>
+    <td><strong>Hand-edit individual Spanish strings:</strong> From the preview author bar,
+    click <strong>Edit translations</strong> to open a side-by-side editor: English on the
+    left, Spanish in an editable field on the right. Corrections you save are stored as
+    overrides that take precedence over the machine translation. Overrides survive
+    regeneration (as long as the English source text has not changed); only strings whose
+    English source was edited revert to fresh AI output.</td>
+  </tr>
+  <tr>
+    <td>2026-06-23</td>
+    <td><strong>Reader toolbar reorganized into a Tools menu:</strong> The public newsletter
+    reader toolbar now keeps only the <strong>English / Espa&ntilde;ol</strong> language
+    switch as top-level buttons (shown only when a Spanish version is published). All other
+    controls (Contents on mobile, Text size, Translate to another language, and Share) are
+    grouped into a single <strong>Tools</strong> hamburger menu. This prevents the
+    Google &ldquo;Translate&rdquo; button from being confused with the per-page Spanish
+    version switch.</td>
+  </tr>
+  <tr>
     <td>2026-06-18</td>
     <td><strong>Unique visitors is now the headline analytics metric:</strong> The analytics
     dashboards (per-newsletter and per-school) now lead with <strong>unique visitors</strong>
@@ -907,42 +944,6 @@ stable number that won't keep changing.</p>
     <td><strong>Section locks now enforced:</strong> When a colleague is editing a section,
     the server blocks edits to it (not just the on-screen controls), so changes can't slip
     through and overwrite theirs.</td>
-  </tr>
-  <tr>
-    <td>2026-05-19</td>
-    <td><strong>Newsletter editor live (Phase 2):</strong> Create a newsletter blank
-    or by duplicating your last issue. Add titled sections and paragraph/link content
-    blocks, drag to reorder, and edits autosave. Mark a newsletter published or back
-    to draft.</td>
-  </tr>
-  <tr>
-    <td>2026-05-19</td>
-    <td><strong>Section editing locks:</strong> When someone opens a section, others
-    see &ldquo;Another editor is editing this section&rdquo; and that section is
-    read-only for them until the lock expires &mdash; so two people can't silently
-    overwrite each other.</td>
-  </tr>
-  <tr>
-    <td>2026-05-15</td>
-    <td><strong>Sign-in live:</strong> Google SSO is implemented. Staff sign in at
-    <code>newsletters.eusd.org</code> with their @eusd.org account. Non-EUSD accounts
-    are blocked.</td>
-  </tr>
-  <tr>
-    <td>2026-05-15</td>
-    <td><strong>School picker live:</strong> After signing in, you see only the schools
-    your Google Group membership grants you access to.</td>
-  </tr>
-  <tr>
-    <td>2026-05-15</td>
-    <td><strong>Access-denied page:</strong> Attempting to reach a school you don't have
-    access to shows a clear message directing you to ask your site administrator to add
-    you to the school's Google Group.</td>
-  </tr>
-  <tr>
-    <td>2026-05-15</td>
-    <td><strong>Project initialized:</strong> Design spec, Phase 1 plan, and user guide
-    skeleton created.</td>
   </tr>
 </table>
 
