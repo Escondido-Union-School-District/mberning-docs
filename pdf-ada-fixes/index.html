@@ -109,7 +109,7 @@
 <h1>PDF Accessibility Remediation Tool &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-06-18 -- Word rebuild scripts now force all text (headings and captions) to black; LCAP annual surgical fix template added
+  <strong>User guide last updated:</strong> 2026-06-25 -- salary_schedule_tagfix.py: new in-place tag-fix tool for Excel-export salary schedules (both PDFMaker and native Save As PDF flavors)
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,14 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-25</td>
+        <td style="padding:8px; background: white;">Add <code>salary_schedule_tagfix.py</code> -- new standalone tool for in-place ADA remediation of Excel-export salary schedule PDFs. Excel exports produce tagged PDFs (Document/Workbook/Worksheet/Table structure) but with recurring defects: no TH header cells, the title band hidden as an /Artifact invisible to screen readers, and footnotes/headings trapped in single-column tables. The tool fixes all of these in place, keeping the rendered page byte-identical to the source (verified automatically on every run). Run: <code>python salary_schedule_tagfix.py "input/file.pdf" --title "Group 21 Salary Schedule"</code></td>
+      </tr>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-25</td>
+        <td style="padding:8px; background: white;">Extend <code>salary_schedule_tagfix.py</code> to support native Excel Save As PDF format in addition to Acrobat PDFMaker. Native exports differ: title band uses <code>/Artifact BMC</code> (not BDC) with one text block per line rather than per column; cells are nested as TD &gt; P &gt; MCID rather than bare TD &gt; MCID; P elements inside cells inherit <code>/Pg</code> from ancestors. Both export flavors now handled transparently</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-06-18</td>
         <td style="padding:8px; background: white;">Word rebuild scripts now force all text to black. Word's built-in Heading 1-6, Title, Subtitle, and Caption styles are theme-tinted blue by default; every rebuilt document now overrides them all to black after <code>Document()</code> creation. No manual step required -- future rebuilds produce consistent black text automatically. Also add Triennial Assessment scorecard rebuild (<code>tmp_rebuild_scorecard.py</code>): 4 data tables with proper TH/TD structure, repeat-header rows, table captions and alt text, H1/H2/H3 hierarchy, 7 pages</td>
@@ -153,22 +161,6 @@
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-08</td>
         <td style="padding:8px; background: white;">Add checkbox and radio AcroForm widgets to the rebuild pipeline — rebuild scripts can now declare <code>checkbox</code> and <code>radio</code> field types in the sidecar JSON, producing fillable PDFs where parents can tick boxes and pick options. Visible glyphs are <code>&#9744;</code> and <code>&#9675;</code> in the docx body font so the static-print case still works; the AcroForm widget paints only the selected indicator (checkmark / dot) on top of the typeset glyph</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-06</td>
-        <td style="padding:8px; background: white;">Add fillable-form pass — <code>rebuild/add_form_widgets.py</code> injects AcroForm text widgets (single-line + multi-line) into a tagged PDF, anchored by invisible <code>[[F:Name]]</code> markers placed in the .docx; widgets are tagged in the structure tree and pages get <code>/Tab /S</code> for structure-order tabbing. Add <code>rebuild/form_fields.py</code> helpers and rewire <code>waiver_form.py</code> to emit fields. New pipeline order: rebuild script → Word Save As PDF → <code>add_form_widgets.py</code> → <code>remediate.py</code></td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-05-05</td>
-        <td style="padding:8px; background: white;">Add Allergy Waiver bilingual rebuild — <code>rebuild/waiver_form.py</code> produces <code>Allergy_Waiver_English.docx</code> and <code>Allergy_Waiver_Spanish.docx</code> from the original bilingual single-PDF; logos extracted and rasterized from the source PDF; add <code>rebuild/verify_page_count.py</code> (Word COM helper that confirms each .docx is exactly 1 page before export); add <code>python-docx</code> to requirements.txt</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-28</td>
-        <td style="padding:8px; background: white;">Add FER guidelines bilingual rebuild (English + Spanish); document that Word's built-in Save As PDF must be used for alt text to carry through — Adobe PDFMaker does not reliably transfer image alt text</td>
-      </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-27</td>
-        <td style="padding:8px; background: white;">Add Step 5 — artifact-wraps runs of underscore characters (e.g., from Word tab-leader signature lines) so screen readers skip them while the visual line remains for sighted users</td>
       </tr>
     </tbody>
   </table>
@@ -440,6 +432,45 @@ python autotag.py "input/YourFlyer_Spanish.pdf" --lang es-ES</code></pre>
 
 <div class="callout">
   <strong>Requirements:</strong> <code>autotag.py</code> needs <code>ANTHROPIC_API_KEY</code> in <code>.env</code> (paid; budget a few cents per page) and a PDF that has a real text layer. It is <em>only</em> for untagged PDFs &mdash; if a PDF is already tagged, use <code>remediate.py</code> instead.
+</div>
+
+<h2>Salary Schedule Tag Fix (<code>salary_schedule_tagfix.py</code>)</h2>
+<p>Excel-export salary schedules arrive <em>tagged</em> but ADA-broken. The tag tree has the right shape (Document/Workbook/Worksheet/Tables) but recurring defects that <code>remediate.py</code> doesn't address:</p>
+<ul>
+  <li>No <code>&lt;TH&gt;</code> header cells anywhere in the data tables</li>
+  <li>The title band (schedule name, group, district, effective date) is hidden as an <code>/Artifact</code> -- invisible to screen readers</li>
+  <li>Footnotes and sub-headings are trapped inside single-column 1-row or multi-row tables instead of heading/list elements</li>
+</ul>
+<p><strong>Never rebuild salary schedules in Word.</strong> The side-by-side pay-group tables (Group AA / BB / CC columns) are easy to mis-group when reading by visual x-position. The original Excel tag structure already groups them correctly. An in-place fix keeps the content exact and leaves the rendered page byte-identical to the source.</p>
+
+<h3>Run it</h3>
+<pre><code>python salary_schedule_tagfix.py "input/2627 GRP 21 Permit Teacher.pdf" --title "Group 21 Salary Schedule"</code></pre>
+<p>Output goes to <code>output/&lt;stem&gt;_tagfix.pdf</code>. The input is never modified. The script prints a render-identical check at the end:</p>
+<pre><code>Render identical to source: True (PASS)</code></pre>
+<p><strong>If it says FAIL, do not ship the output</strong> -- a content-stream edit went wrong. Report it so it can be diagnosed.</p>
+
+<h3>What it fixes</h3>
+<table>
+  <tr><th>Issue</th><th>Fix applied</th></tr>
+  <tr><td>Data table header row</td><td>First row cells become <code>&lt;TH Scope=Column&gt;</code></td></tr>
+  <tr><td>Data table first data cell per row</td><td>Becomes <code>&lt;TH Scope=Row&gt;</code></td></tr>
+  <tr><td>Label rows ("Group AA / Range 01")</td><td>Converted to <code>&lt;Caption&gt;</code> (announced on table entry, not as a data cell)</td></tr>
+  <tr><td>1-column single-row "tables"</td><td>Converted to <code>&lt;H2&gt;</code></td></tr>
+  <tr><td>1-column multi-row "tables"</td><td>Converted to <code>&lt;L&gt;</code>/<code>&lt;LI&gt;</code>/<code>&lt;LBody&gt;</code> list</td></tr>
+  <tr><td>Artifacted title band</td><td>Un-artifacted to <code>&lt;H1&gt;</code> + <code>&lt;P&gt;</code> elements so screen readers read the schedule name</td></tr>
+  <tr><td>Metadata</td><td>Sets <code>/Lang</code>, doc <code>/Title</code>, <code>/DisplayDocTitle</code>, <code>/Tabs /S</code> per page</td></tr>
+</table>
+
+<h3>Supported export formats</h3>
+<p>The tool auto-detects which format was used and handles both transparently:</p>
+<table>
+  <tr><th>Export method</th><th>Creator metadata</th><th>Structure</th></tr>
+  <tr><td>Acrobat PDFMaker (ribbon)</td><td><code>Acrobat PDFMaker ... for Excel</code></td><td>TD &gt; MCID; title band in <code>/Artifact BDC</code>, one block per column</td></tr>
+  <tr><td>Excel native Save As PDF</td><td><code>Microsoft Excel</code></td><td>TD &gt; P &gt; MCID; title band in <code>/Artifact BMC</code>, one block per line</td></tr>
+</table>
+
+<div class="callout callout-info">
+  <strong>Prerequisite:</strong> The PDF must be <em>tagged</em>. If <code>remediate.py</code> reports "PDF is not tagged," the file was printed to PDF (via the Adobe PDF printer or similar) instead of exported. Have the author re-export using <strong>File &rarr; Save As &rarr; PDF</strong> in Excel (with "Document structure tags for accessibility" checked), then run this tool.
 </div>
 
 <h2>Processing Multiple Files</h2>
