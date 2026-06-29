@@ -109,7 +109,7 @@
 <h1>Thrillshare Checker &mdash; User Guide</h1>
 
 <div class="callout callout-info" style="font-size: 0.9em; padding: 0.5em 1em;">
-  <strong>User guide last updated:</strong> 2026-05-28 &mdash; Approval checker is now more resilient to slow Thrillshare OAuth handshakes on load (fixes intermittent "No schools discovered" false negatives)
+  <strong>User guide last updated:</strong> 2026-06-29 &mdash; Scheduled tasks corrected to weekdays only (Mon&ndash;Fri); WakeToRun enabled so the PC wakes from sleep for early-morning runs; cleanup now reliably reaps orphaned Chrome processes from prior S4U runs; log.txt shows live output during scheduled runs
 </div>
 
 <details class="changelog" style="background: #e8f0fe; border-left: 4px solid #1a56db; padding: 0.75em 1em; margin: 1em 0; border-radius: 0 6px 6px 0;">
@@ -122,6 +122,10 @@
       </tr>
     </thead>
     <tbody>
+      <tr style="border-bottom:1px solid #ddd;">
+        <td style="padding:8px; background: white; white-space:nowrap;">2026-06-29</td>
+        <td style="padding:8px; background: white;">Schedule corrected to weekdays only (Mon&ndash;Fri); <code>WakeToRun=True</code> enabled on both tasks so the PC wakes from its 2h idle sleep for early-morning runs; <code>cleanup_stale.ps1</code> now reaps S4U-orphaned <code>chrome-headless-shell</code> processes by name + age (the old CommandLine filter read null across logon sessions and silently missed them); <code>log.txt</code> and <code>smore_scan_log.txt</code> now show live per-school output during scheduled runs (Python <code>-u</code> flag added to batch wrappers)</td>
+      </tr>
       <tr style="border-bottom:1px solid #ddd;">
         <td style="padding:8px; background: white; white-space:nowrap;">2026-05-28</td>
         <td style="padding:8px; background: white;">Approval checker now tolerates the Thrillshare media SPA's OAuth handshake on load (can take 15&ndash;20s): dropdown wait raised to 30s; CMS pages navigation retries once on timeout. Eliminates intermittent "No schools discovered" false negatives during scheduled runs.</td>
@@ -158,10 +162,6 @@
         <td style="padding:8px; background: white; white-space:nowrap;">2026-04-08</td>
         <td style="padding:8px; background: white;">Fix changelog table cell background color; automated guide update</td>
       </tr>
-      <tr style="border-bottom:1px solid #ddd;">
-        <td style="padding:8px; background: white; white-space:nowrap;">2026-04-07</td>
-        <td style="padding:8px; background: white;">Update guide styling; add changelog section; backfill last 30 days of commits</td>
-      </tr>
     </tbody>
   </table>
 </details>
@@ -175,7 +175,7 @@
 <table>
   <tr><th>Mode</th><th>Flag</th><th>What It Does</th><th>Schedule</th></tr>
   <tr><td>Approval Checker</td><td><em>(default)</em></td><td>Checks all schools for pending approvals in Live Feed, News, and CMS pages</td><td>Hourly on weekdays</td></tr>
-  <tr><td>Smore Link Scanner</td><td><code>--smore-scan</code></td><td>Scans all schools for Smore links in messages from the last 7 days (168h); also re-checks discovered links at ~24h and ~48h and emails a diff if the page changed</td><td>Daily at 3:00 AM and 6:50 AM</td></tr>
+  <tr><td>Smore Link Scanner</td><td><code>--smore-scan</code></td><td>Scans all schools for Smore links in messages from the last 7 days (168h); also re-checks discovered links at ~24h and ~48h and emails a diff if the page changed</td><td>Weekdays (Mon&ndash;Fri) at 3:00 AM and 6:50 AM</td></tr>
 </table>
 
 <p>Both modes use browser automation (Playwright), log into Thrillshare via saved session cookies, and <strong>always send an email after every run</strong> — subject line reflects the result ("Pending Approval" vs "Check Complete — No Pending Approvals").</p>
@@ -250,10 +250,10 @@ Take your time — the script will wait.</code></pre>
 <p>Two scheduled tasks are configured:</p>
 <table>
   <tr><th>Task Name</th><th>Schedule</th><th>Wrapper</th><th>Log File</th></tr>
-  <tr><td>ThrillshareChecker</td><td>Daily at 4:00 AM and 7:20 AM + hourly 6 AM &ndash; 4 PM</td><td><code>run_hidden.bat</code></td><td><code>log.txt</code></td></tr>
-  <tr><td>Thrillshare Smore Scan</td><td>Daily at 3:00 AM and 6:50 AM</td><td><code>run_smore_scan.bat</code></td><td><code>smore_scan_log.txt</code></td></tr>
+  <tr><td>ThrillshareChecker</td><td>Weekdays (Mon&ndash;Fri) at 4:00 AM and 7:20 AM + hourly 6 AM &ndash; 4 PM</td><td><code>run_hidden.bat</code></td><td><code>log.txt</code></td></tr>
+  <tr><td>Thrillshare Smore Scan</td><td>Weekdays (Mon&ndash;Fri) at 3:00 AM and 6:50 AM</td><td><code>run_smore_scan.bat</code></td><td><code>smore_scan_log.txt</code></td></tr>
 </table>
-<p>Both tasks have <strong>StartWhenAvailable</strong> enabled — if the machine was off or rebooting at the scheduled time, the task fires as soon as it comes back up. Each task runs <code>cleanup_stale.ps1</code> first to kill any processes left over from a previous hung run.</p>
+<p>Both tasks have <strong>StartWhenAvailable</strong> and <strong>WakeToRun</strong> enabled. StartWhenAvailable fires a single catch-up run if the machine was off or rebooting at the scheduled time. WakeToRun wakes the machine from its idle sleep (AC standby is 2 hours) so early-morning runs are not silently skipped. Each task runs <code>cleanup_stale.ps1</code> first to kill any Chrome or Python processes left over from a previous hung run. Output is written live to the log file as each school is checked.</p>
 
 <h2>Step-by-Step: Smore Link Scanner</h2>
 
@@ -304,7 +304,7 @@ Lookback: 168h (row-text), 48h (popup expansion)
 Messages with Smore links: 2</code></pre>
 
 <h3><span class="step-num">5</span> Adjusting Coverage</h3>
-<p>The scanner uses whatever schools the dropdown returns from <code>discover_schools</code> — no allowlist to maintain. To change the time window, edit <code>LOOKBACK_HOURS</code> (default: 168) or <code>POPUP_LOOKBACK_HOURS</code> (default: 48) at the top of <code>smore_scanner.py</code>. The scheduled task fires daily (including weekends).</p>
+<p>The scanner uses whatever schools the dropdown returns from <code>discover_schools</code> — no allowlist to maintain. To change the time window, edit <code>LOOKBACK_HOURS</code> (default: 168) or <code>POPUP_LOOKBACK_HOURS</code> (default: 48) at the top of <code>smore_scanner.py</code>. The scheduled task fires on weekdays (Mon&ndash;Fri).</p>
 
 <!-- ================================================================== -->
 <h2>CLI Reference</h2>
@@ -411,7 +411,7 @@ With pending:     2</code></pre>
   <tr>
     <td>Scheduled task runs but no email and no report</td>
     <td>The batch wrapper or paths may be misconfigured, or a stale process is blocking the task</td>
-    <td>Check <code>log.txt</code> and <code>smore_scan_log.txt</code> for error output. Verify paths in <code>run_hidden.bat</code> / <code>run_smore_scan.bat</code> match your project location. If the Task Scheduler shows Status=Running but no python.exe is running, kill the stale wscript or cmd process and re-run.</td>
+    <td>Check <code>log.txt</code> and <code>smore_scan_log.txt</code> — output is written live during the run, so the file should grow as each school is checked. If the file is empty and Task Scheduler shows Status=Running but no python.exe is visible, a stale cmd or Chrome process may be blocking it; run <code>cleanup_stale.ps1</code> manually (as Administrator) to reap orphans, then re-trigger the task. Also verify paths in <code>run_hidden.bat</code> / <code>run_smore_scan.bat</code> match your project location.</td>
   </tr>
   <tr>
     <td><code>Error checking CMS: ...</code></td>

@@ -2,6 +2,12 @@
 
 All changes to this project, logged automatically by the Daily User Guide Check.
 
+## 2026-06-29
+- Scheduled tasks corrected to weekdays only (Mon-Fri); previous docs said "daily" but triggers are MSFT_TaskWeeklyTrigger with DaysOfWeek=62 (Mon-Fri, no weekends)
+- WakeToRun enabled on both ThrillshareChecker and Thrillshare Smore Scan tasks (was False); the PC sleeps after 2h idle on AC power and early-morning triggers were silently skipped without this; wake timers were already allowed on the power scheme
+- cleanup_stale.ps1: reap orphaned chrome-headless-shell by name + age instead of CommandLine match; processes spawned by a prior S4U-scheduled run live in a different logon session where CommandLine reads as null, so the old filter matched nothing and orphans accumulated; added taskkill fallback for Stop-Process cross-session denials
+- run_hidden.bat, run_smore_scan.bat: added Python -u flag so log.txt / smore_scan_log.txt capture live per-school output during scheduled runs (without -u, stdout is block-buffered and the log file stays empty until process exit)
+
 ## 2026-05-28
 - Approval checker now tolerates the Thrillshare media SPA's OAuth handshake delay on load (15-20s observed)
 - Raised the three `.dropdown-trigger` waits to a shared 30s `DROPDOWN_TIMEOUT` (was a few seconds each); happy path is unaffected since wait returns as soon as the element appears
